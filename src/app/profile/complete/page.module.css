@@ -1,0 +1,171 @@
+.loading {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-poppins);
+}
+
+.page {
+  min-height: 80vh;
+  background: var(--color-background-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+}
+
+.card {
+  background: var(--color-background-white);
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, var(--color-button), var(--color-hover-accent));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 auto 1.25rem;
+  font-family: var(--font-playfair);
+  overflow: hidden;
+}
+
+.header h1 {
+  font-family: var(--font-playfair);
+  font-size: 1.8rem;
+  color: var(--color-heading);
+  margin-bottom: 0.4rem;
+}
+
+.header p {
+  color: var(--color-body-text);
+  opacity: 0.7;
+  font-family: var(--font-poppins);
+  font-size: 0.95rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.field label {
+  font-family: var(--font-poppins);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--color-heading);
+}
+
+.field input,
+.field textarea {
+  padding: 0.85rem 1rem;
+  border: 1.5px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
+  font-family: var(--font-poppins);
+  font-size: 0.95rem;
+  color: var(--color-body-text);
+  background: #fafafa;
+  transition: border-color 0.25s;
+  resize: none;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--color-button);
+  background: white;
+}
+
+.submitBtn {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--color-button), var(--color-hover-accent));
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: var(--font-poppins);
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.3s, transform 0.2s;
+  letter-spacing: 0.3px;
+}
+
+.submitBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.genderOptions {
+  display: flex;
+  gap: 1rem;
+}
+
+.genderLabel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem;
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  font-family: var(--font-poppins);
+  font-size: 0.95rem;
+  color: var(--color-body-text);
+  background: #fafafa;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.genderLabel:hover {
+  border-color: var(--color-button);
+  background: rgba(212, 160, 23, 0.05);
+}
+
+.activeGender {
+  border-color: var(--color-button);
+  background: rgba(212, 160, 23, 0.1);
+  color: var(--color-button);
+  font-weight: 600;
+}
+
+.radioInput {
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--color-button);
+}

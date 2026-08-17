@@ -1,0 +1,414 @@
+/* ── Page Layout ── */
+.page {
+  font-family: var(--font-poppins);
+}
+
+/* ── Page Header ── */
+.pageHeader {
+  margin-bottom: 1.75rem;
+}
+
+.pageTitle {
+  font-family: var(--font-playfair);
+  font-size: 1.75rem;
+  color: var(--color-heading);
+  margin: 0 0 0.25rem;
+}
+
+.pageSubtitle {
+  font-size: 0.9rem;
+  color: #888;
+  margin: 0;
+}
+
+/* ── Stats Bar ── */
+.statsBar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.statCard {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: box-shadow 0.2s;
+}
+
+.statCard:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.statIconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.statInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.statValue {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  font-family: var(--font-playfair);
+  line-height: 1.2;
+}
+
+.statLabel {
+  font-size: 0.78rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+}
+
+/* ── Table Card ── */
+.tableCard {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tableTitle {
+  font-family: var(--font-playfair);
+  font-size: 1.2rem;
+  color: var(--color-heading);
+  margin: 0;
+}
+
+.orderCount {
+  font-size: 0.82rem;
+  color: #999;
+  background: #f5f5f5;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* ── Loading & Empty States ── */
+.loadingState,
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #eee;
+  border-top-color: var(--color-button);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Table ── */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background: #fafaf8;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.75rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  font-family: var(--font-poppins);
+  border-bottom: 1px solid #f0f0f0;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem;
+  color: var(--color-body-text);
+  border-bottom: 1px solid #f5f5f5;
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  transition: background 0.15s;
+}
+
+.table tbody tr:hover {
+  background: #fdfcfa;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Cell Styles ── */
+.orderId {
+  display: block;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--color-heading);
+  font-family: var(--font-poppins);
+}
+
+.orderDate {
+  display: block;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: 0.15rem;
+}
+
+.customerEmail {
+  font-size: 0.88rem;
+  color: #555;
+  word-break: break-all;
+}
+
+.itemsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.itemChip {
+  background: #f5f3ee;
+  color: #6b5b3e;
+  font-size: 0.78rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.totalPrice {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-heading);
+  font-family: var(--font-playfair);
+  white-space: nowrap;
+}
+
+/* ── Status Badge ── */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  font-family: var(--font-poppins);
+}
+
+/* ── Status Select ── */
+.statusSelect {
+  padding: 0.45rem 0.75rem;
+  background: #fff;
+  border: 1.5px solid;
+  border-radius: 8px;
+  font-family: var(--font-poppins);
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+  min-width: 150px;
+}
+
+.cancelledDisabledTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #c62828;
+  background: rgba(198, 40, 40, 0.08);
+  border: 1px solid rgba(198, 40, 40, 0.3);
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+.statusSelect:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.statusSelect:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.15);
+}
+
+.statusSelect option {
+  color: var(--color-body-text);
+  font-weight: 500;
+}
+
+/* ── Mobile Cards (hidden on desktop) ── */
+.mobileCards {
+  display: none;
+}
+
+.mobileCard {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 1.25rem 1.5rem;
+}
+
+.mobileCard:last-child {
+  border-bottom: none;
+}
+
+.mobileCardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.mobileCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.mobileRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.mobileLabel {
+  font-size: 0.78rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  flex-shrink: 0;
+  padding-top: 0.1rem;
+}
+
+.mobileCardFoot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f5f5f5;
+}
+
+.mobileCardFoot label {
+  font-size: 0.82rem;
+  color: #999;
+  font-weight: 500;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .statsBar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .statsBar {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .statCard {
+    padding: 1rem;
+  }
+
+  .statValue {
+    font-size: 1.3rem;
+  }
+
+  /* Hide table, show cards */
+  .tableWrap {
+    display: none;
+  }
+
+  .mobileCards {
+    display: block;
+  }
+
+  .tableHeader {
+    padding: 1rem 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .statsBar {
+    grid-template-columns: 1fr;
+  }
+
+  .pageTitle {
+    font-size: 1.4rem;
+  }
+
+  .mobileCard {
+    padding: 1rem;
+  }
+
+  .mobileRow {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .mobileCardFoot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mobileCardFoot label {
+    display: none;
+  }
+
+  .statusSelect {
+    width: 100%;
+    min-width: unset;
+  }
+}

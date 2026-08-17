@@ -1,0 +1,338 @@
+.page {
+  font-family: var(--font-poppins);
+}
+
+.pageHeader {
+  margin-bottom: 2rem;
+}
+
+.pageTitle {
+  font-family: var(--font-playfair);
+  font-size: 1.8rem;
+  color: var(--color-heading);
+  margin-bottom: 0.3rem;
+}
+
+.pageSubtitle {
+  color: var(--color-body-text);
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+/* Stats Row */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.statIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.statLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-body-text);
+  opacity: 0.5;
+  letter-spacing: 0.5px;
+}
+
+.statValue {
+  font-family: var(--font-playfair);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+/* Frequent Customers Section */
+.frequentSection {
+  margin-bottom: 2.5rem;
+}
+
+.frequentHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--color-button);
+}
+.frequentHeader h2 {
+  font-family: var(--font-playfair);
+  font-size: 1.25rem;
+  color: var(--color-heading);
+  margin: 0;
+}
+
+.frequentGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+@media (max-width: 768px) {
+  .frequentGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.frequentCard {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  border-left: 4px solid var(--color-button);
+}
+
+.frequentRank {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-family: var(--font-playfair);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-button);
+  opacity: 0.6;
+}
+
+.frequentAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  font-family: var(--font-playfair);
+}
+
+.frequentInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.frequentInfo strong {
+  font-size: 0.92rem;
+  color: var(--color-heading);
+}
+.frequentInfo span {
+  font-size: 0.78rem;
+  color: var(--color-body-text);
+  opacity: 0.6;
+}
+
+/* Search Bar */
+.searchWrapper {
+  position: relative;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1rem;
+  color: var(--color-body-text);
+  opacity: 0.4;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.7rem 1rem 0.7rem 2.5rem;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 30px;
+  font-family: var(--font-poppins);
+  font-size: 0.9rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.searchInput:focus {
+  outline: none;
+  border-color: var(--color-button);
+}
+
+.searchCount {
+  position: absolute;
+  right: 1.25rem;
+  font-size: 0.78rem;
+  color: var(--color-body-text);
+  opacity: 0.5;
+}
+
+/* Customers Table */
+.tableContainer {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  padding: 1rem 1.5rem;
+  background: #faf8f5;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-body-text);
+  opacity: 0.5;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.tableRow {
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  transition: background 0.15s;
+}
+.tableRow:hover {
+  background: #fcfaf7;
+}
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.table td {
+  padding: 1rem 1.5rem;
+  vertical-align: middle;
+}
+
+.customerCell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-family: var(--font-playfair);
+}
+
+.customerName {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.customerName span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.frequentBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  background: #fff3e0;
+  color: #e65100;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  align-self: flex-start;
+  margin-top: 0.15rem;
+}
+
+.contactCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.contactPhone {
+  font-size: 0.88rem;
+  color: var(--color-heading);
+  font-weight: 500;
+}
+.contactEmail {
+  font-size: 0.78rem;
+  color: var(--color-body-text);
+  opacity: 0.6;
+}
+
+.orderCount {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.spentAmount {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+.lastOrder {
+  font-size: 0.82rem;
+  color: var(--color-body-text);
+  opacity: 0.7;
+}
+
+.emptyRow {
+  padding: 3rem !important;
+  text-align: center;
+  color: var(--color-body-text);
+  opacity: 0.4;
+  font-size: 0.9rem;
+}
+
+.loadingState {
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--color-body-text);
+  opacity: 0.7;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(0,0,0,0.06);
+  border-top-color: var(--color-button);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

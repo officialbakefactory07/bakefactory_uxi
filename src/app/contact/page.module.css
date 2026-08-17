@@ -1,0 +1,164 @@
+.page {
+  padding: 4rem 2rem;
+  background-color: var(--color-background-cream);
+  min-height: 80vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.header h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.header p {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.infoSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.infoCard {
+  background-color: var(--color-background-white);
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: block;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  color: inherit;
+  text-decoration: none;
+}
+
+.infoCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(62, 31, 13, 0.1);
+  color: inherit;
+  text-decoration: none;
+}
+
+.icon {
+  color: var(--color-button);
+  margin-bottom: 1rem;
+}
+
+.infoCard h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.infoCard p {
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.formSection {
+  background-color: var(--color-background-white);
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.formSection h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  font-weight: 600;
+  font-family: var(--font-poppins);
+}
+
+.formGroup input,
+.formGroup textarea {
+  padding: 1rem;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 8px;
+  font-family: var(--font-poppins);
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: var(--color-button);
+}
+
+.submitBtn {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 2.5rem 1.25rem;
+  }
+
+  .header {
+    margin-bottom: 2.5rem;
+  }
+
+  .header h1 {
+    font-size: 2.4rem;
+  }
+
+  .header p {
+    font-size: 1rem;
+  }
+
+  .container {
+    gap: 2.5rem;
+  }
+
+  .infoSection {
+    gap: 1.25rem;
+  }
+
+  .infoCard {
+    padding: 1.5rem;
+  }
+
+  .formSection {
+    padding: 2rem 1.25rem;
+  }
+
+  .formSection h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+}

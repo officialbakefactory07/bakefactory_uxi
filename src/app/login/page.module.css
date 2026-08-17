@@ -1,0 +1,120 @@
+.page {
+  padding: 6rem 2rem;
+  background-color: var(--color-background-cream);
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.authCard {
+  width: 100%;
+  max-width: 450px;
+  padding: 3rem 2rem;
+}
+
+.cardHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.cardHeader h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.cardHeader p {
+  opacity: 0.8;
+  font-size: 0.95rem;
+}
+
+.errorAlert {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.authForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  font-family: var(--font-poppins);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.formGroup input {
+  padding: 0.85rem;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 8px;
+  font-family: var(--font-poppins);
+  transition: border-color 0.3s ease;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: var(--color-button);
+}
+
+.submitBtn {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.divider span {
+  padding: 0 1rem;
+  color: rgba(0,0,0,0.5);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.googleBtn {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.toggleText {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.toggleBtn {
+  background: none;
+  border: none;
+  color: var(--color-hover-accent);
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-poppins);
+  font-size: 0.9rem;
+}
+
+.toggleBtn:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,129 @@
+.page {
+  padding: 4rem 2rem;
+  background-color: var(--color-background-cream);
+  min-height: 80vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.header h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.header p {
+  font-size: 1.2rem;
+  color: var(--color-hover-accent);
+  font-weight: 500;
+  font-family: var(--font-playfair);
+  font-style: italic;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.contentSection {
+  margin-bottom: 3rem;
+  background-color: var(--color-background-white);
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.contentSection h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-button);
+}
+
+.contentSection p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  color: var(--color-body-text);
+}
+
+.socialSection {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.socialSection h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.socialLink {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-header-footer);
+  color: var(--color-background-cream);
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.socialLink:hover {
+  background-color: var(--color-hover-accent);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 2.5rem 1.25rem;
+  }
+
+  .header {
+    margin-bottom: 2.5rem;
+  }
+
+  .header h1 {
+    font-size: 2.4rem;
+  }
+
+  .header p {
+    font-size: 1rem;
+  }
+
+  .contentSection {
+    padding: 1.75rem 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .contentSection h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .contentSection p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .socialSection {
+    margin-top: 2.5rem;
+  }
+
+  .socialLinks {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .socialLink {
+    width: 100%;
+    max-width: 200px;
+    padding: 0.6rem;
+  }
+}
