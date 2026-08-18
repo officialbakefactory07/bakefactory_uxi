@@ -1,129 +1,436 @@
 .page {
-  padding: 4rem 2rem;
-  background-color: var(--color-background-cream);
-  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-background-cream);
+  overflow-x: hidden;
 }
 
-.header {
+/* ==================== 1. HERO SECTION ==================== */
+.heroSection {
+  padding: 5.5rem 2rem 4.5rem 2rem;
+  background: linear-gradient(180deg, rgba(244, 236, 225, 0.7) 0%, rgba(252, 248, 242, 1) 100%);
   text-align: center;
-  margin-bottom: 4rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.header h1 {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-}
-
-.header p {
-  font-size: 1.2rem;
-  color: var(--color-hover-accent);
-  font-weight: 500;
-  font-family: var(--font-playfair);
-  font-style: italic;
-}
-
-.container {
+.heroContainer {
   max-width: 800px;
   margin: 0 auto;
 }
 
-.contentSection {
-  margin-bottom: 3rem;
-  background-color: var(--color-background-white);
-  padding: 3rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+.heroTag {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--color-hover-accent);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: inline-block;
 }
 
-.contentSection h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: var(--color-button);
-}
-
-.contentSection p {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  margin-bottom: 1rem;
-  color: var(--color-body-text);
-}
-
-.socialSection {
-  text-align: center;
-  margin-top: 4rem;
-}
-
-.socialSection h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.socialLinks {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  margin-top: 1.5rem;
-}
-
-.socialLink {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--color-header-footer);
-  color: var(--color-background-cream);
-  border-radius: 8px;
+.heroTitle {
+  font-family: var(--font-luxury);
+  font-size: 3.5rem;
   font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.socialLink:hover {
-  background-color: var(--color-hover-accent);
-  transform: translateY(-2px);
+  color: var(--color-heading);
+  line-height: 1.15;
+  margin-bottom: 1.25rem;
 }
 
 @media (max-width: 768px) {
-  .page {
-    padding: 2.5rem 1.25rem;
+  .heroTitle {
+    font-size: 2.5rem;
   }
+}
 
-  .header {
-    margin-bottom: 2.5rem;
+.heroSubtitle {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: var(--color-body-text);
+}
+
+/* ==================== 2. STORY SPLIT ==================== */
+.storySection {
+  padding: 6rem 2rem;
+}
+
+.storyContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.storyGrid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 5rem;
+  align-items: center;
+}
+
+@media (max-width: 960px) {
+  .storyGrid {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
   }
+}
 
-  .header h1 {
-    font-size: 2.4rem;
+.sectionTag {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--color-hover-accent);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.storyText h2 {
+  font-family: var(--font-luxury);
+  font-size: 2.8rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .storyText h2 {
+    font-size: 2.2rem;
   }
+}
 
-  .header p {
-    font-size: 1rem;
+.storyText p {
+  font-family: var(--font-sans);
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--color-body-text);
+  margin-bottom: 1.25rem;
+}
+
+.quoteBox {
+  margin-top: 2rem;
+  padding: 1.5rem 1.75rem;
+  background: #FFFFFF;
+  border-left: 4px solid var(--color-button);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.quoteText {
+  font-family: var(--font-luxury);
+  font-size: 1.25rem;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--color-heading);
+  line-height: 1.5;
+  margin-bottom: 0.5rem !important;
+}
+
+.quoteAuthor {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-body-muted);
+}
+
+.storyVisual {
+  position: relative;
+}
+
+.visualCardMain {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
+}
+
+.storyImg {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s ease;
+}
+
+.visualCardMain:hover .storyImg {
+  transform: scale(1.04);
+}
+
+.storyStatBadge {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  padding: 0.85rem 1.35rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(212, 160, 23, 0.3);
+}
+
+.badgeGoldIcon {
+  color: var(--color-button);
+}
+
+.storyStatBadge strong {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-heading);
+}
+
+.storyStatBadge span {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: var(--color-body-muted);
+}
+
+/* ==================== 3. 4 PILLARS ==================== */
+.pillarsSection {
+  padding: 6rem 2rem;
+  background: #FFFFFF;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pillarsContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.centerHeader {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 3.5rem auto;
+}
+
+.centerHeader h2 {
+  font-family: var(--font-luxury);
+  font-size: 2.8rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  line-height: 1.15;
+  margin-bottom: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .centerHeader h2 {
+    font-size: 2.2rem;
   }
+}
 
-  .contentSection {
-    padding: 1.75rem 1.25rem;
-    margin-bottom: 2rem;
+.centerHeader p {
+  font-family: var(--font-sans);
+  font-size: 0.98rem;
+  color: var(--color-body-muted);
+}
+
+.pillarsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .pillarsGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
+}
 
-  .contentSection h2 {
-    font-size: 1.6rem;
-    margin-bottom: 1rem;
+@media (max-width: 600px) {
+  .pillarsGrid {
+    grid-template-columns: 1fr;
   }
+}
 
-  .contentSection p {
-    font-size: 1rem;
-    line-height: 1.6;
-  }
+.pillarCard {
+  background: var(--color-background-cream);
+  padding: 2.2rem 1.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-  .socialSection {
-    margin-top: 2.5rem;
-  }
+.pillarCard:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  background: #FFFFFF;
+  border-color: rgba(212, 160, 23, 0.35);
+}
 
-  .socialLinks {
+.pillarIcon {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-button-dark);
+  border: 1px solid rgba(212, 160, 23, 0.25);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.25rem;
+}
+
+.pillarCard h3 {
+  font-family: var(--font-luxury);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-bottom: 0.6rem;
+}
+
+.pillarCard p {
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--color-body-muted);
+}
+
+/* ==================== 4. CONNECT SECTION ==================== */
+.connectSection {
+  padding: 5.5rem 2rem;
+}
+
+.connectCard {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  padding: 4rem 3rem;
+  text-align: center;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+
+.connectTag {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--color-hover-accent);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: inline-block;
+}
+
+.connectCard h2 {
+  font-family: var(--font-luxury);
+  font-size: 2.6rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+
+.connectCard p {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-body-muted);
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+}
+
+.socialBtnRow {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+@media (max-width: 520px) {
+  .socialBtnRow {
     flex-direction: column;
     gap: 0.75rem;
-    align-items: center;
   }
+}
 
-  .socialLink {
-    width: 100%;
-    max-width: 200px;
-    padding: 0.6rem;
+.socialButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.8rem;
+  background: var(--color-background-cream);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  transition: all 0.25s ease;
+}
+
+.socialButton:hover {
+  background: var(--color-button);
+  border-color: var(--color-button);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+}
+
+/* ==================== 5. CTA STRIP ==================== */
+.ctaStrip {
+  background: var(--color-header-footer);
+  padding: 3rem 2rem;
+  color: var(--color-background-cream);
+}
+
+.ctaStripContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .ctaStripContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
   }
+}
+
+.ctaStripContainer h3 {
+  font-family: var(--font-luxury);
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.ctaStripContainer p {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: rgba(252, 248, 242, 0.75);
+}
+
+.ctaMenuLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-button);
+  color: var(--color-heading);
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 0.85rem 1.8rem;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  box-shadow: var(--shadow-gold);
+  transition: all 0.3s ease;
+}
+
+.ctaMenuLink:hover {
+  background: #E5B22A;
+  transform: translateY(-2px);
 }

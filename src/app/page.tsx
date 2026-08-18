@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/Button/Button';
-import { Card } from '@/components/Card/Card';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Sparkles, Star, Award, ShieldCheck, Truck, Heart, ArrowRight, Clock, Cake } from 'lucide-react';
 import styles from './page.module.css';
 import Link from 'next/link';
 import { db } from '@/lib/firebase';
@@ -34,7 +33,7 @@ export default function Home() {
           {
             id: 'cakes',
             name: 'Cakes',
-            tagline: 'Dry, Cool & Fancy',
+            tagline: 'Dry, Cool & Custom Designer',
             image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&auto=format&fit=crop&q=80',
             subcategories: [
               'Dry Cakes',
@@ -48,21 +47,21 @@ export default function Home() {
           {
             id: 'desserts',
             name: 'Desserts',
-            tagline: 'Sweet Indulgences',
+            tagline: 'Gourmet Sweet Indulgences',
             image: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&auto=format&fit=crop&q=80',
             subcategories: []
           },
           {
             id: 'cookies',
             name: 'Cookies',
-            tagline: 'Freshly Baked',
+            tagline: 'Oven-Fresh Butter Delights',
             image: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&auto=format&fit=crop&q=80',
             subcategories: []
           },
           {
             id: 'combos',
             name: 'Combos',
-            tagline: 'Perfect Pairings',
+            tagline: 'Celebration Boxes & Treats',
             image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&auto=format&fit=crop&q=80',
             subcategories: []
           }
@@ -78,9 +77,33 @@ export default function Home() {
     return () => unsub();
   }, []);
 
+  const testimonials = [
+    {
+      name: "Priya Sharma",
+      location: "Vijayawada",
+      comment: "The customized chocolate truffle cake for our anniversary was sheer perfection! Rich flavor, delicate texture, and gorgeous presentation.",
+      rating: 5,
+      role: "Verified Customer"
+    },
+    {
+      name: "Rajesh Varma",
+      location: "Tadepalle",
+      comment: "Best artisan bakery in the region. Their fondant craftsmanship and fresh fruit fillings are unmatched in Vijayawada.",
+      rating: 5,
+      role: "Regular Foodie"
+    },
+    {
+      name: "Sneha Reddy",
+      location: "Guntur",
+      comment: "Ordered a 3-tier designer cake for my daughter's birthday. Every single guest complimented the taste. 10/10 recommend Bake Factory!",
+      rating: 5,
+      role: "Party Host"
+    }
+  ];
+
   return (
     <div className={styles.page}>
-      {/* Hero Section */}
+      {/* 1. Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <div className={styles.heroBadge}>
@@ -99,7 +122,7 @@ export default function Home() {
           <div className={styles.ctaButtons}>
             <Link href="/menu">
               <button className={styles.exploreBtn}>
-                Explore Menu <span className={styles.arrowIcon}>→</span>
+                Explore Menu <span className={styles.arrowIcon}>&rarr;</span>
               </button>
             </Link>
             <Link href="/about">
@@ -142,91 +165,225 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats Bar */}
-      <div className={styles.statsBar}>
+      {/* 2. Elevated Stats Bar */}
+      <section className={styles.statsBar}>
         <div className={styles.statItem}>
           <span className={styles.statNum}>5+</span>
-          <span className={styles.statLabel}>YEARS</span>
+          <span className={styles.statLabel}>YEARS OF EXCELLENCE</span>
         </div>
         <div className={styles.statItem}>
           <span className={styles.statNum}>50+</span>
-          <span className={styles.statLabel}>RECIPES</span>
+          <span className={styles.statLabel}>GOURMET RECIPES</span>
         </div>
         <div className={styles.statItem}>
           <span className={styles.statNum}>10K+</span>
-          <span className={styles.statLabel}>CUSTOMERS</span>
+          <span className={styles.statLabel}>HAPPY CLIENTS</span>
         </div>
         <div className={styles.statItem}>
           <span className={styles.statNum}>100%</span>
-          <span className={styles.statLabel}>FRESH</span>
+          <span className={styles.statLabel}>FRESHLY BAKED</span>
         </div>
-      </div>
+      </section>
 
-      {/* About Snippet */}
+      {/* 3. Featured Categories Collection */}
+      <section className={styles.categories}>
+        <div className={styles.sectionHeaderCenter}>
+          <div className={styles.collectionHeading}>OUR SIGNATURE COLLECTION</div>
+          <h2 className={styles.sectionTitle}>Indulge in Handcrafted Perfection</h2>
+          <p className={styles.sectionSubtitle}>
+            From velvety rich fondants to melt-in-the-mouth artisan pastries, explore our freshly baked creations.
+          </p>
+        </div>
+
+        <div className={styles.categoryGrid}>
+          {categories.map((cat, idx) => (
+            <motion.div
+              key={cat.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+            >
+              <Link 
+                href={`/menu?category=${cat.id}`} 
+                className={styles.categoryCard}
+              >
+                <div className={styles.imageContainer}>
+                  <div className={styles.peekingBadge}>
+                    <span>View &rarr;</span>
+                  </div>
+                  
+                  <div 
+                    className={styles.categoryImage} 
+                    style={{ backgroundImage: `url(${cat.image})` }}
+                  />
+                </div>
+                <h3 className={styles.categoryTitle}>{cat.name}</h3>
+                <p className={styles.categoryTagline}>{cat.tagline}</p>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className={styles.centerAction}>
+          <Link href="/menu">
+            <button className={styles.viewFullMenuBtn}>
+              Explore Full Dessert Menu <ArrowRight size={18} />
+            </button>
+          </Link>
+        </div>
+      </section>
+
+      {/* 4. Artisanal Philosophy / Why Choose Us */}
+      <section className={styles.featuresSection}>
+        <div className={styles.featuresContainer}>
+          <div className={styles.sectionHeaderCenter}>
+            <div className={styles.collectionHeading}>THE BAKE FACTORY STANDARD</div>
+            <h2 className={styles.sectionTitle}>Why Dessert Lovers Choose Us</h2>
+          </div>
+
+          <div className={styles.featuresGrid}>
+            <div className={styles.featureCard}>
+              <div className={styles.featureIconWrap}>
+                <Award size={28} />
+              </div>
+              <h3>Master Patisserie Quality</h3>
+              <p>Every cake is sculpted by seasoned bakers using time-tested European techniques and premium chocolates.</p>
+            </div>
+
+            <div className={styles.featureCard}>
+              <div className={styles.featureIconWrap}>
+                <ShieldCheck size={28} />
+              </div>
+              <h3>100% Pure & Fresh</h3>
+              <p>No artificial preservatives or frozen batters. Only fresh dairy butter, real vanilla, and organic fruits.</p>
+            </div>
+
+            <div className={styles.featureCard}>
+              <div className={styles.featureIconWrap}>
+                <Cake size={28} />
+              </div>
+              <h3>Bespoke Custom Designs</h3>
+              <p>Dreaming of a custom theme, wedding masterpiece, or photo cake? We bring your celebration vision to life.</p>
+            </div>
+
+            <div className={styles.featureCard}>
+              <div className={styles.featureIconWrap}>
+                <Truck size={28} />
+              </div>
+              <h3>Safe & Timely Delivery</h3>
+              <p>Temperature-controlled careful handling so your tiered creations arrive pristine and ready to celebrate.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. About Story Snippet */}
       <section className={styles.aboutSnippet}>
         <div className={styles.aboutGrid}>
           <motion.div 
             className={styles.aboutText}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
           >
-            <h2>Our Story</h2>
-            <p>At Bake Factory, we believe that every celebration deserves a touch of sweetness. Founded by passionate bakers, we use only the finest ingredients to bring you recipes that have been perfected over time.</p>
-            <Link href="/about" className={styles.linkButton}>
-              Read more about us <ChevronRight size={16} />
+            <div className={styles.collectionHeading}>OUR BAKERY HERITAGE</div>
+            <h2>Crafted with Passion, Rooted in Love</h2>
+            <p>
+              At Bake Factory, we believe that every celebration deserves a touch of sweetness. Founded by passionate bakers in Vijayawada, we use only the finest natural ingredients to bring you recipes that have been perfected over time.
+            </p>
+            <p>
+              From morning fresh cookies to showstopper multi-tier wedding cakes, our ovens never stop creating moments of pure delight.
+            </p>
+
+            <div className={styles.aboutHighlights}>
+              <div className={styles.highlightItem}>
+                <span className={styles.highlightDot}>✦</span>
+                <span>FSSAI Certified Food Standards</span>
+              </div>
+              <div className={styles.highlightItem}>
+                <span className={styles.highlightDot}>✦</span>
+                <span>Eggless & Custom Dietary Options</span>
+              </div>
+            </div>
+
+            <Link href="/about" className={styles.storyLinkBtn}>
+              Read Our Full Story <ChevronRight size={18} />
             </Link>
           </motion.div>
+
           <motion.div 
             className={styles.aboutImageWrapper}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
           >
             {bakeryImage ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={bakeryImage} alt="Bake Factory Bakery" className={styles.aboutImage} />
+              <img src={bakeryImage} alt="Bake Factory Bakery Studio" className={styles.aboutImage} />
             ) : (
               <div className={styles.aboutImagePlaceholder}>
-                <div className={styles.placeholderImg}>Bakery Image</div>
+                <div className={styles.placeholderImg}>
+                  <Cake size={48} />
+                  <span>Artisan Bakery Studio</span>
+                </div>
               </div>
             )}
+            <div className={styles.floatingStoryBadge}>
+              <Award size={20} className={styles.goldBadgeIcon} />
+              <div>
+                <strong>Vijayawada's Favorite</strong>
+                <span>Artisan Dessert House</span>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Featured Categories */}
-      <section className={styles.categories}>
-        <div className={styles.collectionHeading}>OUR COLLECTION</div>
-        <h2 className={styles.sectionTitle}>Explore Categories</h2>
-        <div className={styles.categoryGrid}>
-          {categories.map((cat) => (
-            <Link 
-              key={cat.id} 
-              href={`/menu?category=${cat.id}`} 
-              className={styles.categoryCard}
-            >
-              <div className={styles.imageContainer}>
-                {/* Peeking Badge */}
-                <div className={styles.peekingBadge} />
-                
-                {/* Oval Image */}
-                <div 
-                  className={styles.categoryImage} 
-                  style={{ backgroundImage: `url(${cat.image})` }}
-                />
+      {/* 6. Testimonials Section */}
+      <section className={styles.testimonialsSection}>
+        <div className={styles.testimonialsContainer}>
+          <div className={styles.sectionHeaderCenter}>
+            <div className={styles.collectionHeading}>CUSTOMER LOVE</div>
+            <h2 className={styles.sectionTitle}>Sweet Words from Our Patrons</h2>
+          </div>
+
+          <div className={styles.testimonialsGrid}>
+            {testimonials.map((item, idx) => (
+              <div key={idx} className={styles.testimonialCard}>
+                <div className={styles.testimonialStars}>★★★★★</div>
+                <p className={styles.testimonialText}>"{item.comment}"</p>
+                <div className={styles.testimonialAuthor}>
+                  <div className={styles.authorAvatar}>{item.name[0]}</div>
+                  <div>
+                    <strong>{item.name}</strong>
+                    <span>{item.location} • {item.role}</span>
+                  </div>
+                </div>
               </div>
-              <h3 className={styles.categoryTitle}>{cat.name}</h3>
-              <p className={styles.categoryTagline}>{cat.tagline}</p>
-            </Link>
-          ))}
+            ))}
+          </div>
         </div>
-        <div className={styles.centerAction}>
-           <Link href="/menu">
-             <Button variant="secondary">View Full Menu</Button>
-           </Link>
+      </section>
+
+      {/* 7. Call To Action Strip */}
+      <section className={styles.ctaSection}>
+        <div className={styles.ctaCard}>
+          <div className={styles.ctaContent}>
+            <span className={styles.ctaTag}>✦ READY FOR SOMETHING SWEET?</span>
+            <h2>Order Your Custom Celebration Cake Today</h2>
+            <p>Choose from our delicious catalog or speak directly with our head pastry chef for bespoke designs.</p>
+            <div className={styles.ctaButtonRow}>
+              <Link href="/menu">
+                <button className={styles.ctaPrimaryBtn}>Order Online Now &rarr;</button>
+              </Link>
+              <Link href="/contact">
+                <button className={styles.ctaSecondaryBtn}>Custom Cake Consultation</button>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </div>

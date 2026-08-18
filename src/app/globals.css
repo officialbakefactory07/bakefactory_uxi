@@ -1,19 +1,43 @@
 :root {
   /* Bake Factory Luxury Color Palette */
-  --color-background-cream: #FDFBF7;
-  --color-background-cream-dark: #F5EEE1;
+  --color-background-cream: #FCF8F2;
+  --color-background-cream-dark: #F4ECE1;
   --color-background-white: #FFFFFF;
-  --color-header-footer: #2C1810;
-  --color-heading: #2C1810;
-  --color-body-text: #4A3E37;
+  --color-header-footer: #23160E;
+  --color-heading: #23160E;
+  --color-body-text: #48382E;
+  --color-body-muted: #7E6B5F;
+  --color-border: rgba(35, 22, 14, 0.09);
+  --color-border-gold: rgba(212, 160, 23, 0.3);
+  
   --color-button: #D4A017;
   --color-button-dark: #B8820B;
   --color-gold-accent: #E5B22A;
-  --color-gold-gradient: linear-gradient(135deg, #F3D287 0%, #D4A017 50%, #B8820B 100%);
-  --color-hover-accent: #C96B2C;
+  --color-gold-gradient: linear-gradient(135deg, #F5D78E 0%, #D4A017 50%, #B8820B 100%);
+  --color-hover-accent: #C86A3D;
+  --color-success: #2E7D32;
+  --color-error: #D32F2F;
 
+  /* Typography Variables */
   --font-luxury: var(--font-cormorant), var(--font-playfair), Georgia, serif;
-  --font-sans: var(--font-jakarta), var(--font-poppins), system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), var(--font-poppins), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(35, 22, 14, 0.04);
+  --shadow-md: 0 8px 24px rgba(35, 22, 14, 0.08);
+  --shadow-lg: 0 16px 48px rgba(35, 22, 14, 0.12);
+  --shadow-gold: 0 8px 30px rgba(212, 160, 23, 0.25);
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html, body {
@@ -33,10 +57,35 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D8C7B5;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #BFA791;
+}
+
+/* Text Selection */
+::selection {
+  background: rgba(212, 160, 23, 0.25);
+  color: var(--color-heading);
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-luxury);
   color: var(--color-heading);
   letter-spacing: -0.01em;
+  font-weight: 600;
 }
 
 * {
@@ -50,8 +99,28 @@ a {
   text-decoration: none;
 }
 
+button {
+  font-family: var(--font-sans);
+}
+
 main {
-  flex: 1; /* Pushes footer to bottom */
+  flex: 1;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow-md);
+}
+
+.gold-gradient-text {
+  background: var(--color-gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
 }
 
 /* Cart Icon Bump Animation */

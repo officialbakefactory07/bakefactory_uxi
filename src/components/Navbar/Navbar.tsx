@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
-import { ShoppingBag, User, Package, Heart, MapPin, LogOut, ChevronDown, Menu, X } from 'lucide-react';
+import { ShoppingBag, User, Package, Heart, MapPin, LogOut, ChevronDown, Menu, X, PhoneCall, Sparkles } from 'lucide-react';
 import styles from './Navbar.module.css';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -48,16 +48,14 @@ export const Navbar = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-      if (scrollTop > 10) {
+      if (scrollTop > 15) {
         setScrolled(true);
       } else {
         setScrolled(false);
       }
     };
     
-    // Listen to scroll events
     window.addEventListener('scroll', handleScroll, { passive: true });
-    // Trigger on mount to handle refreshed scroll positions
     handleScroll();
     
     return () => window.removeEventListener('scroll', handleScroll);
@@ -101,10 +99,18 @@ export const Navbar = () => {
 
   const isHome = pathname === '/';
 
+  const navLinks = [
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about' },
+    { name: 'Menu', href: '/menu' },
+    { name: 'Contact', href: '/contact' },
+  ];
+
   return (
-    <nav className={`${styles.navbar} ${(isHome && !scrolled) ? styles.transparent : ''} ${scrolled ? styles.scrolled : ''}`}>
+    <header className={`${styles.navbar} ${(isHome && !scrolled) ? styles.transparent : ''} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
-        <Link href="/" className={styles.logo}>
+        {/* Brand Logo */}
+        <Link href="/" className={styles.logo} aria-label="Bake Factory Home">
           <div className={styles.logoWrapper}>
             <Image
               src="/logo.png"
@@ -115,33 +121,55 @@ export const Navbar = () => {
               priority
             />
           </div>
+          <div className={styles.brandText}>
+            <span className={styles.brandTitle}>BAKE FACTORY</span>
+            <span className={styles.brandSubtitle}>Cakes & Gourmet Desserts</span>
+          </div>
         </Link>
 
-        <div className={styles.links}>
-          <Link href="/" className={styles.link}>Home</Link>
-          <Link href="/about" className={styles.link}>About</Link>
-          <Link href="/menu" className={styles.link}>Menu</Link>
-          <Link href="/contact" className={styles.link}>Contact</Link>
-        </div>
+        {/* Desktop Navigation Links */}
+        <nav className={styles.links} aria-label="Primary Navigation">
+          {navLinks.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link 
+                key={item.href} 
+                href={item.href} 
+                className={`${styles.link} ${isActive ? styles.activeLink : ''}`}
+              >
+                {item.name}
+              </Link>
+            );
+          })}
+        </nav>
 
+        {/* Right Utility Section */}
         <div className={styles.rightSection}>
+          {/* Direct WhatsApp / Call Shortcut on larger screens */}
+          <a href="tel:+917989499446" className={styles.phoneQuickLink} title="Call Bakery">
+            <PhoneCall size={17} />
+            <span>Order Hotline</span>
+          </a>
+
           {/* Cart Icon */}
-          <Link href="/cart" className={styles.cartLink} id="cart-link">
-            <ShoppingBag size={22} />
-            {totalItems > 0 && <span className={styles.cartBadge}>{totalItems}</span>}
+          <Link href="/cart" className={styles.cartLink} id="cart-link" aria-label="Shopping Cart">
+            <div className={styles.cartIconWrapper}>
+              <ShoppingBag size={21} />
+              {totalItems > 0 && <span className={styles.cartBadge}>{totalItems}</span>}
+            </div>
           </Link>
 
-          {/* Auth Section */}
+          {/* Auth / Profile Section */}
           {user ? (
             <div className={styles.profileWrap} ref={dropdownRef}>
               <button
                 className={styles.avatarBtn}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                aria-label="Profile menu"
+                aria-label="User Profile Menu"
               >
                 {getAvatarSrc() ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={getAvatarSrc()!} alt="avatar" className={styles.avatarImg} />
+                  <img src={getAvatarSrc()!} alt="User Avatar" className={styles.avatarImg} />
                 ) : (
                   <div className={styles.avatarInitials}>
                     {getInitials(profile?.fullName || user.displayName || user.email)}
@@ -153,7 +181,7 @@ export const Navbar = () => {
               {dropdownOpen && (
                 <div className={styles.dropdown}>
                   <div className={styles.dropdownHeader}>
-                    <strong>{user.displayName || user.email?.split('@')[0]}</strong>
+                    <strong>{profile?.fullName || user.displayName || user.email?.split('@')[0]}</strong>
                     <span>{user.email}</span>
                   </div>
                   <div className={styles.dropdownDivider} />
@@ -177,29 +205,52 @@ export const Navbar = () => {
               )}
             </div>
           ) : (
-            <Link href="/login" className={styles.loginLink}>Login</Link>
+            <Link href="/login" className={styles.loginLink}>
+              <span>Login</span>
+            </Link>
           )}
 
-          {/* Hamburger Menu Icon */}
+          {/* Hamburger Menu Button */}
           <button
             className={styles.hamburgerBtn}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle mobile menu"
+            aria-label="Toggle Navigation Menu"
           >
-            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className={styles.mobileMenu}>
-          <Link href="/" className={styles.mobileLink}>Home</Link>
-          <Link href="/about" className={styles.mobileLink}>About</Link>
-          <Link href="/menu" className={styles.mobileLink}>Menu</Link>
-          <Link href="/contact" className={styles.mobileLink}>Contact</Link>
+          <div className={styles.mobileLinks}>
+            {navLinks.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`${styles.mobileLink} ${isActive ? styles.mobileActiveLink : ''}`}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className={styles.mobileFooterActions}>
+            <a href="tel:+917989499446" className={styles.mobilePhoneBtn}>
+              <PhoneCall size={16} /> Call +91 79894 99446
+            </a>
+            {!user && (
+              <Link href="/login" className={styles.mobileLoginBtn}>
+                Login / Register
+              </Link>
+            )}
+          </div>
         </div>
       )}
-    </nav>
+    </header>
   );
 };
