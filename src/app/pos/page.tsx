@@ -593,11 +593,14 @@ export default function PosTerminal() {
                   />
                 </div>
                 <div className={styles.quickCashChips}>
-                  {[netTotal, 100, 200, 500, 2000].filter(n => n >= netTotal).slice(0, 4).map(val => (
-                    <button key={val} onClick={() => setCashTendered(val.toString())}>
-                      ₹{val}
-                    </button>
-                  ))}
+                  {Array.from(new Set([netTotal, 100, 200, 500, 2000]))
+                    .filter(n => n >= netTotal && n > 0)
+                    .slice(0, 4)
+                    .map((val, idx) => (
+                      <button key={`cash-chip-${val}-${idx}`} onClick={() => setCashTendered(val.toString())}>
+                        {val === netTotal ? `Exact (₹${val})` : `₹${val}`}
+                      </button>
+                    ))}
                 </div>
                 {parsedCash > 0 && (
                   <div className={styles.changeDueRow}>
