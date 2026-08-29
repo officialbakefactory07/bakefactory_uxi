@@ -8,14 +8,14 @@ import { Footer } from '@/components/Footer/Footer';
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   
-  // Do not show public Navbar and Footer on admin dashboard pages
-  const isAdminPage = pathname.startsWith('/dmins');
+  // Do not show public Navbar and Footer on admin or pos billing pages
+  const isSpecialAppPage = pathname.startsWith('/dmins') || pathname.startsWith('/pos');
 
   return (
     <>
-      {!isAdminPage && <Navbar />}
+      {!isSpecialAppPage && <Navbar />}
       {children}
-      {!isAdminPage && <Footer />}
+      {!isSpecialAppPage && <Footer />}
     </>
   );
 }

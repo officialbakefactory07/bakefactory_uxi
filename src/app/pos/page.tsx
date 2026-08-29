@@ -4,11 +4,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { db } from '@/lib/firebase';
-import { collection, onSnapshot, addDoc, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
 import { 
   Search, Plus, Minus, Trash2, ShoppingBag, CreditCard, 
   Banknote, QrCode, User, Phone, Tag, Edit3, Printer, 
-  RotateCcw, CheckCircle2, Clock, LogOut, FileText, ChevronRight, X, Sparkles, Layers
+  RotateCcw, CheckCircle2, Clock, LogOut, FileText, ChevronRight, X, Sparkles, ArrowLeft, ArrowRight
 } from 'lucide-react';
 import { ReceiptData, ReceiptItem } from '@/lib/escpos';
 import { ReceiptModal } from '@/components/POS/ReceiptModal';
@@ -41,6 +41,9 @@ export default function PosTerminal() {
   const [loadingMenu, setLoadingMenu] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Mobile View Tab: 'menu' | 'cart'
+  const [mobileTab, setMobileTab] = useState<'menu' | 'cart'>('menu');
 
   // Cart & Order State
   const [cart, setCart] = useState<PosCartItem[]>([]);
@@ -154,9 +157,14 @@ export default function PosTerminal() {
     setCustomerPhone('');
     setDiscountVal(0);
     setCashTendered('');
+    setMobileTab('menu');
   };
 
   // 5. Calculations
+  const totalCartCount = useMemo(() => {
+    return cart.reduce((sum, item) => sum + item.quantity, 0);
+  }, [cart]);
+
   const subtotal = useMemo(() => {
     return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }, [cart]);
@@ -280,31 +288,47 @@ export default function PosTerminal() {
       {/* ── Top Header Navigation ── */}
       <header className={styles.topNav}>
         <div className={styles.navBrand}>
-          <Image src="/logo.png" alt="Bake Factory" width={38} height={38} style={{ mixBlendMode: 'multiply' }} />
+          <Image src="/logo.png" alt="Bake Factory" width={34} height={34} style={{ mixBlendMode: 'multiply' }} />
           <div>
             <strong>BAKE FACTORY POS</strong>
-            <span>Billing Terminal • {cashierSession?.cashierName || 'Counter 1'}</span>
+            <span>{cashierSession?.cashierName || 'Terminal 1'}</span>
           </div>
         </div>
 
         <div className={styles.navActions}>
           <button className={styles.shiftBtn} onClick={() => setShowShiftModal(true)}>
-            <FileText size={16} />
-            <span>Shift Summary (₹{shiftTotals.totalSales.toFixed(0)})</span>
+            <FileText size={15} />
+            <span className={styles.hideMobile}>Shift </span>(₹{shiftTotals.totalSales.toFixed(0)})
           </button>
 
           <button className={styles.logoutBtn} onClick={handleLogout} title="Sign Out">
-            <LogOut size={16} />
-            <span>Logout</span>
+            <LogOut size={15} />
+            <span className={styles.hideMobile}>Logout</span>
           </button>
         </div>
       </header>
+
+      {/* ── Mobile Tab Switcher ── */}
+      <div className={styles.mobileTabBar}>
+        <button 
+          className={`${styles.mobileTabBtn} ${mobileTab === 'menu' ? styles.mobileTabActive : ''}`}
+          onClick={() => setMobileTab('menu')}
+        >
+          🍰 Menu Catalog
+        </button>
+        <button 
+          className={`${styles.mobileTabBtn} ${mobileTab === 'cart' ? styles.mobileTabActive : ''}`}
+          onClick={() => setMobileTab('cart')}
+        >
+          🛒 Current Bill ({totalCartCount}) • ₹{netTotal.toFixed(0)}
+        </button>
+      </div>
 
       {/* ── Main POS Workspace ── */}
       <div className={styles.workspace}>
         
         {/* ── Left Side: Menu Grid & Category Filters ── */}
-        <section className={styles.menuPanel}>
+        <section className={`${styles.menuPanel} ${mobileTab === 'cart' ? styles.hideOnMobile : ''}`}>
           
           {/* Search & Category Tabs */}
           <div className={styles.menuControls}>
@@ -312,7 +336,7 @@ export default function PosTerminal() {
               <Search size={18} className={styles.searchIcon} />
               <input 
                 type="text" 
-                placeholder="Search cake, cookies, dessert name..."
+                placeholder="Search cake, cookie, pastry..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={styles.searchInput}
@@ -362,7 +386,7 @@ export default function PosTerminal() {
                       <span className={styles.prodName}>{item.name}</span>
                       <div className={styles.prodPriceRow}>
                         <span className={styles.prodPrice}>₹{item.price.toFixed(0)}</span>
-                        {inCart && <span className={styles.qtyBadge}>{inCart.quantity} in cart</span>}
+                        {inCart && <span className={styles.qtyBadge}>{inCart.quantity} in bill</span>}
                       </div>
                     </div>
                   </div>
@@ -371,11 +395,33 @@ export default function PosTerminal() {
             )}
           </div>
 
+          {/* Floating Mobile Bill Bar */}
+          {cart.length > 0 && mobileTab === 'menu' && (
+            <div className={styles.floatingMobileBar} onClick={() => setMobileTab('cart')}>
+              <div className={styles.floatingBarInfo}>
+                <ShoppingBag size={18} />
+                <span><strong>{totalCartCount} Items</strong> • ₹{netTotal.toFixed(0)}</span>
+              </div>
+              <div className={styles.floatingBarAction}>
+                <span>View Bill & Print</span>
+                <ArrowRight size={16} />
+              </div>
+            </div>
+          )}
+
         </section>
 
         {/* ── Right Side: Fast Cart & Checkout Drawer ── */}
-        <section className={styles.cartPanel}>
+        <section className={`${styles.cartPanel} ${mobileTab === 'menu' ? styles.hideOnMobile : ''}`}>
           
+          {/* Mobile Back Button */}
+          <div className={styles.mobileBackRow}>
+            <button className={styles.backToMenuBtn} onClick={() => setMobileTab('menu')}>
+              <ArrowLeft size={16} /> Add More Items
+            </button>
+            <span className={styles.mobileBillTitle}>Invoice Details</span>
+          </div>
+
           {/* Order Type Selector */}
           <div className={styles.orderTypeSelector}>
             {(['Takeaway', 'Dine-in', 'Delivery'] as const).map(type => (
@@ -415,9 +461,11 @@ export default function PosTerminal() {
           <div className={styles.cartList}>
             {cart.length === 0 ? (
               <div className={styles.cartEmpty}>
-                <ShoppingBag size={38} className={styles.emptyCartIcon} />
+                <ShoppingBag size={36} className={styles.emptyCartIcon} />
                 <p>No items in current bill.</p>
-                <span>Tap any menu item on the left to add</span>
+                <button className={styles.emptyAddBtn} onClick={() => setMobileTab('menu')}>
+                  Browse Menu & Add Items
+                </button>
               </div>
             ) : (
               cart.map(item => (
