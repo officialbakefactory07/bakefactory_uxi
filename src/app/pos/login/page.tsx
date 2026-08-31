@@ -3,13 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Lock, User, KeyRound, ArrowRight, Sparkles, Delete } from 'lucide-react';
+import { Lock, Mail, CreditCard, Eye, EyeOff, ShieldCheck, DollarSign } from 'lucide-react';
+import { verifyCashierLogin } from '@/lib/authStaff';
 import styles from './page.module.css';
 
 export default function PosLogin() {
   const router = useRouter();
-  const [cashierName, setCashierName] = useState('Counter 1 (Main Cashier)');
-  const [pin, setPin] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [openingCash, setOpeningCash] = useState('1000');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -24,47 +26,38 @@ export default function PosLogin() {
     }
   }, [router]);
 
-  const handlePinInput = (num: string) => {
-    if (pin.length < 6) {
-      setPin(prev => prev + num);
-      setError('');
-    }
-  };
-
-  const handleBackspace = () => {
-    setPin(prev => prev.slice(0, -1));
-  };
-
-  const handleClear = () => {
-    setPin('');
-  };
-
-  const handleLoginSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!pin) {
-      setError('Please enter your 4-digit Cashier PIN');
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setError('Please enter both Cashier Email and Password');
       return;
     }
 
     setLoading(true);
     setError('');
 
-    // Default PIN: 1234 or Admin PIN BakeFactory@2026!
-    setTimeout(() => {
-      if (pin === '1234' || pin === '0000' || pin === '9999') {
+    try {
+      const verifiedStaff = await verifyCashierLogin(email, password);
+
+      if (verifiedStaff) {
         const sessionData = {
-          cashierName: cashierName.trim() || 'Cashier 1',
-          loginTime: new Date().toISOString(),
+          cashierName: verifiedStaff.name || 'Counter 1 (Main Cashier)',
+          email: verifiedStaff.email,
+          counterName: verifiedStaff.counterName || 'Counter 1',
           openingCash: parseFloat(openingCash) || 0,
-          id: 'CSH-' + Math.floor(1000 + Math.random() * 9000)
+          loginTime: new Date().toISOString(),
+          id: verifiedStaff.id || 'CSH-' + Math.floor(1000 + Math.random() * 9000)
         };
         localStorage.setItem('bf_cashier_session', JSON.stringify(sessionData));
         router.push('/pos');
       } else {
-        setError('Invalid Cashier PIN. (Default PIN: 1234)');
-        setLoading(false);
+        setError('Invalid Cashier Email or Password. (Check with Admin if password changed)');
       }
-    }, 400);
+    } catch (err: any) {
+      setError('Authentication failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -74,16 +67,18 @@ export default function PosLogin() {
         {/* Header Branding */}
         <div className={styles.brandHeader}>
           <div className={styles.logoWrap}>
-            <Image 
-              src="/logo.png" 
-              alt="Bake Factory" 
-              width={70} 
-              height={70} 
-              style={{ mixBlendMode: 'multiply' }} 
-            />
+            <div className={styles.logoCircle}>
+              <Image 
+                src="/logo.png" 
+                alt="Bake Factory" 
+                width={70} 
+                height={70} 
+                className={styles.logoImg}
+              />
+            </div>
           </div>
           <h2>Bake Factory POS</h2>
-          <p>Cashier & Billing Terminal Login</p>
+          <p>Cashier & Counter Terminal Login</p>
         </div>
 
         {error && <div className={styles.errorBanner}>{error}</div>}
@@ -91,87 +86,69 @@ export default function PosLogin() {
         <form onSubmit={handleLoginSubmit} className={styles.formSection}>
           
           <div className={styles.fieldGroup}>
-            <label>Cashier / Terminal Name</label>
-            <input 
-              type="text" 
-              value={cashierName} 
-              onChange={(e) => setCashierName(e.target.value)}
-              placeholder="e.g. Counter 1"
-              className={styles.inputField}
-              required
-            />
+            <label>Cashier Email / Username</label>
+            <div className={styles.inputWrap}>
+              <Mail size={18} className={styles.inputIcon} />
+              <input 
+                type="text" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="cashier@bakefactory.in"
+                className={styles.inputField}
+                required
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          <div className={styles.fieldGroup}>
+            <label>Cashier Password</label>
+            <div className={styles.inputWrap}>
+              <Lock size={18} className={styles.inputIcon} />
+              <input 
+                type={showPassword ? 'text' : 'password'} 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className={styles.inputField}
+                required
+              />
+              <button 
+                type="button" 
+                className={styles.showPassBtn}
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
 
           <div className={styles.fieldGroup}>
             <label>Opening Cash in Drawer (₹)</label>
-            <input 
-              type="number" 
-              value={openingCash} 
-              onChange={(e) => setOpeningCash(e.target.value)}
-              placeholder="1000"
-              className={styles.inputField}
-            />
-          </div>
-
-          {/* PIN Input Display */}
-          <div className={styles.pinDisplayGroup}>
-            <label>Enter Cashier PIN</label>
-            <div className={styles.pinCircles}>
-              {[0, 1, 2, 3].map((idx) => (
-                <div 
-                  key={idx} 
-                  className={`${styles.pinDot} ${pin.length > idx ? styles.pinDotFilled : ''}`}
-                />
-              ))}
+            <div className={styles.inputWrap}>
+              <DollarSign size={18} className={styles.inputIcon} />
+              <input 
+                type="number" 
+                value={openingCash} 
+                onChange={(e) => setOpeningCash(e.target.value)}
+                placeholder="1000"
+                className={styles.inputField}
+              />
             </div>
-          </div>
-
-          {/* Numeric Touch Keypad */}
-          <div className={styles.keypadGrid}>
-            {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map(num => (
-              <button 
-                key={num} 
-                type="button" 
-                className={styles.keypadBtn}
-                onClick={() => handlePinInput(num)}
-              >
-                {num}
-              </button>
-            ))}
-            <button 
-              type="button" 
-              className={`${styles.keypadBtn} ${styles.keypadActionBtn}`}
-              onClick={handleClear}
-            >
-              C
-            </button>
-            <button 
-              type="button" 
-              className={styles.keypadBtn}
-              onClick={() => handlePinInput('0')}
-            >
-              0
-            </button>
-            <button 
-              type="button" 
-              className={`${styles.keypadBtn} ${styles.keypadActionBtn}`}
-              onClick={handleBackspace}
-            >
-              <Delete size={18} />
-            </button>
           </div>
 
           <button 
             type="submit" 
             className={styles.loginBtn}
-            disabled={loading || pin.length < 4}
+            disabled={loading}
           >
             {loading ? 'Starting Shift...' : 'Open Register & Start Billing →'}
           </button>
         </form>
 
         <div className={styles.footerNote}>
-          <span>Default Cashier PIN: <strong>1234</strong></span>
+          <span>Default: <strong>cashier@bakefactory.in</strong> / <strong>Cashier@2026</strong></span>
+          <p className={styles.adminNote}>Passwords can be managed & changed inside the Admin Panel.</p>
         </div>
 
       </div>

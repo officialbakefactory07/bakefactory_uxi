@@ -9,6 +9,8 @@ import styles from './page.module.css';
 const ADMIN_USER = process.env.NEXT_PUBLIC_ADMIN_USERNAME || 'bakefactory_admin';
 const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'BakeFactory@2026!';
 
+import { getAdminCredentials } from '@/lib/authStaff';
+
 export default function AdminLogin() {
   const router = useRouter();
   const [username, setUsername] = useState('');
@@ -27,20 +29,24 @@ export default function AdminLogin() {
     }
   }, [router]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    setTimeout(() => {
-      if (username === ADMIN_USER && password === ADMIN_PASS) {
+    try {
+      const liveAdmin = await getAdminCredentials();
+      if (username.trim() === liveAdmin.username && password.trim() === liveAdmin.password) {
         localStorage.setItem('bf_admin_session', 'authenticated');
         router.push('/dmins/dashboard');
       } else {
         setError('Invalid credentials. Access denied.');
         setLoading(false);
       }
-    }, 500);
+    } catch (err) {
+      setError('Login verification failed. Please try again.');
+      setLoading(false);
+    }
   };
 
   return (

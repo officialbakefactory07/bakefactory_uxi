@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { LayoutDashboard, ShoppingCart, UtensilsCrossed, Users, BarChart3, History, Tag, Settings, LogOut, ExternalLink, ChevronLeft, Printer } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, UtensilsCrossed, Users, BarChart3, History, Tag, Settings, LogOut, ExternalLink, ChevronLeft, Printer, KeyRound } from 'lucide-react';
 import styles from './layout.module.css';
 
 const NAV_ITEMS = [
@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { href: '/dmins/dashboard/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/dmins/dashboard/menu', label: 'Menu', icon: UtensilsCrossed },
   { href: '/dmins/dashboard/customers', label: 'Customers', icon: Users },
+  { href: '/dmins/dashboard/staff', label: 'Staff & Passwords', icon: KeyRound },
   { href: '/dmins/dashboard/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/dmins/dashboard/history', label: 'History', icon: History },
   { href: '/dmins/dashboard/offers', label: 'Offers', icon: Tag },
