@@ -222,7 +222,7 @@ export default function Cart() {
 
     setIsSubmitting(true);
     try {
-      await addDoc(collection(db, "orders"), {
+      const orderPayload = {
         userId: user.uid,
         userEmail: user.email,
         userName: profile?.fullName || user.displayName || 'Customer',
@@ -239,7 +239,26 @@ export default function Cart() {
         specialInstructions: instructions,
         status: 'Preparing',
         createdAt: serverTimestamp()
-      });
+      };
+
+      const docRef = await addDoc(collection(db, "orders"), orderPayload);
+
+      // Trigger Resend confirmation email asynchronously
+      if (user.email) {
+        fetch('/api/order-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: user.email,
+            order: {
+              id: docRef.id,
+              ...orderPayload,
+              createdAt: new Date().toISOString()
+            }
+          })
+        }).catch(e => console.error('Error triggering order email:', e));
+      }
+
       clearCart();
       setOrderSuccess(true);
     } catch (error) {

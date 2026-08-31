@@ -7,11 +7,25 @@ import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, MessageSquare } from 'l
 export default function Contact() {
   const [formState, setFormState] = useState({ name: '', email: '', phone: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formState.name || !formState.message) return;
-    setSubmitted(true);
+    setSending(true);
+
+    try {
+      await fetch('/api/contact-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formState)
+      });
+    } catch (err) {
+      console.error("Error submitting contact email:", err);
+    } finally {
+      setSending(false);
+      setSubmitted(true);
+    }
   };
 
   return (
