@@ -37,153 +37,132 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ data, onClose, onNew
     }
   };
 
-  // Robust Thermal & PDF print using dedicated clean iframe
   const handleSystemPrint = () => {
-    const receiptEl = document.getElementById('printable-thermal-receipt');
-    if (!receiptEl) {
+    const printContent = document.getElementById('printable-thermal-receipt');
+    if (!printContent) {
       window.print();
       return;
     }
 
-    const printWindow = document.createElement('iframe');
-    printWindow.style.position = 'absolute';
-    printWindow.style.top = '-9999px';
-    printWindow.style.left = '-9999px';
-    printWindow.style.width = '0px';
-    printWindow.style.height = '0px';
-    printWindow.style.border = 'none';
-
-    document.body.appendChild(printWindow);
-
-    const doc = printWindow.contentWindow?.document;
-    if (!doc) {
+    const printWindow = window.open('', '_blank', 'width=450,height=650');
+    if (!printWindow) {
       window.print();
       return;
     }
 
-    const receiptHtml = receiptEl.outerHTML;
-
-    doc.open();
-    doc.write(`
+    printWindow.document.write(`
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Receipt #${data.invoiceNumber} - Bake Factory</title>
+          <title>Receipt_${data.invoiceNumber}</title>
           <style>
             @page {
               margin: 0;
               size: 80mm auto;
             }
             body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
               margin: 0;
-              padding: 6mm 4mm;
-              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-              color: #000000;
-              background: #FFFFFF;
+              padding: 15px 12px;
+              color: #000;
+              background: #fff;
               font-size: 12px;
               line-height: 1.4;
             }
-            * {
-              box-sizing: border-box;
-            }
-            img {
-              max-width: 60px;
-              height: auto;
-              display: block;
-              margin: 0 auto 6px auto;
-            }
-            .brandTitle {
-              font-size: 18px;
-              font-weight: 800;
-              text-align: center;
-              margin: 0 0 2px 0;
-              letter-spacing: 1px;
-            }
-            .brandTagline {
-              font-size: 10px;
-              font-weight: 700;
-              text-align: center;
-              margin: 0 0 4px 0;
-              text-transform: uppercase;
-            }
-            .brandAddress, .brandPhone {
-              font-size: 10px;
-              text-align: center;
-              margin: 0 0 2px 0;
-              color: #333333;
-            }
-            .divider {
-              border-top: 1px dashed #444444;
-              margin: 6px 0;
-            }
-            .solidDivider {
-              border-top: 1px solid #000000;
-              margin: 6px 0;
-            }
-            .doubleDivider {
-              border-top: 2px double #000000;
-              margin: 6px 0;
-            }
-            .metaRow {
-              display: flex;
-              justify-content: space-between;
-              font-size: 11px;
-              margin: 2px 0;
-            }
-            .tableHeader {
-              display: flex;
-              justify-content: space-between;
-              font-weight: 800;
-              font-size: 11px;
-              margin-bottom: 4px;
-            }
-            .tableRow {
-              display: flex;
-              justify-content: space-between;
-              font-size: 11px;
-              margin: 4px 0;
-            }
-            .itemNote {
-              font-size: 10px;
-              font-style: italic;
-              color: #444444;
-              padding-left: 6px;
-            }
-            .totalRow {
-              display: flex;
-              justify-content: space-between;
-              font-size: 11px;
-              margin: 3px 0;
-            }
-            .grandTotal {
-              font-size: 15px;
-              font-weight: 900;
-              margin: 4px 0;
-            }
-            .footer {
-              text-align: center;
-              font-size: 10px;
-              margin-top: 8px;
-              line-height: 1.4;
-            }
-            .footer strong {
-              font-size: 11px;
-            }
+            * { box-sizing: border-box; }
+            .logo-center { text-align: center; margin-bottom: 8px; }
+            .logo-center img { width: 55px; height: 55px; object-fit: contain; }
+            .title { font-size: 18px; font-weight: 800; text-align: center; margin: 0; }
+            .tagline { font-size: 10px; font-weight: 700; text-align: center; margin: 2px 0 4px; }
+            .address { font-size: 10px; text-align: center; margin: 0; color: #444; }
+            .hr-dash { border-top: 1px dashed #000; margin: 8px 0; }
+            .hr-solid { border-top: 1px solid #000; margin: 8px 0; }
+            .hr-double { border-top: 2px double #000; margin: 8px 0; }
+            .row { display: flex; justify-content: space-between; margin: 3px 0; font-size: 11px; }
+            table { width: 100%; border-collapse: collapse; margin: 6px 0; font-size: 11px; }
+            th { text-align: left; padding: 4px 0; border-bottom: 1px solid #000; font-weight: 700; }
+            td { padding: 4px 0; vertical-align: top; }
+            .text-right { text-align: right; }
+            .text-center { text-align: center; }
+            .note { font-size: 10px; font-style: italic; color: #444; padding-left: 6px; }
+            .grand-total { font-size: 15px; font-weight: 900; }
+            .footer { text-align: center; font-size: 10px; margin-top: 10px; line-height: 1.4; }
           </style>
         </head>
         <body>
-          ${receiptHtml}
+          <div class="logo-center">
+            <img src="/logo.png" alt="Bake Factory" />
+          </div>
+          <div class="title">BAKE FACTORY</div>
+          <div class="tagline">CAKES & GOURMET DESSERTS</div>
+          <div class="address">Catholic Church Area, Tadepalle, Vijayawada</div>
+          <div class="address">Hotline: +91 79894 99446</div>
+          
+          <div class="hr-dash"></div>
+          
+          <div class="row"><span><strong>Invoice:</strong> #${data.invoiceNumber}</span><span><strong>Type:</strong> ${data.orderType}</span></div>
+          <div class="row"><span><strong>Date:</strong> ${data.dateStr || new Date().toLocaleDateString('en-IN')}</span><span><strong>Time:</strong> ${data.timeStr || new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span></div>
+          ${data.customerName ? `<div class="row"><span><strong>Customer:</strong> ${data.customerName}</span><span>${data.customerPhone || ''}</span></div>` : ''}
+          ${data.cashierName ? `<div class="row"><span><strong>Cashier:</strong> ${data.cashierName}</span></div>` : ''}
+
+          <div class="hr-solid"></div>
+
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 50%;">ITEM</th>
+                <th class="text-center" style="width: 15%;">QTY</th>
+                <th class="text-right" style="width: 15%;">RATE</th>
+                <th class="text-right" style="width: 20%;">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.items.map(item => `
+                <tr>
+                  <td>
+                    <strong>${item.name}</strong>
+                    ${item.note ? `<div class="note">↳ "${item.note}"</div>` : ''}
+                  </td>
+                  <td class="text-center">${item.quantity}</td>
+                  <td class="text-right">₹${item.price.toFixed(0)}</td>
+                  <td class="text-right"><strong>₹${(item.quantity * item.price).toFixed(0)}</strong></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <div class="hr-solid"></div>
+
+          <div class="row"><span>Subtotal:</span><span>₹${data.subtotal.toFixed(0)}</span></div>
+          ${data.discount > 0 ? `<div class="row" style="color: #c00;"><span>Discount:</span><span>-₹${data.discount.toFixed(0)}</span></div>` : ''}
+          ${data.deliveryFee && data.deliveryFee > 0 ? `<div class="row"><span>Delivery:</span><span>₹${data.deliveryFee.toFixed(0)}</span></div>` : ''}
+
+          <div class="hr-double"></div>
+          <div class="row grand-total"><span>NET TOTAL:</span><span>₹${data.total.toFixed(0)}</span></div>
+          <div class="hr-double"></div>
+
+          <div class="row"><span>Payment Mode:</span><strong>${data.paymentMethod}</strong></div>
+          ${data.paymentMethod === 'Cash' && data.cashReceived !== undefined ? `
+            <div class="row"><span>Cash Received:</span><span>₹${data.cashReceived.toFixed(0)}</span></div>
+            <div class="row" style="font-weight: 700;"><span>Change Return:</span><span>₹${(data.changeDue || 0).toFixed(0)}</span></div>
+          ` : ''}
+
+          <div class="hr-dash"></div>
+
+          <div class="footer">
+            <strong>THANK YOU! VISIT AGAIN</strong><br/>
+            Freshly Handcrafted With Passion & Love<br/>
+            FSSAI Certified • www.bakefactory.in
+          </div>
         </body>
       </html>
     `);
-    doc.close();
 
+    printWindow.document.close();
     setTimeout(() => {
-      printWindow.contentWindow?.focus();
-      printWindow.contentWindow?.print();
-      setTimeout(() => {
-        document.body.removeChild(printWindow);
-      }, 1000);
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
     }, 250);
   };
 
@@ -198,7 +177,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ data, onClose, onNew
         {/* Top Header */}
         <div className={styles.header}>
           <div className={styles.headerLeft}>
-            <CheckCircle size={20} className={styles.headerCheckIcon} />
+            <CheckCircle size={22} className={styles.headerCheckIcon} />
             <div>
               <h3>Bill Generated Successfully</h3>
               <span>Invoice #{data.invoiceNumber} • {data.orderType}</span>
@@ -216,146 +195,154 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ data, onClose, onNew
           </div>
         )}
 
-        {/* Unified Luxury Receipt Body */}
+        {/* Scrollable Receipt Body */}
         <div className={styles.receiptScrollArea}>
           <div className={styles.receiptPaper} id="printable-thermal-receipt">
             
             {/* Logo */}
             <div className={styles.logoWrap}>
-              <Image 
-                src="/logo.png" 
-                alt="Bake Factory" 
-                width={70} 
-                height={70} 
-                className={styles.logoImg}
-                priority
-              />
+              <div className={styles.logoCircle}>
+                <Image 
+                  src="/logo.png" 
+                  alt="Bake Factory" 
+                  width={64} 
+                  height={64} 
+                  className={styles.logoImg}
+                  priority
+                />
+              </div>
             </div>
 
             {/* Store Title */}
             <div className={styles.storeHeader}>
-              <h2 className="brandTitle">BAKE FACTORY</h2>
-              <p className="brandTagline">Cakes & Gourmet Desserts</p>
-              <p className="brandAddress">Catholic Church Area, Tadepalle, Vijayawada</p>
-              <p className="brandPhone">Hotline: +91 79894 99446</p>
+              <h2 className={styles.brandTitle}>BAKE FACTORY</h2>
+              <p className={styles.brandTagline}>✦ ARTISANAL CAKES & DESSERT STUDIO ✦</p>
+              <p className={styles.brandAddress}>Catholic Church Area, Tadepalle, Vijayawada</p>
+              <p className={styles.brandPhone}>Hotline: +91 79894 99446</p>
             </div>
 
-            <div className="divider" />
+            <div className={styles.dashedDivider} />
 
-            {/* Meta */}
+            {/* Metadata */}
             <div className={styles.metaSection}>
-              <div className="metaRow">
+              <div className={styles.metaRow}>
                 <span><strong>Invoice:</strong> #{data.invoiceNumber}</span>
-                <span><strong>Type:</strong> {data.orderType}</span>
+                <span className={styles.orderTypeBadge}>{data.orderType.toUpperCase()}</span>
               </div>
-              <div className="metaRow">
+              <div className={styles.metaRow}>
                 <span><strong>Date:</strong> {dateStr}</span>
                 <span><strong>Time:</strong> {timeStr}</span>
               </div>
               {data.customerName && (
-                <div className="metaRow">
+                <div className={styles.metaRow}>
                   <span><strong>Customer:</strong> {data.customerName}</span>
                   {data.customerPhone && <span>{data.customerPhone}</span>}
                 </div>
               )}
               {data.cashierName && (
-                <div className="metaRow">
+                <div className={styles.metaRow}>
                   <span><strong>Cashier:</strong> {data.cashierName}</span>
                 </div>
               )}
             </div>
 
-            <div className="solidDivider" />
+            <div className={styles.solidDivider} />
 
-            {/* Items Table */}
-            <div className={styles.itemsSection}>
-              <div className="tableHeader">
-                <span style={{ flex: 2 }}>ITEM</span>
-                <span style={{ width: '35px', textAlign: 'center' }}>QTY</span>
-                <span style={{ width: '45px', textAlign: 'right' }}>RATE</span>
-                <span style={{ width: '55px', textAlign: 'right' }}>TOTAL</span>
-              </div>
-              <div className="solidDivider" />
+            {/* Items Table with Guaranteed Table Structure */}
+            <table className={styles.billTable}>
+              <thead>
+                <tr>
+                  <th style={{ width: '48%' }}>ITEM</th>
+                  <th style={{ width: '16%', textAlign: 'center' }}>QTY</th>
+                  <th style={{ width: '16%', textAlign: 'right' }}>RATE</th>
+                  <th style={{ width: '20%', textAlign: 'right' }}>AMOUNT</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.items.map((item, idx) => (
+                  <tr key={idx}>
+                    <td>
+                      <div className={styles.itemName}>{item.name}</div>
+                      {item.note && (
+                        <div className={styles.itemNote}>↳ &ldquo;{item.note}&rdquo;</div>
+                      )}
+                    </td>
+                    <td style={{ textAlign: 'center' }}>{item.quantity}</td>
+                    <td style={{ textAlign: 'right' }}>₹{item.price.toFixed(0)}</td>
+                    <td style={{ textAlign: 'right', fontWeight: 700 }}>
+                      ₹{(item.quantity * item.price).toFixed(0)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-              {data.items.map((item, idx) => (
-                <div key={idx} className={styles.itemRow}>
-                  <div className="tableRow">
-                    <span style={{ flex: 2, fontWeight: 600 }}>{item.name}</span>
-                    <span style={{ width: '35px', textAlign: 'center' }}>{item.quantity}</span>
-                    <span style={{ width: '45px', textAlign: 'right' }}>₹{item.price.toFixed(0)}</span>
-                    <span style={{ width: '55px', textAlign: 'right', fontWeight: 700 }}>₹{(item.quantity * item.price).toFixed(0)}</span>
-                  </div>
-                  {item.note && (
-                    <div className="itemNote">↳ Note: &ldquo;{item.note}&rdquo;</div>
-                  )}
-                </div>
-              ))}
-            </div>
+            <div className={styles.solidDivider} />
 
-            <div className="solidDivider" />
-
-            {/* Totals */}
+            {/* Totals Section */}
             <div className={styles.totalsSection}>
-              <div className="totalRow">
+              <div className={styles.totalRow}>
                 <span>Subtotal:</span>
                 <span>₹{data.subtotal.toFixed(0)}</span>
               </div>
+
               {data.discount > 0 && (
-                <div className="totalRow" style={{ color: '#C62828', fontWeight: 700 }}>
-                  <span>Discount:</span>
+                <div className={`${styles.totalRow} ${styles.discountRow}`}>
+                  <span>Discount Applied:</span>
                   <span>-₹{data.discount.toFixed(0)}</span>
                 </div>
               )}
+
               {data.deliveryFee && data.deliveryFee > 0 ? (
-                <div className="totalRow">
-                  <span>Delivery Fee:</span>
+                <div className={styles.totalRow}>
+                  <span>Delivery Charge:</span>
                   <span>₹{data.deliveryFee.toFixed(0)}</span>
                 </div>
               ) : null}
 
-              <div className="doubleDivider" />
+              <div className={styles.doubleDivider} />
 
-              <div className="totalRow grandTotal">
+              <div className={`${styles.totalRow} ${styles.grandTotalRow}`}>
                 <span>NET TOTAL:</span>
                 <span>₹{data.total.toFixed(0)}</span>
               </div>
 
-              <div className="doubleDivider" />
+              <div className={styles.doubleDivider} />
 
-              <div className="totalRow">
+              <div className={styles.totalRow}>
                 <span>Payment Mode:</span>
-                <strong>{data.paymentMethod}</strong>
+                <span className={styles.paymentBadge}>{data.paymentMethod}</span>
               </div>
 
               {data.paymentMethod === 'Cash' && data.cashReceived !== undefined && (
                 <>
-                  <div className="totalRow">
+                  <div className={styles.totalRow}>
                     <span>Cash Received:</span>
                     <span>₹{data.cashReceived.toFixed(0)}</span>
                   </div>
                   {data.changeDue !== undefined && (
-                    <div className="totalRow" style={{ color: '#2E7D32', fontWeight: 700 }}>
-                      <span>Change Due:</span>
-                      <span>₹{data.changeDue.toFixed(0)}</span>
+                    <div className={`${styles.totalRow} ${styles.changeDueRow}`}>
+                      <span>Change Return:</span>
+                      <strong>₹{data.changeDue.toFixed(0)}</strong>
                     </div>
                   )}
                 </>
               )}
             </div>
 
-            <div className="divider" />
+            <div className={styles.dashedDivider} />
 
             {/* Footer */}
-            <div className="footer">
-              <strong>THANK YOU! VISIT AGAIN</strong>
-              <div>Freshly Handcrafted With Passion</div>
-              <div>FSSAI Certified • www.bakefactory.in</div>
+            <div className={styles.receiptFooter}>
+              <strong className={styles.thankYou}>THANK YOU! VISIT AGAIN</strong>
+              <p>Freshly Handcrafted With Passion & Love</p>
+              <p>FSSAI Certified • www.bakefactory.in</p>
             </div>
 
           </div>
         </div>
 
-        {/* Buttons */}
+        {/* Action Buttons */}
         <div className={styles.actions}>
           <button 
             className={styles.btBtn} 
@@ -363,7 +350,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ data, onClose, onNew
             disabled={printingBt}
           >
             <Bluetooth size={16} />
-            <span>{printingBt ? 'Connecting...' : 'Print Bluetooth (ESC/POS)'}</span>
+            <span>{printingBt ? 'Connecting Printer...' : 'Print Bluetooth (ESC/POS)'}</span>
           </button>
 
           <button 
