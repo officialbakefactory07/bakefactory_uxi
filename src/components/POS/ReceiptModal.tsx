@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Bluetooth, Printer, CheckCircle, X, Download, Share2, Sparkles } from 'lucide-react';
+import Image from 'next/image';
+import { Bluetooth, Printer, CheckCircle, X, Download, Share2, Sparkles, Heart } from 'lucide-react';
 import { ReceiptData, printViaBluetooth } from '@/lib/escpos';
 import styles from './ReceiptModal.module.css';
 
@@ -64,39 +65,54 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ data, onClose, onNew
           </div>
         )}
 
-        {/* Thermal Receipt Visual Preview (58mm Paper Roll Look) */}
+        {/* Thermal Receipt Visual Preview */}
         <div className={styles.receiptContainer}>
           <div className={styles.thermalReceipt} id="printable-thermal-receipt">
             
-            {/* Header */}
-            <div className={styles.receiptHeader}>
-              <h2 className={styles.brandTitle}>BAKE FACTORY</h2>
-              <p className={styles.brandTagline}>Cakes & Gourmet Desserts</p>
-              <p className={styles.brandAddress}>Catholic Church Area, Tadepalle, Vijayawada</p>
-              <p className={styles.brandPhone}>Ph: +91 79894 99446</p>
+            {/* Logo Badge */}
+            <div className={styles.receiptLogoWrap}>
+              <div className={styles.receiptLogoCircle}>
+                <Image 
+                  src="/logo.png" 
+                  alt="Bake Factory" 
+                  width={68} 
+                  height={68} 
+                  className={styles.receiptLogoImg}
+                  priority
+                />
+              </div>
             </div>
 
-            <div className={styles.dashedDivider} />
+            {/* Brand Header */}
+            <div className={styles.receiptHeader}>
+              <h2 className={styles.brandTitle}>BAKE FACTORY</h2>
+              <p className={styles.brandTagline}>✦ ARTISANAL CAKES & DESSERT STUDIO ✦</p>
+              <p className={styles.brandAddress}>Catholic Church Area, Tadepalle, Vijayawada</p>
+              <p className={styles.brandPhone}>Hotline: +91 79894 99446</p>
+            </div>
+
+            <div className={styles.goldDivider} />
 
             {/* Meta Info */}
             <div className={styles.receiptMeta}>
               <div className={styles.metaRow}>
-                <span>Invoice: #{data.invoiceNumber}</span>
-                <span>Type: {data.orderType}</span>
+                <span><strong>INVOICE:</strong> #{data.invoiceNumber}</span>
+                <span className={styles.orderTypeBadge}>{data.orderType.toUpperCase()}</span>
               </div>
               <div className={styles.metaRow}>
-                <span>Date: {dateStr}</span>
-                <span>Time: {timeStr}</span>
+                <span><strong>DATE:</strong> {dateStr}</span>
+                <span><strong>TIME:</strong> {timeStr}</span>
               </div>
               {data.customerName && (
                 <div className={styles.metaRow}>
-                  <span>Customer: {data.customerName}</span>
+                  <span><strong>CUSTOMER:</strong> {data.customerName}</span>
                   {data.customerPhone && <span>{data.customerPhone}</span>}
                 </div>
               )}
               {data.cashierName && (
                 <div className={styles.metaRow}>
-                  <span>Cashier: {data.cashierName}</span>
+                  <span><strong>CASHIER:</strong> {data.cashierName}</span>
+                  <span><strong>COUNTER:</strong> Main Register</span>
                 </div>
               )}
             </div>
@@ -106,27 +122,31 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ data, onClose, onNew
             {/* Items Table */}
             <div className={styles.itemsTable}>
               <div className={styles.tableHeader}>
-                <span className={styles.colItem}>ITEM</span>
+                <span className={styles.colItem}>ITEM DESCRIPTION</span>
                 <span className={styles.colQty}>QTY</span>
-                <span className={styles.colTotal}>TOTAL</span>
+                <span className={styles.colPrice}>RATE</span>
+                <span className={styles.colTotal}>AMOUNT</span>
               </div>
               <div className={styles.solidDivider} />
               
               {data.items.map((item, idx) => (
                 <div key={idx} className={styles.itemRowWrapper}>
                   <div className={styles.tableRow}>
-                    <span className={styles.colItem}>{item.name}</span>
-                    <span className={styles.colQty}>{item.quantity}x</span>
+                    <span className={styles.colItem}>
+                      <strong>{item.name}</strong>
+                    </span>
+                    <span className={styles.colQty}>{item.quantity}</span>
+                    <span className={styles.colPrice}>₹{item.price.toFixed(0)}</span>
                     <span className={styles.colTotal}>₹{(item.quantity * item.price).toFixed(0)}</span>
                   </div>
                   {item.note && (
-                    <span className={styles.itemNote}>* Note: {item.note}</span>
+                    <span className={styles.itemNote}>↳ Custom Note: &ldquo;{item.note}&rdquo;</span>
                   )}
                 </div>
               ))}
             </div>
 
-            <div className={styles.dashedDivider} />
+            <div className={styles.solidDivider} />
 
             {/* Bill Summary */}
             <div className={styles.totalsSection}>
@@ -136,42 +156,42 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ data, onClose, onNew
               </div>
               
               {data.discount > 0 && (
-                <div className={styles.totalRow}>
-                  <span>Discount:</span>
+                <div className={`${styles.totalRow} ${styles.discountRow}`}>
+                  <span>Discount Applied:</span>
                   <span>-₹{data.discount.toFixed(0)}</span>
                 </div>
               )}
 
               {data.deliveryFee && data.deliveryFee > 0 ? (
                 <div className={styles.totalRow}>
-                  <span>Delivery Fee:</span>
+                  <span>Delivery Charge:</span>
                   <span>₹{data.deliveryFee.toFixed(0)}</span>
                 </div>
               ) : null}
 
-              <div className={styles.solidDivider} />
+              <div className={styles.doubleDivider} />
 
               <div className={`${styles.totalRow} ${styles.grandTotalRow}`}>
-                <span>NET TOTAL:</span>
+                <span>NET PAYABLE AMOUNT:</span>
                 <span>₹{data.total.toFixed(0)}</span>
               </div>
 
-              <div className={styles.solidDivider} />
+              <div className={styles.doubleDivider} />
 
               <div className={styles.totalRow}>
                 <span>Payment Mode:</span>
-                <strong>{data.paymentMethod}</strong>
+                <strong className={styles.paymentBadge}>{data.paymentMethod}</strong>
               </div>
 
               {data.paymentMethod === 'Cash' && data.cashReceived !== undefined && (
                 <>
                   <div className={styles.totalRow}>
-                    <span>Cash Received:</span>
+                    <span>Cash Tendered:</span>
                     <span>₹{data.cashReceived.toFixed(0)}</span>
                   </div>
                   {data.changeDue !== undefined && (
-                    <div className={styles.totalRow}>
-                      <span>Change Return:</span>
+                    <div className={`${styles.totalRow} ${styles.changeDueRow}`}>
+                      <span>Change Returned:</span>
                       <strong>₹{data.changeDue.toFixed(0)}</strong>
                     </div>
                   )}
@@ -179,13 +199,14 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ data, onClose, onNew
               )}
             </div>
 
-            <div className={styles.dashedDivider} />
+            <div className={styles.goldDivider} />
 
             {/* Footer */}
             <div className={styles.receiptFooter}>
-              <p className={styles.thankYou}>THANK YOU! VISIT AGAIN</p>
-              <p>FSSAI Lic. Certified Quality</p>
-              <p>www.bakefactory.in</p>
+              <p className={styles.thankYou}>THANK YOU FOR YOUR PATRONAGE!</p>
+              <p className={styles.footerTagline}>Freshly Handcrafted With Pure Passion & Love</p>
+              <p className={styles.certText}>FSSAI Certified • 100% Artisanal Quality</p>
+              <p className={styles.webLink}>www.bakefactory.in</p>
             </div>
 
           </div>
@@ -199,7 +220,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ data, onClose, onNew
             disabled={printingBt}
           >
             <Bluetooth size={18} />
-            <span>{printingBt ? 'Connecting...' : 'Print Bluetooth (ESC/POS)'}</span>
+            <span>{printingBt ? 'Connecting Printer...' : 'Print Bluetooth (ESC/POS)'}</span>
           </button>
 
           <button 
@@ -207,7 +228,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ data, onClose, onNew
             onClick={handleSystemPrint}
           >
             <Printer size={18} />
-            <span>System Thermal Print</span>
+            <span>Print Thermal Bill (58mm / 80mm)</span>
           </button>
 
           <button 
