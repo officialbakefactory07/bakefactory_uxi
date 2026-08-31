@@ -64,19 +64,31 @@ export default function PosTerminal() {
 
   // Shift summary live state
   const [shiftOrders, setShiftOrders] = useState<any[]>([]);
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 
-  // 1. Verify Cashier Authentication
+  // 1. Verify Strict Cashier Authentication
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const sessionStr = localStorage.getItem('bf_cashier_session');
-      const adminSession = localStorage.getItem('bf_admin_session');
 
-      if (!sessionStr && adminSession !== 'authenticated') {
+      if (!sessionStr) {
+        setIsAuthorized(false);
         router.replace('/pos/login');
-      } else if (sessionStr) {
-        setCashierSession(JSON.parse(sessionStr));
-      } else if (adminSession === 'authenticated') {
-        setCashierSession({ cashierName: 'Master Admin', id: 'ADM-01', loginTime: new Date().toISOString() });
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(sessionStr);
+        if (parsed && (parsed.cashierName || parsed.id)) {
+          setCashierSession(parsed);
+          setIsAuthorized(true);
+        } else {
+          setIsAuthorized(false);
+          router.replace('/pos/login');
+        }
+      } catch (e) {
+        setIsAuthorized(false);
+        router.replace('/pos/login');
       }
     }
   }, [router]);
@@ -281,6 +293,34 @@ export default function PosTerminal() {
 
     return { totalSales, cashCount, upiCount, billsCount };
   }, [shiftOrders]);
+
+  if (!isAuthorized) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#180E07',
+        color: '#FFFFFF',
+        fontFamily: 'sans-serif',
+        gap: '1rem'
+      }}>
+        <div style={{
+          width: '38px',
+          height: '38px',
+          border: '3px solid rgba(212, 160, 23, 0.2)',
+          borderTopColor: '#D4A017',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite'
+        }} />
+        <p style={{ fontSize: '0.9rem', color: '#D4A017', letterSpacing: '0.05em', fontWeight: 600 }}>
+          🔒 Verifying Cashier Terminal Access...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.posContainer}>
