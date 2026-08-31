@@ -1,3 +1,4 @@
+/* Modal Overlay */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -10,11 +11,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 1.25rem;
   z-index: 9999;
   font-family: var(--font-sans);
 }
 
+/* Modal Frame */
 .modalCard {
   background: #FFFFFF;
   border-radius: var(--radius-lg);
@@ -24,45 +26,46 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
-  border: 1.5px solid var(--color-border);
+  border: 1px solid var(--color-border);
   overflow: hidden;
-  animation: popIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes popIn {
-  from { opacity: 0; transform: scale(0.96) translateY(10px); }
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.header {
+/* Modal Header */
+.modalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.1rem 1.25rem;
+  padding: 1rem 1.25rem;
   background: #FFFFFF;
   border-bottom: 1px solid var(--color-border);
 }
 
-.headerLeft {
+.headerInfo {
   display: flex;
   align-items: center;
   gap: 0.65rem;
 }
 
-.headerCheckIcon {
+.successIcon {
   color: #2E7D32;
   flex-shrink: 0;
 }
 
-.headerLeft h3 {
-  font-family: var(--font-luxury);
-  font-size: 1.2rem;
+.headerInfo h3 {
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--color-heading);
   margin: 0;
 }
 
-.headerLeft span {
+.headerInfo span {
   font-size: 0.75rem;
   color: var(--color-body-muted);
 }
@@ -72,8 +75,8 @@
   border: 1px solid var(--color-border);
   color: var(--color-body-muted);
   cursor: pointer;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -86,8 +89,9 @@
   color: var(--color-heading);
 }
 
+/* Status / Error Banner */
 .statusBanner {
-  padding: 0.65rem 1rem;
+  padding: 0.6rem 1rem;
   font-size: 0.8rem;
   font-weight: 700;
   display: flex;
@@ -108,219 +112,31 @@
   border-bottom: 1px solid #FFCDD2;
 }
 
-/* Scroll Area for Receipt Paper */
-.receiptScrollArea {
+/* ── PREVIEW VIEWPORT ── */
+.previewViewport {
   flex: 1;
   overflow-y: auto;
   padding: 1.25rem;
-  background: #EFE9E1;
+  background: #EBE6DF;
   display: flex;
   justify-content: center;
 }
 
-.receiptPaper {
+/* ── AUTHENTIC THERMAL RECEIPT SHEET ── */
+.receiptSheet {
   background: #FFFFFF;
   width: 100%;
-  max-width: 380px;
-  padding: 1.75rem 1.4rem;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  font-family: var(--font-sans);
-  color: #23160E;
+  max-width: 340px;
+  padding: 16px 14px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #000000;
   box-sizing: border-box;
+  margin: auto 0;
 }
 
-.logoWrap {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0.65rem;
-}
-
-.logoCircle {
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
-  background: #FCF8F2;
-  border: 1.5px solid #D4A017;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px;
-}
-
-.logoImg {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.storeHeader {
-  text-align: center;
-  margin-bottom: 0.65rem;
-}
-
-.brandTitle {
-  font-family: var(--font-luxury);
-  font-size: 1.65rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  color: var(--color-heading);
-  margin: 0 0 0.15rem 0;
-}
-
-.brandTagline {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #8D6208;
-  letter-spacing: 0.04em;
-  margin: 0 0 0.25rem 0;
-}
-
-.brandAddress,
-.brandPhone {
-  font-size: 0.75rem;
-  color: var(--color-body-muted);
-  margin: 0 0 0.15rem 0;
-}
-
-.dashedDivider {
-  border-top: 1px dashed #B8A89A;
-  margin: 0.65rem 0;
-}
-
-.solidDivider {
-  border-top: 1px solid #D8CEC4;
-  margin: 0.5rem 0;
-}
-
-.doubleDivider {
-  border-top: 2px double #23160E;
-  margin: 0.5rem 0;
-}
-
-.metaSection {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-size: 0.78rem;
-  margin: 0.4rem 0;
-}
-
-.metaRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.orderTypeBadge {
-  background: #FEF8E7;
-  border: 1px solid #D4A017;
-  color: #8D6208;
-  font-weight: 800;
-  font-size: 0.68rem;
-  padding: 0.1rem 0.45rem;
-  border-radius: var(--radius-sm);
-}
-
-/* Bill Table */
-.billTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 0.4rem 0;
-  font-size: 0.82rem;
-}
-
-.billTable th {
-  padding: 0.35rem 0;
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #7A695C;
-  border-bottom: 1px solid #D8CEC4;
-  text-align: left;
-}
-
-.billTable td {
-  padding: 0.45rem 0;
-  vertical-align: top;
-}
-
-.itemName {
-  font-weight: 600;
-  color: #23160E;
-}
-
-.itemNote {
-  font-size: 0.72rem;
-  color: #B8820B;
-  font-style: italic;
-  margin-top: 0.1rem;
-}
-
-/* Totals */
-.totalsSection {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  font-size: 0.82rem;
-}
-
-.totalRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.discountRow {
-  color: #C62828;
-  font-weight: 700;
-}
-
-.grandTotalRow {
-  font-size: 1.15rem;
-  font-weight: 900;
-  color: #23160E;
-  padding: 0.2rem 0;
-}
-
-.paymentBadge {
-  background: #23160E;
-  color: #FFFFFF;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 0.15rem 0.55rem;
-  border-radius: var(--radius-sm);
-}
-
-.changeDueRow {
-  color: #2E7D32;
-  font-size: 0.88rem;
-}
-
-/* Footer */
-.receiptFooter {
-  text-align: center;
-  font-size: 0.72rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  color: #66564B;
-  margin-top: 0.35rem;
-}
-
-.thankYou {
-  font-family: var(--font-luxury);
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #23160E;
-}
-
-.receiptFooter p {
-  margin: 0;
-}
-
-/* Action Buttons */
-.actions {
+/* ── ACTION BUTTONS FOOTER ── */
+.modalActions {
   padding: 1rem 1.25rem;
   background: #FFFFFF;
   border-top: 1px solid var(--color-border);
@@ -329,7 +145,7 @@
   gap: 0.5rem;
 }
 
-.btBtn {
+.bluetoothBtn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -346,16 +162,16 @@
   transition: all 0.2s ease;
 }
 
-.btBtn:hover:not(:disabled) {
+.bluetoothBtn:hover:not(:disabled) {
   background: #3B2418;
 }
 
-.btBtn:disabled {
+.bluetoothBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.printBtn {
+.thermalPrintBtn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -373,7 +189,7 @@
   transition: all 0.2s ease;
 }
 
-.printBtn:hover {
+.thermalPrintBtn:hover {
   background: #E5B22A;
   transform: translateY(-1px);
 }
@@ -397,4 +213,57 @@
 
 .newSaleBtn:hover {
   background: #FFFFFF;
+}
+
+/* ── PRINT-FIRST MEDIA QUERY ── */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  .modalOverlay,
+  .modalCard,
+  .previewViewport {
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  .modalHeader,
+  .modalActions,
+  .statusBanner {
+    display: none !important;
+  }
+
+  #printable-thermal-receipt,
+  #printable-thermal-receipt * {
+    visibility: visible !important;
+  }
+
+  #printable-thermal-receipt {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 80mm !important;
+    max-width: 80mm !important;
+    margin: 0 !important;
+    padding: 3mm 4mm !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    font-size: 11px !important;
+  }
+
+  @page {
+    size: 80mm auto;
+    margin: 0mm;
+  }
 }

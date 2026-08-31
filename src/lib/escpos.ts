@@ -157,23 +157,28 @@ export function generateReceiptBytes(data: ReceiptData, is80mm: boolean = false)
     .bold(true)
     .line('BAKE FACTORY')
     .size('normal')
-    .bold(false)
-    .line('Cakes & Gourmet Desserts')
-    .line('Tadepalle, Vijayawada - 522501')
-    .line('Hotline: +91 79894 99446')
-    .divider('=', width);
-
-  // 2. Order Metadata
-  builder
-    .align('left')
     .bold(true)
-    .row(`Inv: #${data.invoiceNumber}`, `Type: ${data.orderType}`, width)
+    .line('CAKES & DESSERTS')
     .bold(false)
-    .row(`Date: ${dateStr}`, `Time: ${timeStr}`, width);
+    .line('ARTISANAL STUDIO')
+    .line('Catholic Church Area, Tadepalle')
+    .line('Vijayawada')
+    .line('Hotline: +91 79894 99446')
+    .divider('-', width);
+
+  // 2. Tax Invoice Title & Metadata
+  builder
+    .align('center')
+    .bold(true)
+    .line('TAX INVOICE')
+    .bold(false)
+    .align('left')
+    .row(`Invoice No: #${data.invoiceNumber}`, `Type: ${data.orderType.toUpperCase()}`, width)
+    .row(`Date: ${dateStr}`, `${timeStr}`, width);
 
   if (data.customerName || data.customerPhone) {
-    const cust = `${data.customerName || 'Customer'} ${data.customerPhone ? `(${data.customerPhone})` : ''}`;
-    builder.line(`Cust: ${cust}`);
+    const cust = `${data.customerName || 'Walk-in Customer'} ${data.customerPhone ? `(${data.customerPhone})` : ''}`;
+    builder.line(`Customer: ${cust}`);
   }
 
   if (data.cashierName) {
@@ -185,22 +190,21 @@ export function generateReceiptBytes(data: ReceiptData, is80mm: boolean = false)
   // 3. Itemized Table
   builder
     .bold(true)
-    .row('ITEM', 'QTY   TOTAL', width)
+    .row('ITEM', 'QTY RATE AMOUNT', width)
     .bold(false)
     .divider('-', width);
 
   data.items.forEach(item => {
     builder.itemRow(item.name, item.quantity, item.price, width);
     if (item.note && item.note.trim()) {
-      builder.line(`  * Note: ${item.note.trim()}`);
+      builder.line(`  Note: ${item.note.trim()}`);
     }
   });
 
   builder.divider('-', width);
 
-  // 4. Totals & Payment
-  builder
-    .row('Subtotal:', `Rs.${data.subtotal.toFixed(0)}`, width);
+  // 4. Financial Summary & NET TOTAL
+  builder.row('Subtotal:', `Rs.${data.subtotal.toFixed(0)}`, width);
 
   if (data.discount > 0) {
     builder.row('Discount:', `-Rs.${data.discount.toFixed(0)}`, width);
@@ -211,32 +215,36 @@ export function generateReceiptBytes(data: ReceiptData, is80mm: boolean = false)
   }
 
   builder
+    .divider('=', width)
     .bold(true)
     .size('double_height')
     .row('NET TOTAL:', `Rs.${data.total.toFixed(0)}`, width)
     .size('normal')
     .bold(false)
-    .divider('-', width);
+    .divider('=', width);
 
-  builder.row('Payment Mode:', data.paymentMethod, width);
+  // 5. Payment Information
+  builder.row('Payment Mode:', data.paymentMethod.toUpperCase(), width);
 
   if (data.paymentMethod === 'Cash' && data.cashReceived !== undefined) {
     builder.row('Cash Received:', `Rs.${data.cashReceived.toFixed(0)}`, width);
     if (data.changeDue !== undefined && data.changeDue >= 0) {
-      builder.row('Change Return:', `Rs.${data.changeDue.toFixed(0)}`, width);
+      builder.row('Change Returned:', `Rs.${data.changeDue.toFixed(0)}`, width);
     }
   }
 
-  builder.divider('=', width);
+  builder.divider('-', width);
 
-  // 5. Footer Message
+  // 6. Brand Closing Footer
   builder
     .align('center')
     .bold(true)
-    .line('THANK YOU! VISIT AGAIN')
+    .line('THANK YOU FOR VISITING!')
+    .line('BAKE FACTORY')
     .bold(false)
-    .line('FSSAI Lic. Certified Quality')
-    .line('www.bakefactory.in')
+    .line('CAKES & DESSERTS')
+    .line('Baked fresh. Served happy.')
+    .divider('-', width)
     .cut();
 
   return builder.getUint8Array();
