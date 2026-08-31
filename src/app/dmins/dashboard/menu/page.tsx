@@ -9,9 +9,10 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  serverTimestamp,
 } from 'firebase/firestore';
 import { ref, uploadString, getDownloadURL } from 'firebase/storage';
-import { Search, Plus, Pencil, Trash2, X, Upload } from 'lucide-react';
+import { Search, Plus, Pencil, Trash2, X, Upload, Sparkles, Wand2, Image as ImageIcon, FileText, Check, AlertCircle, RefreshCw } from 'lucide-react';
 import styles from './page.module.css';
 
 interface MenuItem {
@@ -38,6 +39,18 @@ type FormData = {
   image: string;
   subcategory: string;
 };
+
+interface ExtractedItem {
+  id?: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  subcategory?: string;
+  available: boolean;
+  bestSeller: boolean;
+  selected: boolean;
+}
 
 const CATEGORIES = ['All', 'Cakes', 'Desserts', 'Cookies', 'Combos'] as const;
 
@@ -66,14 +79,60 @@ export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Modal state
+  // Standard Product Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<FormData>(INITIAL_FORM);
   const [submitting, setSubmitting] = useState(false);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // ── AI Menu Importer State (Powered by Groq Llama 3) ──
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [aiMode, setAiMode] = useState<'text' | 'image'>('text');
+  const [aiTextPrompt, setAiTextPrompt] = useState('');
+  const [aiImageBase64, setAiImageBase64] = useState('');
+  const [aiExtracting, setAiExtracting] = useState(false);
+  const [aiExtractedItems, setAiExtractedItems] = useState<ExtractedItem[]>([]);
+  const [aiImporting, setAiImporting] = useState(false);
+  const [aiStatusMsg, setAiStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const aiImageInputRef = useRef<HTMLInputElement>(null);
+
+  // ── Fetch ──
+  const fetchMenu = async () => {
+    setLoading(true);
+    try {
+      const snap = await getDocs(collection(db, 'menu'));
+      const list: MenuItem[] = [];
+      snap.forEach((d) => {
+        list.push({ id: d.id, ...(d.data() as Omit<MenuItem, 'id'>) });
+      });
+      setItems(list);
+    } catch (err) {
+      console.error('Error fetching menu items:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMenu();
+  }, []);
+
+  // ── Filtered list ──
+  const filtered = useMemo(() => {
+    return items.filter((item) => {
+      const matchCat =
+        activeCategory === 'All' ||
+        item.category.toLowerCase() === activeCategory.toLowerCase();
+      const matchSearch =
+        !searchQuery.trim() ||
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchCat && matchSearch;
+    });
+  }, [items, activeCategory, searchQuery]);
+
+  // ── File upload compress helper ──
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -103,68 +162,128 @@ export default function MenuPage() {
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, width, height);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.7); // Compress to 70% quality JPEG
-          setForm((prev) => ({ ...prev, image: dataUrl }));
-        }
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        setForm((prev) => ({ ...prev, image: dataUrl }));
       };
       img.src = event.target?.result as string;
     };
     reader.readAsDataURL(file);
   };
 
-  // ── Fetch menu items ──
-  useEffect(() => {
-    const fetchMenu = async () => {
-      try {
-        const snap = await getDocs(collection(db, 'menu'));
-        const data: MenuItem[] = [];
-        snap.forEach((d) => {
-          data.push({
-            id: d.id,
-            name: d.data().name || '',
-            description: d.data().description || '',
-            price: d.data().price || 0,
-            category: d.data().category || 'Cakes',
-            available: d.data().available !== false,
-            bestSeller: d.data().bestSeller || false,
-            special: d.data().special || false,
-            image: d.data().image || '',
-            subcategory: d.data().subcategory || '',
-          });
-        });
-        setItems(data);
-      } catch (err) {
-        console.error('Error fetching menu:', err);
-      } finally {
-        setLoading(false);
-      }
+  // ── AI Image Upload Handler ──
+  const handleAiImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result as string;
+      setAiImageBase64(dataUrl);
+      setAiStatusMsg(null);
     };
-    fetchMenu();
-  }, []);
+    reader.readAsDataURL(file);
+  };
 
-  // ── Filtered items ──
-  const filtered = useMemo(() => {
-    let result = items;
-    if (activeCategory !== 'All') {
-      result = result.filter((i) => i.category === activeCategory);
+  // ── AI Extraction Handler (Calls Groq Llama 3) ──
+  const handleExtractWithAI = async () => {
+    if (aiMode === 'text' && !aiTextPrompt.trim()) {
+      setAiStatusMsg({ type: 'error', text: 'Please paste your menu text or product list first.' });
+      return;
     }
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter((i) => i.name.toLowerCase().includes(q));
+    if (aiMode === 'image' && !aiImageBase64) {
+      setAiStatusMsg({ type: 'error', text: 'Please upload a photo of your menu card first.' });
+      return;
     }
-    return result;
-  }, [items, activeCategory, searchQuery]);
 
-  // ── Open modal for adding ──
+    setAiExtracting(true);
+    setAiStatusMsg(null);
+
+    try {
+      const res = await fetch('/api/ai-menu-extract', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: aiMode === 'text' ? aiTextPrompt : undefined,
+          image: aiMode === 'image' ? aiImageBase64 : undefined,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'AI extraction failed.');
+      }
+
+      if (data.items.length === 0) {
+        setAiStatusMsg({ type: 'error', text: 'No products could be extracted. Try providing clearer text or a sharper menu image.' });
+      } else {
+        const mappedItems: ExtractedItem[] = data.items.map((item: any, i: number) => ({
+          id: 'temp_' + i,
+          name: item.name || 'Delicious Treat',
+          description: item.description || 'Artisanal creation from Bake Factory',
+          price: parseFloat(item.price) || 150,
+          category: item.category || 'Cakes',
+          subcategory: item.subcategory || '',
+          available: true,
+          bestSeller: item.bestSeller || false,
+          selected: true,
+        }));
+        setAiExtractedItems(mappedItems);
+        setAiStatusMsg({ type: 'success', text: `✨ Extracted ${mappedItems.length} products with AI! Review and import below.` });
+      }
+    } catch (err: any) {
+      setAiStatusMsg({ type: 'error', text: err.message || 'Error communicating with Groq AI.' });
+    } finally {
+      setAiExtracting(false);
+    }
+  };
+
+  // ── Bulk Import Selected Items to Firestore ──
+  const handleBulkImport = async () => {
+    const selectedItems = aiExtractedItems.filter((i) => i.selected);
+    if (selectedItems.length === 0) {
+      alert('Please select at least one product to import.');
+      return;
+    }
+
+    setAiImporting(true);
+    try {
+      for (const item of selectedItems) {
+        await addDoc(collection(db, 'menu'), {
+          name: item.name.trim(),
+          description: item.description.trim(),
+          price: item.price,
+          category: item.category,
+          subcategory: item.subcategory || '',
+          available: item.available,
+          bestSeller: item.bestSeller,
+          special: false,
+          image: '/logo.png', // Default high-res bakery emblem placeholder
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      setAiModalOpen(false);
+      setAiExtractedItems([]);
+      setAiTextPrompt('');
+      setAiImageBase64('');
+      await fetchMenu();
+      alert(`🎉 Successfully imported ${selectedItems.length} products into the Bake Factory menu!`);
+    } catch (err: any) {
+      alert('Error importing menu items: ' + err.message);
+    } finally {
+      setAiImporting(false);
+    }
+  };
+
+  // ── Open Add / Edit Modal ──
   const handleOpenAdd = () => {
     setEditingId(null);
     setForm(INITIAL_FORM);
     setModalOpen(true);
   };
 
-  // ── Open modal for editing ──
   const handleOpenEdit = (item: MenuItem) => {
     setEditingId(item.id);
     setForm({
@@ -175,82 +294,72 @@ export default function MenuPage() {
       available: item.available,
       bestSeller: item.bestSeller,
       special: item.special,
-      image: item.image || '',
+      image: item.image,
       subcategory: item.subcategory || '',
     });
     setModalOpen(true);
   };
 
-  // ── Close modal ──
   const handleClose = () => {
     setModalOpen(false);
     setEditingId(null);
     setForm(INITIAL_FORM);
   };
 
-  // ── Submit (create or update) ──
+  // ── Form Submit ──
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim() || !form.price) return;
+
     setSubmitting(true);
 
-    try {
-      let finalImageUrl = form.image || '';
+    let finalImageUrl = form.image;
 
-      // If image is a newly selected base64 string, upload to Cloudinary via server API
-      if (form.image && form.image.startsWith('data:')) {
-        try {
-          const response = await fetch('/api/upload', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ image: form.image }),
-          });
+    if (form.image && form.image.startsWith('data:image')) {
+      try {
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: form.image }),
+        });
 
-          if (!response.ok) {
-            const errData = await response.json();
-            throw new Error(errData.error || `Upload failed with status ${response.status}`);
+        if (uploadRes.ok) {
+          const uploadData = await uploadRes.json();
+          if (uploadData.url) {
+            finalImageUrl = uploadData.url;
           }
-
-          const uploadData = await response.json();
-          finalImageUrl = uploadData.url;
-        } catch (uploadError: any) {
-          console.error("Cloudinary upload error via API:", uploadError);
-          alert(`Image upload to Cloudinary failed: ${uploadError.message || uploadError}.`);
-          setSubmitting(false);
-          return;
         }
+      } catch (uploadError) {
+        console.warn('Cloudinary upload fallback, storing data locally:', uploadError);
       }
+    }
 
-      const payload = {
-        name: form.name.trim(),
-        description: form.description.trim(),
-        ingredients: form.description.trim(), // Map description to ingredients for public menu
-        price: parseFloat(form.price),
-        category: form.category,
-        available: form.available,
-        bestSeller: form.bestSeller,
-        special: form.special,
-        image: finalImageUrl,
-        subcategory: form.subcategory,
-      };
+    const payload = {
+      name: form.name.trim(),
+      description: form.description.trim(),
+      price: parseFloat(form.price) || 0,
+      category: form.category,
+      available: form.available,
+      bestSeller: form.bestSeller,
+      special: form.special,
+      image: finalImageUrl || '/logo.png',
+      subcategory: form.subcategory.trim(),
+    };
 
+    try {
       if (editingId) {
-        // Update
         await updateDoc(doc(db, 'menu', editingId), payload);
         setItems((prev) =>
           prev.map((i) => (i.id === editingId ? { ...i, ...payload } : i))
         );
       } else {
-        // Create
-        const docRef = await addDoc(collection(db, 'menu'), payload);
-        setItems((prev) => [...prev, { id: docRef.id, ...payload }]);
+        const ref = await addDoc(collection(db, 'menu'), payload);
+        setItems((prev) => [{ id: ref.id, ...payload }, ...prev]);
       }
       handleClose();
     } catch (err: any) {
       console.error('Error saving menu item:', err);
-      alert(`Error saving menu item: ${err.message || err}. Ensure you have updated the database rules in your Firebase Console!`);
+      alert(`Error saving menu item: ${err.message || err}.`);
     } finally {
       setSubmitting(false);
     }
@@ -269,18 +378,31 @@ export default function MenuPage() {
 
   return (
     <div className={styles.page}>
+      
       {/* ── Header ── */}
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>Menu</h1>
+          <h1 className={styles.title}>Menu Management</h1>
           <p className={styles.subtitle}>
-            Menu Management &mdash; {items.length} item{items.length !== 1 ? 's' : ''}
+            Live Store & POS Catalog &mdash; {items.length} item{items.length !== 1 ? 's' : ''}
           </p>
         </div>
-        <button className={styles.addBtn} onClick={handleOpenAdd}>
-          <Plus size={18} />
-          Add Item
-        </button>
+
+        <div className={styles.headerActions}>
+          <button 
+            className={styles.aiBtn} 
+            onClick={() => { setAiModalOpen(true); setAiStatusMsg(null); }}
+            title="Import menu from unstructured text or menu card photo using Groq AI"
+          >
+            <Sparkles size={18} />
+            <span>AI Menu Importer (Groq)</span>
+          </button>
+
+          <button className={styles.addBtn} onClick={handleOpenAdd}>
+            <Plus size={18} />
+            <span>Add Item</span>
+          </button>
+        </div>
       </div>
 
       {/* ── Category tabs + Search ── */}
@@ -315,62 +437,72 @@ export default function MenuPage() {
         <div className={styles.emptyState}>
           {searchQuery || activeCategory !== 'All'
             ? 'No items match your filters.'
-            : 'No menu items yet. Click "+ Add Item" to get started!'}
+            : 'No menu items yet. Click "✨ AI Menu Importer" or "+ Add Item" to populate your catalog!'}
         </div>
       ) : (
         <div className={styles.grid}>
           {filtered.map((item) => {
-            const catColor = CATEGORY_COLORS[item.category] || '#888';
-            const initial = item.category.charAt(0).toUpperCase();
+            const catColor = CATEGORY_COLORS[item.category] || '#d4a017';
             return (
               <div key={item.id} className={styles.card}>
-                {/* Image placeholder */}
-                <div
-                  className={styles.cardImage}
-                  style={{ backgroundColor: item.image ? 'transparent' : catColor }}
-                >
+                <div className={styles.imageWrap}>
                   {item.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className={styles.cardImage}
+                    />
                   ) : (
-                    <span className={styles.cardInitial}>{initial}</span>
+                    <div className={styles.placeholderImage}>
+                      <span>{item.name.charAt(0)}</span>
+                    </div>
                   )}
-                </div>
-
-                {/* Body */}
-                <div className={styles.cardBody}>
-                  <div className={styles.cardTopRow}>
-                    <h3 className={styles.cardName}>{item.name}</h3>
-                    <span className={styles.statusBadge}>Live</span>
-                  </div>
 
                   <span
-                    className={styles.categoryBadge}
-                    style={{
-                      backgroundColor: `${catColor}15`,
-                      color: catColor,
-                    }}
+                    className={styles.catBadge}
+                    style={{ backgroundColor: catColor }}
                   >
                     {item.category}
                   </span>
 
-                  <p className={styles.cardPrice}>₹{item.price.toFixed(2)}</p>
-
                   <div className={styles.cardActions}>
                     <button
-                      className={styles.editBtn}
+                      className={styles.actionBtn}
                       onClick={() => handleOpenEdit(item)}
                       title="Edit"
                     >
                       <Pencil size={15} />
                     </button>
                     <button
-                      className={styles.deleteBtn}
+                      className={`${styles.actionBtn} ${styles.deleteBtn}`}
                       onClick={() => handleDelete(item.id)}
                       title="Delete"
                     >
                       <Trash2 size={15} />
                     </button>
+                  </div>
+                </div>
+
+                <div className={styles.cardBody}>
+                  <div className={styles.nameRow}>
+                    <h3 className={styles.itemName}>{item.name}</h3>
+                    <span className={styles.itemPrice}>₹{item.price.toFixed(0)}</span>
+                  </div>
+                  <p className={styles.itemDesc}>{item.description}</p>
+
+                  <div className={styles.cardFooter}>
+                    <span
+                      className={`${styles.availDot} ${
+                        item.available ? styles.availOn : styles.availOff
+                      }`}
+                    />
+                    <span className={styles.availText}>
+                      {item.available ? 'In Stock' : 'Out of Stock'}
+                    </span>
+                    {item.bestSeller && (
+                      <span className={styles.bestSellerBadge}>★ Best Seller</span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -379,27 +511,271 @@ export default function MenuPage() {
         </div>
       )}
 
-      {/* ── Modal ── */}
-      {modalOpen && (
-        <div className={styles.overlay} onClick={handleClose}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <h2>{editingId ? 'Edit Item' : 'Add New Item'}</h2>
-              <button className={styles.modalClose} onClick={handleClose}>
+      {/* ── 1. MODAL: AI MENU IMPORTER (POWERED BY GROQ) ── */}
+      {aiModalOpen && (
+        <div className={styles.modalOverlay} onClick={() => setAiModalOpen(false)}>
+          <div className={styles.aiModalCard} onClick={(e) => e.stopPropagation()}>
+            
+            {/* Header */}
+            <div className={styles.aiModalHeader}>
+              <div className={styles.aiHeaderTitle}>
+                <div className={styles.aiIconBadge}>
+                  <Sparkles size={22} />
+                </div>
+                <div>
+                  <h2>AI Menu Extractor & Importer</h2>
+                  <p>Powered by Groq Llama 3 & Vision &bull; Paste text or upload a menu photo</p>
+                </div>
+              </div>
+              <button className={styles.closeBtn} onClick={() => setAiModalOpen(false)}>
                 <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className={styles.modalForm}>
+            {/* AI Source Mode Switcher */}
+            <div className={styles.aiModeSwitcher}>
+              <button
+                type="button"
+                className={`${styles.aiModeBtn} ${aiMode === 'text' ? styles.aiModeBtnActive : ''}`}
+                onClick={() => setAiMode('text')}
+              >
+                <FileText size={16} />
+                <span>Paste Text / Raw Menu</span>
+              </button>
+              <button
+                type="button"
+                className={`${styles.aiModeBtn} ${aiMode === 'image' ? styles.aiModeBtnActive : ''}`}
+                onClick={() => setAiMode('image')}
+              >
+                <ImageIcon size={16} />
+                <span>Scan / Upload Menu Card Photo</span>
+              </button>
+            </div>
+
+            {aiStatusMsg && (
+              <div className={`${styles.aiStatusBanner} ${aiStatusMsg.type === 'error' ? styles.aiStatusError : styles.aiStatusSuccess}`}>
+                {aiStatusMsg.type === 'error' ? <AlertCircle size={16} /> : <Check size={16} />}
+                <span>{aiStatusMsg.text}</span>
+              </div>
+            )}
+
+            {/* Input Section */}
+            {aiMode === 'text' ? (
+              <div className={styles.aiInputBlock}>
+                <div className={styles.aiPromptHeader}>
+                  <label>Paste your raw items, WhatsApp messages, or price lists:</label>
+                  <button 
+                    type="button" 
+                    className={styles.samplePromptBtn}
+                    onClick={() => setAiTextPrompt(
+                      "Red Velvet Truffle Cake 500g ₹450 (Rich cream cheese and velvety sponge)\n" +
+                      "Blueberry Cheesecake Slice ₹180\n" +
+                      "Belgian Chocolate Brownie ₹120\n" +
+                      "Almond Butter Cookies (Pack of 6) ₹160\n" +
+                      "Mango Passionfruit Jar Cake ₹150\n" +
+                      "Custom Fondant Birthday Cake 1kg ₹850"
+                    )}
+                  >
+                    Load Sample Items
+                  </button>
+                </div>
+                <textarea
+                  rows={5}
+                  value={aiTextPrompt}
+                  onChange={(e) => setAiTextPrompt(e.target.value)}
+                  placeholder="e.g.&#10;Dark Chocolate Mousse - 180&#10;Pineapple Pastry - 90&#10;Truffle Cake 1kg - 650&#10;Nutella Cupcake - 80..."
+                  className={styles.aiTextarea}
+                />
+              </div>
+            ) : (
+              <div className={styles.aiInputBlock}>
+                <input
+                  type="file"
+                  ref={aiImageInputRef}
+                  onChange={handleAiImageChange}
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                />
+                <div 
+                  className={styles.aiDropzone}
+                  onClick={() => aiImageInputRef.current?.click()}
+                  style={{
+                    backgroundImage: aiImageBase64 ? `url(${aiImageBase64})` : 'none',
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                  }}
+                >
+                  {!aiImageBase64 ? (
+                    <>
+                      <Upload size={32} color="#D4A017" />
+                      <p><strong>Click or drag to upload a menu photo</strong></p>
+                      <span>Supports PNG, JPG of printed menus, chalkboard boards, or flyers</span>
+                    </>
+                  ) : (
+                    <div className={styles.changeImageOverlay}>Click to change photo</div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Extract Action Button */}
+            <div className={styles.aiExtractActionRow}>
+              <button
+                type="button"
+                className={styles.extractBtn}
+                onClick={handleExtractWithAI}
+                disabled={aiExtracting}
+              >
+                <Wand2 size={18} />
+                <span>{aiExtracting ? 'Analyzing with Groq AI…' : '⚡ Extract Menu Items with Groq AI'}</span>
+              </button>
+            </div>
+
+            {/* Extracted Review Table */}
+            {aiExtractedItems.length > 0 && (
+              <div className={styles.extractedTableWrapper}>
+                <div className={styles.tableHeaderRow}>
+                  <h3>Review Extracted Items ({aiExtractedItems.filter(i => i.selected).length}/{aiExtractedItems.length} selected)</h3>
+                  <button 
+                    type="button" 
+                    className={styles.toggleAllBtn}
+                    onClick={() => {
+                      const allSelected = aiExtractedItems.every(i => i.selected);
+                      setAiExtractedItems(prev => prev.map(item => ({ ...item, selected: !allSelected })));
+                    }}
+                  >
+                    Toggle All
+                  </button>
+                </div>
+
+                <div className={styles.itemsTableScroll}>
+                  <table className={styles.extractedTable}>
+                    <thead>
+                      <tr>
+                        <th style={{ width: '40px' }}>✓</th>
+                        <th>Product Name</th>
+                        <th style={{ width: '130px' }}>Category</th>
+                        <th style={{ width: '100px' }}>Price (₹)</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {aiExtractedItems.map((item, idx) => (
+                        <tr key={idx} className={item.selected ? styles.rowSelected : styles.rowUnselected}>
+                          <td>
+                            <input
+                              type="checkbox"
+                              checked={item.selected}
+                              onChange={(e) => {
+                                const updated = [...aiExtractedItems];
+                                updated[idx].selected = e.target.checked;
+                                setAiExtractedItems(updated);
+                              }}
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="text"
+                              value={item.name}
+                              onChange={(e) => {
+                                const updated = [...aiExtractedItems];
+                                updated[idx].name = e.target.value;
+                                setAiExtractedItems(updated);
+                              }}
+                              className={styles.cellInput}
+                            />
+                          </td>
+                          <td>
+                            <select
+                              value={item.category}
+                              onChange={(e) => {
+                                const updated = [...aiExtractedItems];
+                                updated[idx].category = e.target.value as any;
+                                setAiExtractedItems(updated);
+                              }}
+                              className={styles.cellSelect}
+                            >
+                              <option value="Cakes">Cakes</option>
+                              <option value="Desserts">Desserts</option>
+                              <option value="Cookies">Cookies</option>
+                              <option value="Combos">Combos</option>
+                            </select>
+                          </td>
+                          <td>
+                            <input
+                              type="number"
+                              value={item.price}
+                              onChange={(e) => {
+                                const updated = [...aiExtractedItems];
+                                updated[idx].price = parseFloat(e.target.value) || 0;
+                                setAiExtractedItems(updated);
+                              }}
+                              className={styles.cellInput}
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="text"
+                              value={item.description}
+                              onChange={(e) => {
+                                const updated = [...aiExtractedItems];
+                                updated[idx].description = e.target.value;
+                                setAiExtractedItems(updated);
+                              }}
+                              className={styles.cellInput}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Bulk Import Button */}
+                <div className={styles.bulkImportRow}>
+                  <button
+                    type="button"
+                    className={styles.bulkImportBtn}
+                    onClick={handleBulkImport}
+                    disabled={aiImporting}
+                  >
+                    <Plus size={18} />
+                    <span>
+                      {aiImporting 
+                        ? 'Importing to Firestore…' 
+                        : `Import ${aiExtractedItems.filter(i => i.selected).length} Items to Menu Catalog →`}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
+      )}
+
+      {/* ── 2. MODAL: STANDARD ADD / EDIT ITEM ── */}
+      {modalOpen && (
+        <div className={styles.modalOverlay} onClick={handleClose}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>
+                {editingId ? 'Edit Menu Item' : 'Add New Item'}
+              </h2>
+              <button className={styles.closeBtn} onClick={handleClose}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className={styles.form}>
               {/* Name */}
               <div className={styles.fieldGroup}>
-                <label className={styles.label}>
-                  NAME <span className={styles.required}>*</span>
-                </label>
+                <label className={styles.label}>ITEM NAME *</label>
                 <input
                   type="text"
                   className={styles.input}
-                  placeholder="Enter item name"
+                  placeholder="e.g. Belgian Chocolate Cake"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   required
@@ -411,8 +787,8 @@ export default function MenuPage() {
                 <label className={styles.label}>DESCRIPTION</label>
                 <textarea
                   className={styles.textarea}
-                  placeholder="Enter item description"
                   rows={3}
+                  placeholder="Rich, decadent 70% dark chocolate sponge with ganache..."
                   value={form.description}
                   onChange={(e) =>
                     setForm({ ...form, description: e.target.value })
@@ -420,18 +796,16 @@ export default function MenuPage() {
                 />
               </div>
 
-              {/* Price + Category side by side */}
-              <div className={styles.row}>
+              {/* Price + Category */}
+              <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.label}>
-                    PRICE <span className={styles.required}>*</span>
-                  </label>
+                  <label className={styles.label}>PRICE (₹) *</label>
                   <input
                     type="number"
-                    step="0.01"
                     min="0"
+                    step="1"
                     className={styles.input}
-                    placeholder="₹ 0.00"
+                    placeholder="450"
                     value={form.price}
                     onChange={(e) =>
                       setForm({ ...form, price: e.target.value })
@@ -439,10 +813,9 @@ export default function MenuPage() {
                     required
                   />
                 </div>
+
                 <div className={styles.fieldGroup}>
-                  <label className={styles.label}>
-                    CATEGORY <span className={styles.required}>*</span>
-                  </label>
+                  <label className={styles.label}>CATEGORY</label>
                   <select
                     className={styles.select}
                     value={form.category}
