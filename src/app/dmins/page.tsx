@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './page.module.css';
 import Image from 'next/image';
+import { Lock, Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import styles from './page.module.css';
 
 const ADMIN_USER = process.env.NEXT_PUBLIC_ADMIN_USERNAME || 'bakefactory_admin';
 const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'BakeFactory@2026!';
@@ -31,7 +32,6 @@ export default function AdminLogin() {
     setLoading(true);
     setError('');
 
-    // Small delay to simulate verification
     setTimeout(() => {
       if (username === ADMIN_USER && password === ADMIN_PASS) {
         localStorage.setItem('bf_admin_session', 'authenticated');
@@ -40,23 +40,34 @@ export default function AdminLogin() {
         setError('Invalid credentials. Access denied.');
         setLoading(false);
       }
-    }, 600);
+    }, 500);
   };
 
   return (
     <div className={styles.page}>
       <div className={styles.card}>
+        
+        {/* Bright, Crisp Circular Logo with Gold Accent */}
         <div className={styles.logoWrap}>
-          <Image src="/logo.png" alt="Bake Factory" width={90} height={90} style={{ mixBlendMode: 'multiply' }} />
+          <div className={styles.logoCircle}>
+            <Image 
+              src="/logo.png" 
+              alt="Bake Factory" 
+              width={76} 
+              height={76} 
+              className={styles.logoImg}
+            />
+          </div>
         </div>
+
         <h1 className={styles.title}>Admin Access</h1>
-        <p className={styles.subtitle}>Restricted — Authorized personnel only</p>
+        <p className={styles.subtitle}>Restricted — Authorized Management Only</p>
 
         {error && <div className={styles.error}>{error}</div>}
 
         <form onSubmit={handleLogin} className={styles.form}>
           <div className={styles.field}>
-            <label>Username</label>
+            <label>Admin Username</label>
             <input
               type="text"
               placeholder="Enter admin username"
@@ -78,7 +89,7 @@ export default function AdminLogin() {
                 required
               />
               <button type="button" className={styles.showBtn} onClick={() => setShowPass(!showPass)}>
-                {showPass ? 'Hide' : 'Show'}
+                {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
@@ -87,13 +98,13 @@ export default function AdminLogin() {
             {loading ? (
               <span className={styles.btnSpinner} />
             ) : (
-              '🔐 Access Dashboard'
+              '🔐 Access Master Dashboard'
             )}
           </button>
         </form>
 
         <p className={styles.footer}>
-          This page is not publicly accessible. Unauthorized access attempts are logged.
+          This portal is not publicly indexed. All access sessions are logged securely.
         </p>
       </div>
     </div>

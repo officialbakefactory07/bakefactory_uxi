@@ -33,6 +33,14 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Bake Factory | Luxury Artisanal Cakes & Desserts",
   description: "Experience luxury handcrafted cakes, snacks, and gourmet desserts from Bake Factory.",
+  icons: {
+    icon: [
+      { url: '/logo.png' },
+      { url: '/icon.png', type: 'image/png' },
+    ],
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({
