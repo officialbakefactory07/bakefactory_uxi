@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, Clock, Heart, Award, Share2 } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, ShieldCheck, CreditCard } from 'lucide-react';
 import styles from './Footer.module.css';
 
 export const Footer = () => {
@@ -39,7 +39,7 @@ export const Footer = () => {
             </div>
           </div>
           <p className={styles.brandDesc}>
-            Vijayawada's premier boutique dessert house. Handcrafted cakes, authentic European pastries, and fresh oven treats prepared with 100% natural ingredients.
+            Vijayawada&apos;s premier boutique dessert studio. Handcrafted cakes, authentic European pastries, and fresh oven treats prepared with 100% natural ingredients.
           </p>
           <div className={styles.socialRow}>
             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} aria-label="Instagram">
@@ -63,15 +63,15 @@ export const Footer = () => {
           </ul>
         </div>
 
-        {/* Specialties */}
+        {/* Legal & Compliance (Mandatory for PayU Gateway Verification) */}
         <div className={styles.linksCol}>
-          <h4 className={styles.colTitle}>Specialties</h4>
+          <h4 className={styles.colTitle}>Policies & Legal</h4>
           <ul className={styles.linkList}>
-            <li><Link href="/menu?category=cakes" className={styles.footerLink}>Custom Designer Cakes</Link></li>
-            <li><Link href="/menu?category=cakes" className={styles.footerLink}>Cool Cakes & Fondant</Link></li>
-            <li><Link href="/menu?category=desserts" className={styles.footerLink}>Gourmet Desserts</Link></li>
-            <li><Link href="/menu?category=cookies" className={styles.footerLink}>Oven-Fresh Cookies</Link></li>
-            <li><Link href="/menu?category=combos" className={styles.footerLink}>Celebration Combos</Link></li>
+            <li><Link href="/terms" className={styles.footerLink}>Terms & Conditions</Link></li>
+            <li><Link href="/privacy" className={styles.footerLink}>Privacy Policy</Link></li>
+            <li><Link href="/refund-policy" className={styles.footerLink}>Cancellation & Refund Policy</Link></li>
+            <li><Link href="/shipping-policy" className={styles.footerLink}>Shipping & Delivery Policy</Link></li>
+            <li><Link href="/contact" className={styles.footerLink}>Customer Grievances</Link></li>
           </ul>
         </div>
 
@@ -86,7 +86,7 @@ export const Footer = () => {
               className={styles.contactItem}
             >
               <MapPin size={18} className={styles.itemIcon} />
-              <span>Near Rohan's Pride Apts, Catholic Church Area, Tadepalle, Vijayawada 522501</span>
+              <span>Near Rohan&apos;s Pride Apts, Catholic Church Area, Tadepalle, Vijayawada 522501</span>
             </a>
 
             <a href="tel:+917989499446" className={styles.contactItem}>
@@ -107,14 +107,33 @@ export const Footer = () => {
         </div>
       </div>
 
+      {/* PayU Payment Security Banner */}
+      <div className={styles.paymentSecurityBar}>
+        <div className={styles.paymentContainer}>
+          <div className={styles.securityTag}>
+            <ShieldCheck size={18} className={styles.securityIcon} />
+            <span>100% SECURE CHECKOUT POWERED BY PAYU</span>
+          </div>
+          <div className={styles.paymentBadges}>
+            <span className={styles.payBadge}>PayU</span>
+            <span className={styles.payBadge}>UPI</span>
+            <span className={styles.payBadge}>GPay / PhonePe</span>
+            <span className={styles.payBadge}>Visa</span>
+            <span className={styles.payBadge}>Mastercard</span>
+            <span className={styles.payBadge}>RuPay</span>
+            <span className={styles.payBadge}>NetBanking</span>
+          </div>
+        </div>
+      </div>
+
       {/* Bottom Bar */}
       <div className={styles.bottomBar}>
         <div className={styles.bottomContainer}>
-          <p>&copy; {new Date().getFullYear()} Bake Factory. Handcrafted with passion.</p>
+          <p>&copy; {new Date().getFullYear()} Bake Factory. Handcrafted with passion in Vijayawada.</p>
           <div className={styles.bottomLinks}>
             <span>FSSAI Certified Bakery</span>
             <span>•</span>
-            <span>100% Quality Guaranteed</span>
+            <span>PCI-DSS 256-Bit SSL Secured</span>
           </div>
         </div>
       </div>

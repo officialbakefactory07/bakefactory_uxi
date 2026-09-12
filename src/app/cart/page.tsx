@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCart, CartItem } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import styles from './page.module.css';
@@ -10,7 +10,7 @@ import { Card } from '@/components/Card/Card';
 import { 
   Trash2, Plus, Minus, Tag, Check, MapPin, Edit3, 
   PlusCircle, ShoppingBag, ShieldCheck, Sparkles, X, Phone, User, CheckCircle2,
-  Banknote, CreditCard, Wallet, Clock
+  Banknote, CreditCard, Wallet, Clock, AlertCircle
 } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp, doc, getDoc, updateDoc } from 'firebase/firestore';
@@ -22,17 +22,19 @@ const AVAILABLE_COUPONS = [
   { code: 'SWEET20', discountType: 'percent', value: 20, description: '20% OFF sweet treats' },
 ];
 
-export default function Cart() {
+function CartContent() {
   const { items, removeFromCart, updateQuantity, clearCart, totalPrice, totalItems } = useCart();
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const paymentErrorParam = searchParams.get('payment_error');
 
   // User Profile & Address State
   const [profile, setProfile] = useState<any>(null);
   const [fetchingProfile, setFetchingProfile] = useState(true);
 
-  // Payment Method State: 'cod' or 'online'
-  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online'>('cod');
+  // Payment Method State: 'online' (PayU) or 'cod'
+  const [paymentMethod, setPaymentMethod] = useState<'online' | 'cod'>('online');
 
   // Address Selection & Management State
   const [addresses, setAddresses] = useState<string[]>([]);
@@ -108,7 +110,7 @@ export default function Cart() {
     return 0;
   }, [appliedCoupon, totalPrice]);
 
-  const deliveryFee = totalPrice >= 300 || totalPrice === 0 ? 0 : 35;
+  const deliveryFee = totalPrice >= 499 || totalPrice === 0 ? 0 : 35;
   const finalPrice = Math.max(0, totalPrice - discountAmount + deliveryFee);
 
   // Apply Coupon Handler
@@ -118,28 +120,28 @@ export default function Cart() {
     setCouponSuccess('');
 
     if (!code) {
-      setCouponError('Please enter a coupon code.');
+      setCouponError('Please enter a valid coupon code.');
       return;
     }
 
     const found = AVAILABLE_COUPONS.find(c => c.code === code);
     if (found) {
       setAppliedCoupon(found);
-      setCouponCode(code);
-      setCouponSuccess(`Coupon "${found.code}" applied successfully!`);
+      setCouponCode(found.code);
+      setCouponSuccess(`🎉 Coupon ${found.code} applied successfully!`);
     } else {
-      setCouponError('Invalid coupon code. Try WELCOME10 or BAKE50.');
+      setCouponError('Invalid coupon code. Try BAKE50 or WELCOME10.');
     }
   };
 
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null);
     setCouponCode('');
-    setCouponSuccess('');
     setCouponError('');
+    setCouponSuccess('');
   };
 
-  // Add New Address
+  // Save new delivery address
   const handleSaveNewAddress = async () => {
     if (!newAddressInput.trim()) return;
     const updatedList = [...addresses, newAddressInput.trim()];
@@ -154,16 +156,16 @@ export default function Cart() {
           address: updatedList[0],
           savedAddresses: updatedList
         });
-        setSavedSuccessMsg('New address saved to your account!');
+        setSavedSuccessMsg('Address saved to your profile!');
         setTimeout(() => setSavedSuccessMsg(''), 3000);
-      } catch (e) {
-        console.error('Error saving new address:', e);
+      } catch (err) {
+        console.error('Error saving address to profile:', err);
       }
     }
   };
 
-  // Edit Address
-  const handleSaveEditedAddress = async () => {
+  // Update existing address
+  const handleUpdateAddress = async () => {
     if (!editingAddressInput.trim()) return;
     const updatedList = [...addresses];
     updatedList[selectedAddressIndex] = editingAddressInput.trim();
@@ -176,15 +178,15 @@ export default function Cart() {
           address: updatedList[0],
           savedAddresses: updatedList
         });
-        setSavedSuccessMsg('Address updated in your account!');
+        setSavedSuccessMsg('Address updated successfully!');
         setTimeout(() => setSavedSuccessMsg(''), 3000);
-      } catch (e) {
-        console.error('Error updating address:', e);
+      } catch (err) {
+        console.error('Error updating address in profile:', err);
       }
     }
   };
 
-  // Edit Phone
+  // Save contact phone
   const handleSavePhone = async () => {
     if (!phoneInput.trim()) return;
     setContactPhone(phoneInput.trim());
@@ -192,16 +194,18 @@ export default function Cart() {
 
     if (user) {
       try {
-        await updateDoc(doc(db, 'users', user.uid), { phone: phoneInput.trim() });
+        await updateDoc(doc(db, 'users', user.uid), {
+          phone: phoneInput.trim()
+        });
         setSavedSuccessMsg('Phone number updated!');
         setTimeout(() => setSavedSuccessMsg(''), 3000);
-      } catch (e) {
-        console.error('Error updating phone:', e);
+      } catch (err) {
+        console.error('Error updating phone in profile:', err);
       }
     }
   };
 
-  // Place Order Handler
+  // Place Order Handler (PayU Payment Gateway or COD)
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
@@ -234,8 +238,8 @@ export default function Cart() {
         couponCode: appliedCoupon ? appliedCoupon.code : null,
         deliveryFee,
         totalPrice: finalPrice,
-        paymentMethod: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment (Razorpay)',
-        paymentStatus: paymentMethod === 'cod' ? 'Pending (COD)' : 'Pending Payment (Razorpay Ready)',
+        paymentMethod: paymentMethod === 'online' ? 'PayU Payment Gateway' : 'Cash on Delivery (COD)',
+        paymentStatus: paymentMethod === 'online' ? 'Pending Payment (PayU)' : 'Pending (COD)',
         specialInstructions: instructions,
         status: 'Preparing',
         createdAt: serverTimestamp()
@@ -243,7 +247,49 @@ export default function Cart() {
 
       const docRef = await addDoc(collection(db, "orders"), orderPayload);
 
-      // Trigger Resend confirmation email asynchronously
+      // If Online Payment via PayU
+      if (paymentMethod === 'online') {
+        const payuRes = await fetch('/api/payu/create-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: docRef.id,
+            amount: finalPrice,
+            customerName: profile?.fullName || user.displayName || 'Customer',
+            email: user.email,
+            phone: contactPhone,
+            productInfo: `Bake Factory Order #${docRef.id.slice(0, 8)} (${items.length} items)`
+          })
+        });
+
+        const payuData = await payuRes.json();
+
+        if (!payuRes.ok || !payuData.success) {
+          throw new Error(payuData.error || 'Failed to initialize PayU payment');
+        }
+
+        // Clear local cart before redirecting to PayU
+        clearCart();
+
+        // Create dynamic form and POST to PayU Gateway
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = payuData.actionUrl;
+
+        Object.keys(payuData.params).forEach(key => {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = payuData.params[key];
+          form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+        return;
+      }
+
+      // If Cash on Delivery (COD)
       if (user.email) {
         fetch('/api/order-email', {
           method: 'POST',
@@ -260,10 +306,10 @@ export default function Cart() {
       }
 
       clearCart();
-      setOrderSuccess(true);
-    } catch (error) {
+      router.push(`/order-success?id=${docRef.id}&status=cod`);
+    } catch (error: any) {
       console.error("Error placing order:", error);
-      alert("There was an error placing your order. Please try again.");
+      alert(error.message || "There was an error placing your order. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -278,26 +324,13 @@ export default function Cart() {
     );
   }
 
-  if (orderSuccess) {
-    return (
-      <div className={styles.page}>
-        <Card className={styles.emptyCartCard}>
-          <CheckCircle2 size={56} color="#2e7d32" style={{ margin: '0 auto 1rem auto' }} />
-          <h2>Order Placed Successfully! 🎉</h2>
-          <p>Your order is being prepared with love. You can track it in your account profile.</p>
-          <Button variant="primary" onClick={() => router.push('/profile')}>View Your Orders</Button>
-        </Card>
-      </div>
-    );
-  }
-
   if (items.length === 0) {
     return (
       <div className={styles.page}>
         <Card className={styles.emptyCartCard}>
           <ShoppingBag size={56} opacity={0.3} style={{ margin: '0 auto 1rem auto' }} />
           <h2>Your Cart is Empty</h2>
-          <p>Looks like you haven't added any delicious items yet.</p>
+          <p>Looks like you haven&apos;t added any delicious items yet.</p>
           <Button variant="primary" onClick={() => router.push('/menu')}>Browse Menu</Button>
         </Card>
       </div>
@@ -309,6 +342,14 @@ export default function Cart() {
   return (
     <div className={styles.page}>
       
+      {/* Payment Error Alert from PayU Callback */}
+      {paymentErrorParam && (
+        <div className={styles.errorToastBanner}>
+          <AlertCircle size={18} />
+          <span>Payment Failed or Cancelled: {decodeURIComponent(paymentErrorParam)}. You can retry payment below.</span>
+        </div>
+      )}
+
       {/* Header Notification Toast */}
       {savedSuccessMsg && (
         <div className={styles.toastBanner}>
@@ -349,154 +390,173 @@ export default function Cart() {
                     )}
                   </div>
 
-                  {/* Name & Unit Price */}
-                  <div className={styles.itemInfo}>
+                  {/* Info */}
+                  <div className={styles.itemInfoCol}>
                     <h3 className={styles.itemName}>{item.name}</h3>
-                    <p className={styles.itemUnitPrice}>₹{item.price.toFixed(0)} per unit</p>
+                    <p className={styles.itemPricePerUnit}>₹{item.price.toFixed(0)} each</p>
+                    
+                    {item.note && (
+                      <div className={styles.cakeNoteBadge}>
+                        <span>↳ Message: &ldquo;{item.note}&rdquo;</span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Quantity Controls */}
-                  <div className={styles.quantityControl}>
-                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>
-                      <Minus size={14} strokeWidth={2.5} />
+                  <div className={styles.quantityControls}>
+                    <button 
+                      className={styles.qtyBtn} 
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      aria-label="Decrease quantity"
+                    >
+                      <Minus size={14} />
                     </button>
-                    <span className={styles.qtyText}>{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>
-                      <Plus size={14} strokeWidth={2.5} />
+                    <span className={styles.qtyValue}>{item.quantity}</span>
+                    <button 
+                      className={styles.qtyBtn} 
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      aria-label="Increase quantity"
+                    >
+                      <Plus size={14} />
                     </button>
                   </div>
 
-                  {/* Item Total Subtotal */}
-                  <div className={styles.itemSubtotal}>
-                    ₹{(item.price * item.quantity).toFixed(0)}
+                  {/* Total Price & Delete */}
+                  <div className={styles.itemTotalCol}>
+                    <span className={styles.itemTotalPrice}>₹{(item.price * item.quantity).toFixed(0)}</span>
+                    <button 
+                      className={styles.deleteBtn} 
+                      onClick={() => removeFromCart(item.id)}
+                      title="Remove item"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
-
-                  {/* Delete Button */}
-                  <button className={styles.removeBtn} onClick={() => removeFromCart(item.id)} title="Remove item">
-                    <Trash2 size={18} />
-                  </button>
 
                 </div>
               ))}
             </div>
           </Card>
 
-          {/* Section 2: Account & Delivery Address Details */}
+          {/* Section 2: Account & Delivery Address */}
           <Card className={styles.sectionCard}>
             <div className={styles.cardHeaderRow}>
-              <h2><MapPin size={20} /> Delivery & Account Details</h2>
-              {profile?.fullName && (
-                <span className={styles.userBadge}>
-                  <User size={14} /> {profile.fullName}
-                </span>
-              )}
+              <h2><MapPin size={20} /> Delivery Details</h2>
+              {user && <span className={styles.userEmailTag}>{user.email}</span>}
             </div>
 
             {!user ? (
-              <div className={styles.loginPrompt}>
-                <p>Sign in to load your saved addresses and process orders faster.</p>
-                <Button variant="primary" onClick={() => router.push('/login')}>Sign In / Register</Button>
+              <div className={styles.guestPrompt}>
+                <p>Please log in or register to place your order and earn loyalty points.</p>
+                <Button variant="secondary" onClick={() => router.push('/login')}>
+                  <User size={16} /> Log In to Continue
+                </Button>
               </div>
             ) : (
-              <div className={styles.addressSectionContent}>
+              <div className={styles.deliveryDetailsForm}>
                 
                 {/* Contact Phone Row */}
                 <div className={styles.phoneBlock}>
-                  <div className={styles.phoneLeft}>
-                    <Phone size={18} className={styles.iconGold} />
-                    <div>
-                      <span className={styles.blockLabel}>Contact Mobile Number</span>
-                      {isEditingPhone ? (
-                        <div className={styles.inlineEditRow}>
-                          <input 
-                            type="tel" 
-                            value={phoneInput} 
-                            onChange={e => setPhoneInput(e.target.value)}
-                            placeholder="Enter 10-digit mobile number"
-                            className={styles.inlineInput}
-                          />
-                          <button className={styles.smallSaveBtn} onClick={handleSavePhone}>Save</button>
-                          <button className={styles.smallCancelBtn} onClick={() => setIsEditingPhone(false)}>Cancel</button>
-                        </div>
-                      ) : (
-                        <span className={styles.blockValue}>{contactPhone || 'No mobile number added'}</span>
-                      )}
-                    </div>
+                  <div className={styles.blockHeader}>
+                    <label><Phone size={16} /> Contact Phone Number</label>
+                    {!isEditingPhone && (
+                      <button 
+                        className={styles.textLinkBtn} 
+                        onClick={() => {
+                          setPhoneInput(contactPhone);
+                          setIsEditingPhone(true);
+                        }}
+                      >
+                        <Edit3 size={13} /> {contactPhone ? 'Change' : 'Add Phone'}
+                      </button>
+                    )}
                   </div>
-                  {!isEditingPhone && (
-                    <button className={styles.editIconBtn} onClick={() => setIsEditingPhone(true)}>
-                      <Edit3 size={16} /> Edit Phone
-                    </button>
+
+                  {isEditingPhone ? (
+                    <div className={styles.phoneEditRow}>
+                      <input 
+                        type="tel"
+                        value={phoneInput}
+                        onChange={e => setPhoneInput(e.target.value)}
+                        placeholder="e.g. +91 79894 99446"
+                        className={styles.addressInput}
+                      />
+                      <button className={styles.saveSmallBtn} onClick={handleSavePhone}>Save</button>
+                      <button className={styles.cancelSmallBtn} onClick={() => setIsEditingPhone(false)}>Cancel</button>
+                    </div>
+                  ) : (
+                    <p className={styles.phoneDisplay}>
+                      {contactPhone || <span className={styles.missingWarn}>No phone number added yet. Please add one for delivery updates.</span>}
+                    </p>
                   )}
                 </div>
 
-                <div className={styles.dividerLine} />
-
-                {/* Saved Address Selection */}
+                {/* Delivery Address Section */}
                 <div className={styles.addressBlock}>
-                  <div className={styles.addressBlockHeader}>
-                    <span className={styles.blockLabel}>Select Delivery Address</span>
-                    <button 
-                      className={styles.addAddressBtn} 
-                      onClick={() => {
-                        setIsAddingNewAddress(!isAddingNewAddress);
-                        setIsEditingAddress(false);
-                      }}
-                    >
-                      <PlusCircle size={15} /> Add New Address
-                    </button>
+                  <div className={styles.blockHeader}>
+                    <label><MapPin size={16} /> Delivery Address (Vijayawada / Tadepalle)</label>
+                    {!isAddingNewAddress && !isEditingAddress && (
+                      <button 
+                        className={styles.textLinkBtn}
+                        onClick={() => {
+                          setNewAddressInput('');
+                          setIsAddingNewAddress(true);
+                          setIsEditingAddress(false);
+                        }}
+                      >
+                        <PlusCircle size={14} /> Add New Address
+                      </button>
+                    )}
                   </div>
 
                   {/* Add New Address Form */}
                   {isAddingNewAddress && (
-                    <div className={styles.addAddressBox}>
-                      <textarea
+                    <div className={styles.addressEditBox}>
+                      <textarea 
                         rows={3}
                         value={newAddressInput}
                         onChange={e => setNewAddressInput(e.target.value)}
-                        placeholder="Enter full street address, house number, landmark, city, etc."
-                        className={styles.addressTextarea}
+                        placeholder="Enter full street address, apartment / flat number, landmark, Vijayawada pin code..."
+                        className={styles.addressInput}
                       />
-                      <div className={styles.boxActions}>
-                        <button className={styles.smallSaveBtn} onClick={handleSaveNewAddress}>
-                          Save Address
-                        </button>
-                        <button className={styles.smallCancelBtn} onClick={() => setIsAddingNewAddress(false)}>
-                          Cancel
-                        </button>
+                      <div className={styles.editActions}>
+                        <button className={styles.saveSmallBtn} onClick={handleSaveNewAddress}>Save & Select Address</button>
+                        <button className={styles.cancelSmallBtn} onClick={() => setIsAddingNewAddress(false)}>Cancel</button>
                       </div>
                     </div>
                   )}
 
-                  {/* Edit Selected Address Form */}
+                  {/* Edit Existing Address Form */}
                   {isEditingAddress && (
-                    <div className={styles.addAddressBox}>
-                      <textarea
+                    <div className={styles.addressEditBox}>
+                      <textarea 
                         rows={3}
                         value={editingAddressInput}
                         onChange={e => setEditingAddressInput(e.target.value)}
-                        className={styles.addressTextarea}
+                        placeholder="Update full address..."
+                        className={styles.addressInput}
                       />
-                      <div className={styles.boxActions}>
-                        <button className={styles.smallSaveBtn} onClick={handleSaveEditedAddress}>
-                          Update Address
-                        </button>
-                        <button className={styles.smallCancelBtn} onClick={() => setIsEditingAddress(false)}>
-                          Cancel
-                        </button>
+                      <div className={styles.editActions}>
+                        <button className={styles.saveSmallBtn} onClick={handleUpdateAddress}>Update Address</button>
+                        <button className={styles.cancelSmallBtn} onClick={() => setIsEditingAddress(false)}>Cancel</button>
                       </div>
                     </div>
                   )}
 
-                  {/* Address List Options */}
-                  {addresses.length === 0 && !isAddingNewAddress ? (
+                  {/* Address Selection List */}
+                  {!isAddingNewAddress && !isEditingAddress && addresses.length === 0 && (
                     <div className={styles.noAddressBox}>
-                      <p>No saved address found in your account.</p>
-                      <button className={styles.smallSaveBtn} onClick={() => setIsAddingNewAddress(true)}>
-                        + Add Delivery Address
+                      <p>You have no saved delivery addresses.</p>
+                      <button 
+                        className={styles.addFirstAddrBtn}
+                        onClick={() => setIsAddingNewAddress(true)}
+                      >
+                        <PlusCircle size={15} /> Add Delivery Address
                       </button>
                     </div>
-                  ) : (
+                  )}
+
+                  {!isAddingNewAddress && !isEditingAddress && addresses.length > 0 && (
                     <div className={styles.addressList}>
                       {addresses.map((addr, idx) => {
                         const isSelected = selectedAddressIndex === idx;
@@ -548,7 +608,7 @@ export default function Cart() {
                     rows={2}
                     value={instructions}
                     onChange={e => setInstructions(e.target.value)}
-                    placeholder="e.g. Ring doorbell twice, leave with security guard, allergies"
+                    placeholder="e.g. Ring doorbell twice, leave with security guard, custom eggless note"
                     className={styles.instructionsInput}
                   />
                 </div>
@@ -557,21 +617,25 @@ export default function Cart() {
             )}
           </Card>
 
-          {/* Section 3: Payment Method Selection */}
+          {/* Section 3: Payment Method Selection (PayU & COD) */}
           <Card className={styles.sectionCard}>
             <div className={styles.cardHeaderRow}>
               <h2><CreditCard size={20} /> Payment Method</h2>
               <span className={styles.secureTag}>
-                <ShieldCheck size={13} /> Razorpay Encrypted
+                <ShieldCheck size={13} /> PayU 256-Bit SSL Encrypted
               </span>
             </div>
 
             <div className={styles.paymentOptionsList}>
-              {/* Online Payment Only */}
-              <div className={`${styles.paymentCard} ${styles.selectedPaymentCard}`}>
+              
+              {/* Option 1: Online Payment via PayU */}
+              <div 
+                className={`${styles.paymentCard} ${paymentMethod === 'online' ? styles.selectedPaymentCard : ''}`}
+                onClick={() => setPaymentMethod('online')}
+              >
                 <div className={styles.radioCol}>
-                  <div className={`${styles.radioOuter} ${styles.radioChecked}`}>
-                    <div className={styles.radioInner} />
+                  <div className={`${styles.radioOuter} ${paymentMethod === 'online' ? styles.radioChecked : ''}`}>
+                    {paymentMethod === 'online' && <div className={styles.radioInner} />}
                   </div>
                 </div>
                 <div className={styles.paymentIconBox}>
@@ -579,17 +643,48 @@ export default function Cart() {
                 </div>
                 <div className={styles.paymentInfoCol}>
                   <div className={styles.paymentTitleRow}>
-                    <h3>Online Payment</h3>
-                    <span className={styles.razorpayBadge}>UPI / Cards / NetBanking</span>
+                    <h3>Online Payment (PayU Gateway)</h3>
+                    <span className={styles.razorpayBadge}>Recommended</span>
                   </div>
-                  <p className={styles.paymentDesc}>Pay securely via GPay, PhonePe, Paytm, Credit/Debit Cards, or NetBanking (Razorpay Ready).</p>
+                  <p className={styles.paymentDesc}>
+                    UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards (Visa, Mastercard, RuPay), and NetBanking.
+                  </p>
                 </div>
               </div>
+
+              {/* Option 2: Cash on Delivery */}
+              <div 
+                className={`${styles.paymentCard} ${paymentMethod === 'cod' ? styles.selectedPaymentCard : ''}`}
+                onClick={() => setPaymentMethod('cod')}
+              >
+                <div className={styles.radioCol}>
+                  <div className={`${styles.radioOuter} ${paymentMethod === 'cod' ? styles.radioChecked : ''}`}>
+                    {paymentMethod === 'cod' && <div className={styles.radioInner} />}
+                  </div>
+                </div>
+                <div className={styles.paymentIconBox}>
+                  <Banknote size={24} className={styles.paymentIcon} />
+                </div>
+                <div className={styles.paymentInfoCol}>
+                  <div className={styles.paymentTitleRow}>
+                    <h3>Cash on Delivery (COD)</h3>
+                    <span className={styles.codBadge}>Pay at Doorstep</span>
+                  </div>
+                  <p className={styles.paymentDesc}>
+                    Pay with cash or scan delivery driver&apos;s UPI QR upon fresh delivery.
+                  </p>
+                </div>
+              </div>
+
             </div>
 
             <div className={styles.razorpayNoticeBox}>
               <Sparkles size={16} className={styles.sparkleGold} />
-              <span>⚡ Razorpay Gateway will launch when you click <strong>Proceed to Online Pay</strong>.</span>
+              <span>
+                {paymentMethod === 'online' 
+                  ? '⚡ You will be securely redirected to PayU to complete payment.' 
+                  : '💵 Please keep exact cash or UPI ready at the time of delivery.'}
+              </span>
             </div>
 
             {/* 30-Minute Cancellation Policy Alert */}
@@ -597,7 +692,7 @@ export default function Cart() {
               <Clock size={18} className={styles.clockIcon} />
               <div>
                 <strong>⏱️ 30-Minute Cancellation Policy</strong>
-                <p>Orders can be cancelled within <strong>30 minutes</strong> of placement from your Profile &gt; Orders page. After 30 minutes, cancellation closes so our bakers can start preparing fresh goods.</p>
+                <p>Orders can be cancelled within <strong>30 minutes</strong> of placement. See our full <a href="/refund-policy" target="_blank" style={{ color: '#D4A017', textDecoration: 'underline' }}>Cancellation & Refund Policy</a>.</p>
               </div>
             </div>
           </Card>
@@ -698,9 +793,9 @@ export default function Cart() {
                 </span>
               </div>
 
-              {totalPrice < 300 && totalPrice > 0 && (
+              {totalPrice < 499 && totalPrice > 0 && (
                 <p className={styles.freeDeliveryTip}>
-                  💡 Add ₹{(300 - totalPrice).toFixed(0)} more for FREE delivery!
+                  💡 Add ₹{(499 - totalPrice).toFixed(0)} more for FREE delivery!
                 </p>
               )}
 
@@ -722,13 +817,15 @@ export default function Cart() {
                 className={styles.placeOrderBtn}
               >
                 {isSubmitting 
-                  ? 'Processing Order...' 
-                  : `Proceed to Online Pay • ₹${finalPrice.toFixed(0)}`
+                  ? 'Connecting to PayU...' 
+                  : paymentMethod === 'online'
+                  ? `Pay with PayU • ₹${finalPrice.toFixed(0)}`
+                  : `Place COD Order • ₹${finalPrice.toFixed(0)}`
                 }
               </Button>
 
               <div className={styles.secureGuarantee}>
-                <ShieldCheck size={16} /> 100% Safe & Secure Checkout
+                <ShieldCheck size={16} /> 100% Safe & Secure PayU Gateway
               </div>
 
             </div>
@@ -739,5 +836,13 @@ export default function Cart() {
       </div>
 
     </div>
+  );
+}
+
+export default function Cart() {
+  return (
+    <Suspense fallback={<div style={{ padding: '4rem', textAlign: 'center' }}>Loading Cart...</div>}>
+      <CartContent />
+    </Suspense>
   );
 }

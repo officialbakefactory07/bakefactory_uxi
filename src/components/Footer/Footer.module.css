@@ -269,6 +269,58 @@
   margin-top: 0.15rem;
 }
 
+/* Payment Security Bar for PayU Verification */
+.paymentSecurityBar {
+  background: #24140C;
+  border-top: 1px solid rgba(212, 160, 23, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1rem 0;
+}
+
+.paymentContainer {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.securityTag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #D4A017;
+}
+
+.securityIcon {
+  color: #D4A017;
+}
+
+.paymentBadges {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.payBadge {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.02em;
+}
+
 /* Bottom Bar */
 .bottomBar {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -295,6 +347,11 @@
 }
 
 @media (max-width: 600px) {
+  .paymentContainer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
   .bottomContainer {
     flex-direction: column;
     gap: 0.75rem;

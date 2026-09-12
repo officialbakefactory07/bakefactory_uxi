@@ -45,6 +45,32 @@
   box-shadow: var(--shadow-sm);
 }
 
+.errorToastBanner {
+  max-width: 1280px;
+  margin: 0 auto 1.5rem auto;
+  background: #FFEBEE;
+  border: 1px solid #FFCDD2;
+  color: #C62828;
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.codBadge {
+  background: #E0F2FE;
+  color: #0369A1;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.04em;
+}
+
 .headerTitleRow {
   max-width: 1280px;
   margin: 0 auto 2.5rem auto;
