@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './page.module.css';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, MessageSquare } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, MessageSquare, Award, ShieldCheck, Building2, Cake, Truck } from 'lucide-react';
 
 export default function Contact() {
   const [formState, setFormState] = useState({ name: '', email: '', phone: '', message: '' });
@@ -33,14 +33,54 @@ export default function Contact() {
       {/* 1. Header */}
       <section className={styles.header}>
         <div className={styles.headerContainer}>
-          <span className={styles.headerTag}>✦ GET IN TOUCH</span>
-          <h1>We'd Love to Hear from You</h1>
-          <p>Have a question about custom cakes, party orders, or delivery in Vijayawada? Reach out to our bakery team.</p>
+          <span className={styles.headerTag}>✦ GET IN TOUCH & LEGAL DETAILS</span>
+          <h1>Customer Support & Bakery Information</h1>
+          <p>Have a question about our artisanal cakes, dietary options, or express delivery in Vijayawada? Reach out to our team.</p>
         </div>
       </section>
 
       <div className={styles.container}>
-        {/* 2. Quick Contact Cards */}
+        
+        {/* 2. Business Registration & FSSAI Info Banner */}
+        <div className={styles.legalInfoBanner}>
+          <div className={styles.legalCard}>
+            <div className={styles.legalIconBadge}>
+              <Building2 size={24} />
+            </div>
+            <div>
+              <h3>Legal Business Entity</h3>
+              <p><strong>Entity Name:</strong> Bake Factory</p>
+              <p><strong>Trade Name:</strong> Bake Factory Artisanal Studio</p>
+              <p><strong>Category:</strong> Food & Bakery Confectionery Retailer & Delivery</p>
+            </div>
+          </div>
+
+          <div className={styles.legalCard}>
+            <div className={styles.legalIconBadge}>
+              <Award size={24} />
+            </div>
+            <div>
+              <h3>FSSAI License & Certification</h3>
+              <p><strong>FSSAI Registration No:</strong> 20124043000000</p>
+              <p><strong>Food Safety:</strong> 100% Food-grade, hygienic artisanal bakery</p>
+              <p><strong>Issuing Authority:</strong> FSSAI, Government of Andhra Pradesh</p>
+            </div>
+          </div>
+
+          <div className={styles.legalCard}>
+            <div className={styles.legalIconBadge}>
+              <Truck size={24} />
+            </div>
+            <div>
+              <h3>Delivery & Service Area</h3>
+              <p><strong>Coverage:</strong> Vijayawada & Tadepalle (PIN: 522501, 520001+)</p>
+              <p><strong>Delivery Slots:</strong> Express 45–60 mins / Pre-booked slots</p>
+              <p><strong>Store Pickup:</strong> Free self-pickup available daily</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. Quick Contact Cards */}
         <div className={styles.infoSection}>
           <a 
             href="https://www.google.com/maps/search/BAKE+FACTORY+%5BCakes+and+Desserts,+Maximilian+Kolbe,+Catholic+Church+Area,+12-1%2F2,+near+Rohan's+Pride+Appartments,+Tadepalle,+Sitanagaram,+Tadepalli,+Tadepalle,+Andhra+Pradesh+522501,+India/@16.4815522,80.6128612,17z" 
@@ -53,7 +93,7 @@ export default function Contact() {
             </div>
             <h3>Visit Our Studio</h3>
             <p className={styles.addressText}>
-              Catholic Church Area, Near Rohan's Pride Apartments, Tadepalle, Vijayawada 522501
+              Bake Factory, Maximilian Kolbe, Catholic Church Area, 12-1/2, Near Rohan&apos;s Pride Apartments, Tadepalle, Vijayawada, AP &ndash; 522501
             </p>
             <span className={styles.cardAction}>Get Directions &rarr;</span>
           </a>
@@ -62,7 +102,7 @@ export default function Contact() {
             <div className={styles.iconCircle}>
               <Phone size={24} />
             </div>
-            <h3>Call or WhatsApp</h3>
+            <h3>Call or WhatsApp Hotline</h3>
             <p className={styles.phoneText}>+91 79894 99446</p>
             <span className={styles.cardAction}>Call Bakery &rarr;</span>
           </a>
@@ -71,13 +111,13 @@ export default function Contact() {
             <div className={styles.iconCircle}>
               <Mail size={24} />
             </div>
-            <h3>Email Inquiries</h3>
+            <h3>Email Support & Grievances</h3>
             <p className={styles.emailText}>officialbakefactory@gmail.com</p>
             <span className={styles.cardAction}>Send Email &rarr;</span>
           </a>
         </div>
 
-        {/* 3. Form & Hours Split */}
+        {/* 4. Form & Hours Split */}
         <div className={styles.contentGrid}>
           {/* Contact Form */}
           <div className={styles.formSection}>
@@ -85,7 +125,7 @@ export default function Contact() {
               <MessageSquare size={22} className={styles.formIcon} />
               <h2>Send Us a Message</h2>
             </div>
-            <p className={styles.formSub}>Fill out the details below and we will get back to you promptly.</p>
+            <p className={styles.formSub}>Fill out the details below and our team will get back to you promptly.</p>
 
             {submitted ? (
               <div className={styles.successBox}>
@@ -99,97 +139,97 @@ export default function Contact() {
                     setFormState({ name: '', email: '', phone: '', message: '' });
                   }}
                 >
-                  Send Another Message
+                  Send Another Inquiry
                 </button>
               </div>
             ) : (
-              <form className={styles.contactForm} onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} className={styles.contactForm}>
                 <div className={styles.formRow}>
-                  <div className={styles.formGroup}>
+                  <div className={styles.inputGroup}>
                     <label htmlFor="name">Full Name *</label>
                     <input 
                       type="text" 
                       id="name" 
-                      required
-                      placeholder="e.g. Priya Sharma" 
+                      required 
+                      placeholder="e.g. Rahul Sharma"
                       value={formState.name}
-                      onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                      onChange={e => setFormState({...formState, name: e.target.value})}
                     />
                   </div>
-
-                  <div className={styles.formGroup}>
-                    <label htmlFor="phone">Phone Number</label>
+                  <div className={styles.inputGroup}>
+                    <label htmlFor="phone">Phone Number *</label>
                     <input 
                       type="tel" 
                       id="phone" 
-                      placeholder="+91 98765 43210" 
+                      required 
+                      placeholder="+91 79894 99446"
                       value={formState.phone}
-                      onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
+                      onChange={e => setFormState({...formState, phone: e.target.value})}
                     />
                   </div>
                 </div>
 
-                <div className={styles.formGroup}>
+                <div className={styles.inputGroup}>
                   <label htmlFor="email">Email Address</label>
                   <input 
                     type="email" 
                     id="email" 
-                    placeholder="priya@example.com" 
+                    placeholder="you@example.com"
                     value={formState.email}
-                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                    onChange={e => setFormState({...formState, email: e.target.value})}
                   />
                 </div>
 
-                <div className={styles.formGroup}>
-                  <label htmlFor="message">Your Message / Cake Requirements *</label>
+                <div className={styles.inputGroup}>
+                  <label htmlFor="message">Your Message or Custom Order Details *</label>
                   <textarea 
                     id="message" 
+                    required 
                     rows={4} 
-                    required
-                    placeholder="Tell us about your event date, theme, flavors, or any question..."
+                    placeholder="Tell us about your celebration date, guest count, flavor preference, or dietary requests..."
                     value={formState.message}
-                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                    onChange={e => setFormState({...formState, message: e.target.value})}
                   />
                 </div>
 
-                <button type="submit" className={styles.submitBtn}>
-                  <Send size={18} /> Send Message
+                <button type="submit" disabled={sending} className={styles.submitBtn}>
+                  <Send size={18} />
+                  <span>{sending ? 'Sending...' : 'Send Message'}</span>
                 </button>
               </form>
             )}
           </div>
 
-          {/* Operating Hours & Studio Highlights */}
-          <div className={styles.sideInfoSection}>
+          {/* Operating Hours & Studio Map */}
+          <div className={styles.sideSection}>
             <div className={styles.hoursCard}>
-              <div className={styles.hoursHeader}>
-                <Clock size={24} className={styles.hoursIcon} />
-                <div>
-                  <h3>Bakery Studio Timings</h3>
-                  <span>Open 7 Days a Week</span>
-                </div>
+              <div className={styles.cardHeader}>
+                <Clock size={20} className={styles.goldIcon} />
+                <h3>Operating Hours</h3>
               </div>
-              <div className={styles.timingsList}>
-                <div className={styles.timingRow}>
-                  <strong>Monday – Friday</strong>
-                  <span>9:00 AM – 10:30 PM</span>
-                </div>
-                <div className={styles.timingRow}>
-                  <strong>Saturday – Sunday</strong>
-                  <span>9:00 AM – 11:00 PM</span>
-                </div>
-              </div>
+              <ul className={styles.hoursList}>
+                <li><span>Monday &ndash; Friday</span><strong>9:00 AM &ndash; 10:30 PM</strong></li>
+                <li><span>Saturday</span><strong>9:00 AM &ndash; 11:00 PM</strong></li>
+                <li><span>Sunday</span><strong>9:00 AM &ndash; 11:00 PM</strong></li>
+                <li><span>Midnight Cake Delivery</span><strong>11:00 PM &ndash; 12:30 AM (Pre-booked)</strong></li>
+              </ul>
             </div>
 
-            <div className={styles.customOrderNote}>
-              <h4>Planning a Custom Party Cake?</h4>
-              <p>For large multi-tier fondant creations, we recommend placing orders at least 24–48 hours in advance for the best artistry and freshness.</p>
-              <a href="tel:+917989499446" className={styles.hotlineLink}>
-                <Phone size={16} /> Direct Cake Hotline: +91 79894 99446
-              </a>
+            <div className={styles.mapCard}>
+              <iframe 
+                title="Bake Factory Location"
+                src="https://maps.google.com/maps?q=16.4815522,80.6128612&hl=es;z=14&output=embed"
+                width="100%" 
+                height="220" 
+                style={{ border: 0, borderRadius: '12px' }} 
+                allowFullScreen={false} 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );

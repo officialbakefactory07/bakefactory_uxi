@@ -103,8 +103,8 @@
 
 .storyText p {
   font-family: var(--font-sans);
-  font-size: 1.02rem;
-  line-height: 1.8;
+  font-size: 1.05rem;
+  line-height: 1.75;
   color: var(--color-body-text);
   margin-bottom: 1.25rem;
 }
@@ -112,17 +112,15 @@
 .quoteBox {
   margin-top: 2rem;
   padding: 1.5rem 1.75rem;
-  background: #FFFFFF;
+  background: var(--color-background-cream);
   border-left: 4px solid var(--color-button);
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  box-shadow: var(--shadow-sm);
 }
 
 .quoteText {
   font-family: var(--font-luxury);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-style: italic;
-  font-weight: 600;
   color: var(--color-heading);
   line-height: 1.5;
   margin-bottom: 0.5rem !important;
@@ -131,49 +129,37 @@
 .quoteAuthor {
   font-family: var(--font-sans);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-body-muted);
 }
 
-.storyVisual {
-  position: relative;
-}
-
 .visualCardMain {
-  width: 100%;
-  aspect-ratio: 4/3;
+  position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  position: relative;
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--color-border);
 }
 
 .storyImg {
-  width: 100%;
-  height: 100%;
+  height: 480px;
   background-size: cover;
   background-position: center;
-  transition: transform 0.6s ease;
-}
-
-.visualCardMain:hover .storyImg {
-  transform: scale(1.04);
 }
 
 .storyStatBadge {
   position: absolute;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(12px);
-  padding: 0.85rem 1.35rem;
+  bottom: 2rem;
+  left: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 1rem 1.5rem;
   border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   box-shadow: var(--shadow-md);
-  border: 1px solid rgba(212, 160, 23, 0.3);
 }
 
 .badgeGoldIcon {
@@ -182,19 +168,164 @@
 
 .storyStatBadge strong {
   display: block;
-  font-family: var(--font-sans);
-  font-size: 1.1rem;
-  font-weight: 800;
+  font-family: var(--font-luxury);
+  font-size: 1.4rem;
+  font-weight: 700;
   color: var(--color-heading);
+  line-height: 1.1;
 }
 
 .storyStatBadge span {
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--color-body-muted);
 }
 
-/* ==================== 3. 4 PILLARS ==================== */
+/* ==================== 3. LEGAL & FSSAI SECTION ==================== */
+.legalSection {
+  padding: 0 2rem 5rem 2rem;
+}
+
+.legalWrapper {
+  background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid #EFE4D2;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.05);
+  padding: 3rem 2.5rem;
+}
+
+.legalHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 1.5rem;
+}
+
+.legalHeader h2 {
+  font-family: var(--font-luxury);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-bottom: 0.35rem;
+}
+
+.legalHeader p {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--color-body-muted);
+}
+
+.legalGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .legalGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .legalGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.legalItem {
+  background: var(--color-background-cream);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.legalIcon {
+  color: var(--color-button);
+}
+
+.legalItem strong {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-body-muted);
+  display: block;
+}
+
+.legalItem p {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin: 0.2rem 0;
+}
+
+.legalItem span {
+  font-size: 0.78rem;
+  color: #66564B;
+  line-height: 1.4;
+}
+
+/* ==================== 4. SERVICES SECTION ==================== */
+.servicesSection {
+  padding: 5rem 2rem;
+  background: #FCFAF6;
+  border-top: 1px solid var(--color-border);
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .servicesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.serviceCard {
+  background: #FFFFFF;
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  border: 1px solid var(--color-border);
+  display: flex;
+  gap: 1.25rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+.serviceCheck {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #FEF8E7;
+  color: #8D6208;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.serviceCard h3 {
+  font-family: var(--font-luxury);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-bottom: 0.45rem;
+}
+
+.serviceCard p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-body-text);
+}
+
+/* ==================== 5. PILLARS OF QUALITY ==================== */
 .pillarsSection {
   padding: 6rem 2rem;
   background: #FFFFFF;
@@ -267,7 +398,7 @@
   border-color: rgba(212, 160, 23, 0.35);
 }
 
-.pillarIcon {
+.pillarIconWrap {
   width: 54px;
   height: 54px;
   border-radius: 14px;
@@ -296,141 +427,75 @@
   color: var(--color-body-muted);
 }
 
-/* ==================== 4. CONNECT SECTION ==================== */
-.connectSection {
-  padding: 5.5rem 2rem;
-}
-
-.connectCard {
-  max-width: 1000px;
-  margin: 0 auto;
-  background: #FFFFFF;
-  border-radius: var(--radius-lg);
-  padding: 4rem 3rem;
+/* ==================== 6. CTA SECTION ==================== */
+.ctaSection {
+  padding: 6rem 2rem;
+  background: linear-gradient(135deg, #1C110B 0%, #30190D 100%);
   text-align: center;
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-md);
+  color: #FFFFFF;
 }
 
-.connectTag {
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  color: var(--color-hover-accent);
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
-  display: inline-block;
+.ctaContainer {
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-.connectCard h2 {
+.ctaContainer h2 {
   font-family: var(--font-luxury);
-  font-size: 2.6rem;
-  font-weight: 600;
-  color: var(--color-heading);
-  line-height: 1.2;
-  margin-bottom: 0.75rem;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 1rem;
 }
 
-.connectCard p {
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--color-body-muted);
-  max-width: 600px;
-  margin: 0 auto 2rem auto;
+.ctaContainer p {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.65;
+  margin-bottom: 2rem;
 }
 
-.socialBtnRow {
+.ctaBtnRow {
   display: flex;
   justify-content: center;
   gap: 1.25rem;
+  flex-wrap: wrap;
 }
 
-@media (max-width: 520px) {
-  .socialBtnRow {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-}
-
-.socialButton {
+.primaryCtaBtn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 0.5rem;
-  padding: 0.85rem 1.8rem;
-  background: var(--color-background-cream);
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-full);
-  font-family: var(--font-sans);
-  font-size: 0.92rem;
-  font-weight: 600;
+  background: var(--color-button);
   color: var(--color-heading);
+  padding: 0.95rem 2rem;
+  border-radius: var(--radius-full);
+  font-weight: 800;
+  font-size: 0.95rem;
+  text-decoration: none;
+  box-shadow: var(--shadow-gold);
   transition: all 0.25s ease;
 }
 
-.socialButton:hover {
-  background: var(--color-button);
-  border-color: var(--color-button);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-gold);
-}
-
-/* ==================== 5. CTA STRIP ==================== */
-.ctaStrip {
-  background: var(--color-header-footer);
-  padding: 3rem 2rem;
-  color: var(--color-background-cream);
-}
-
-.ctaStripContainer {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
-}
-
-@media (max-width: 768px) {
-  .ctaStripContainer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
-  }
-}
-
-.ctaStripContainer h3 {
-  font-family: var(--font-luxury);
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin-bottom: 0.35rem;
-}
-
-.ctaStripContainer p {
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
-  color: rgba(252, 248, 242, 0.75);
-}
-
-.ctaMenuLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--color-button);
-  color: var(--color-heading);
-  font-family: var(--font-sans);
-  font-size: 0.92rem;
-  font-weight: 700;
-  padding: 0.85rem 1.8rem;
-  border-radius: var(--radius-full);
-  white-space: nowrap;
-  box-shadow: var(--shadow-gold);
-  transition: all 0.3s ease;
-}
-
-.ctaMenuLink:hover {
+.primaryCtaBtn:hover {
   background: #E5B22A;
   transform: translateY(-2px);
+}
+
+.secondaryCtaBtn {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.95rem 2rem;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.secondaryCtaBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

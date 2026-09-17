@@ -30,9 +30,12 @@ export default function TermsPage() {
           </div>
 
           <section className={styles.section}>
-            <h2>1. Introduction & Company Information</h2>
+            <h2>1. Introduction, Legal Entity & FSSAI Registration</h2>
             <p>
-              Welcome to <strong>Bake Factory</strong> (&ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;us&rdquo;). We operate the artisanal bakery and online ordering portal at <Link href="/">https://bakefactory.in</Link>. Our bakery studio is located near Rohan&apos;s Pride Apartments, Catholic Church Area, Tadepalle, Vijayawada, Andhra Pradesh &ndash; 522501, India.
+              Welcome to <strong>Bake Factory</strong> (&ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;us&rdquo;). The website <Link href="/">https://bakefactory.in</Link> is owned and operated by the legal business entity <strong>Bake Factory</strong>, an artisanal bakery studio operating under <strong>FSSAI License / Registration No. 20124043000000</strong>.
+            </p>
+            <p>
+              Our registered bakery studio address is: <strong>Maximilian Kolbe, Catholic Church Area, 12-1/2, Near Rohan&apos;s Pride Apartments, Tadepalle, Vijayawada, Andhra Pradesh &ndash; 522501, India</strong>.
             </p>
             <p>
               By accessing our website, placing an order, or utilizing our POS counter and online delivery services, you agree to be bound by these Terms and Conditions and our Privacy Policy.
@@ -85,14 +88,15 @@ export default function TermsPage() {
           </section>
 
           <section className={styles.section}>
-            <h2>7. Contact & Grievance Officer</h2>
-            <p>If you have any questions or grievances regarding our Terms & Conditions, please contact our support team:</p>
+            <h2>7. Contact & Grievance Redressal</h2>
+            <p>If you have any questions, inquiries, or grievances regarding our Terms & Conditions or order fulfillment, please contact our support team:</p>
             <div className={styles.contactBox}>
-              <p><strong>Bake Factory Customer Care</strong></p>
-              <p>Address: Catholic Church Area, Tadepalle, Vijayawada &ndash; 522501, AP, India</p>
-              <p>Hotline: <a href="tel:+917989499446">+91 79894 99446</a></p>
-              <p>Email: <a href="mailto:officialbakefactory@gmail.com">officialbakefactory@gmail.com</a></p>
-              <p>Operating Hours: 9:00 AM &ndash; 10:30 PM (All 7 Days)</p>
+              <p><strong>Legal Entity:</strong> Bake Factory</p>
+              <p><strong>FSSAI License / Registration No:</strong> 20124043000000</p>
+              <p><strong>Registered Address:</strong> Maximilian Kolbe, Catholic Church Area, 12-1/2, Near Rohan&apos;s Pride Apartments, Tadepalle, Vijayawada &ndash; 522501, AP, India</p>
+              <p><strong>Customer Care Hotline:</strong> <a href="tel:+917989499446">+91 79894 99446</a></p>
+              <p><strong>Official Email:</strong> <a href="mailto:officialbakefactory@gmail.com">officialbakefactory@gmail.com</a></p>
+              <p><strong>Operating Hours:</strong> 9:00 AM &ndash; 10:30 PM (Mon &ndash; Sun)</p>
             </div>
           </section>
         </div>
