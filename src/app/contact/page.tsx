@@ -33,15 +33,15 @@ export default function Contact() {
       {/* 1. Header */}
       <section className={styles.header}>
         <div className={styles.headerContainer}>
-          <span className={styles.headerTag}>✦ GET IN TOUCH & LEGAL DETAILS</span>
+          <span className={styles.headerTag}>✦ GET IN TOUCH & OFFICIAL DETAILS</span>
           <h1>Customer Support & Bakery Information</h1>
-          <p>Have a question about our artisanal cakes, dietary options, or express delivery in Vijayawada? Reach out to our team.</p>
+          <p>Have a question about our artisanal cakes, dietary options, or express delivery in Vijayawada &amp; Tadepalle? Reach out to our team.</p>
         </div>
       </section>
 
       <div className={styles.container}>
         
-        {/* 2. Business Registration & FSSAI Info Banner */}
+        {/* 2. Business Registration & Official FSSAI Info Banner */}
         <div className={styles.legalInfoBanner}>
           <div className={styles.legalCard}>
             <div className={styles.legalIconBadge}>
@@ -49,9 +49,9 @@ export default function Contact() {
             </div>
             <div>
               <h3>Legal Business Entity</h3>
-              <p><strong>Entity Name:</strong> Bake Factory</p>
-              <p><strong>Trade Name:</strong> Bake Factory Artisanal Studio</p>
-              <p><strong>Category:</strong> Food & Bakery Confectionery Retailer & Delivery</p>
+              <p><strong>FBO / Entity:</strong> VENIGALLA THUSHITHA</p>
+              <p><strong>Trade Name:</strong> BAKE FACTORY</p>
+              <p><strong>Kind of Business:</strong> Food Vending &amp; Bakery Confectionery</p>
             </div>
           </div>
 
@@ -61,9 +61,9 @@ export default function Contact() {
             </div>
             <div>
               <h3>FSSAI License & Certification</h3>
-              <p><strong>FSSAI Registration No:</strong> 20124043000000</p>
-              <p><strong>Food Safety:</strong> 100% Food-grade, hygienic artisanal bakery</p>
-              <p><strong>Issuing Authority:</strong> FSSAI, Government of Andhra Pradesh</p>
+              <p><strong>FSSAI Reg. No:</strong> 20126141002411</p>
+              <p><strong>Food Authority:</strong> Govt. of Andhra Pradesh (FSSAI)</p>
+              <p><strong>Place of Issue:</strong> Guntur &bull; 100% Food Safety Compliant</p>
             </div>
           </div>
 
@@ -73,9 +73,9 @@ export default function Contact() {
             </div>
             <div>
               <h3>Delivery & Service Area</h3>
-              <p><strong>Coverage:</strong> Vijayawada & Tadepalle (PIN: 522501, 520001+)</p>
-              <p><strong>Delivery Slots:</strong> Express 45–60 mins / Pre-booked slots</p>
-              <p><strong>Store Pickup:</strong> Free self-pickup available daily</p>
+              <p><strong>Coverage:</strong> Vijayawada, Tadepalle, Undavalli (522501, 520001+)</p>
+              <p><strong>Delivery Slots:</strong> Express 45–60 mins / Scheduled Deliveries</p>
+              <p><strong>Store Pickup:</strong> Self-pickup available from our studio</p>
             </div>
           </div>
         </div>
@@ -91,9 +91,9 @@ export default function Contact() {
             <div className={styles.iconCircle}>
               <MapPin size={24} />
             </div>
-            <h3>Visit Our Studio</h3>
+            <h3>Registered Premises</h3>
             <p className={styles.addressText}>
-              Bake Factory, Maximilian Kolbe, Catholic Church Area, 12-1/2, Near Rohan&apos;s Pride Apartments, Tadepalle, Vijayawada, AP &ndash; 522501
+              Bake Factory, #12-1/2, Near Rohan&apos;s Pride Appartments, Amaravathi Road, Undavalli (Rural), Tadepalle, Guntur, Andhra Pradesh &ndash; 522501
             </p>
             <span className={styles.cardAction}>Get Directions &rarr;</span>
           </a>

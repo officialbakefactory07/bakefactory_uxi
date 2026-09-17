@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, Clock, ShieldCheck, Award, FileCheck } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, ShieldCheck, Award } from 'lucide-react';
 import styles from './Footer.module.css';
 
 export const Footer = () => {
@@ -21,7 +21,7 @@ export const Footer = () => {
       </div>
 
       <div className={styles.mainContainer}>
-        {/* Brand Column */}
+        {/* Brand & FSSAI Column */}
         <div className={styles.brandCol}>
           <div className={styles.brandHeader}>
             <div className={styles.logoCircle}>
@@ -39,20 +39,20 @@ export const Footer = () => {
             </div>
           </div>
           <p className={styles.brandDesc}>
-            Vijayawada&apos;s premier boutique dessert studio. Handcrafted designer cakes, authentic European pastries, and fresh oven treats prepared with 100% natural ingredients.
+            Vijayawada &amp; Tadepalle&apos;s premier boutique dessert studio. Handcrafted designer cakes, authentic European pastries, and fresh oven treats prepared with 100% natural ingredients.
           </p>
           
-          {/* FSSAI & Legal Entity Badge */}
+          {/* Official FSSAI & Legal Entity Details */}
           <div className={styles.fssaiBox}>
             <div className={styles.fssaiHeader}>
               <Award size={18} className={styles.goldIcon} />
               <strong>FSSAI CERTIFIED FOOD BUSINESS</strong>
             </div>
             <p className={styles.fssaiText}>
-              License / Reg. No: <strong>20124043000000</strong>
+              FSSAI Registration No: <strong>20126141002411</strong>
             </p>
             <p className={styles.legalEntityText}>
-              Legal Entity Name: <strong>Bake Factory</strong>
+              Legal Entity / FBO: <strong>VENIGALLA THUSHITHA (BAKE FACTORY)</strong>
             </p>
           </div>
 
@@ -92,15 +92,15 @@ export const Footer = () => {
           </ul>
         </div>
 
-        {/* Store & Contact Info */}
+        {/* Store & Registered Address */}
         <div className={styles.contactCol}>
-          <h4 className={styles.colTitle}>Registered Studio & Contact</h4>
+          <h4 className={styles.colTitle}>Registered Premises & Studio</h4>
           <div className={styles.contactItems}>
             <div className={styles.contactItem}>
               <MapPin size={18} className={styles.itemIcon} />
               <span>
                 <strong>Bake Factory</strong><br/>
-                Maximilian Kolbe, Catholic Church Area, 12-1/2, Near Rohan&apos;s Pride Apartments, Tadepalle, Vijayawada, Andhra Pradesh &ndash; 522501, India
+                #12-1/2, Near Rohan&apos;s Pride Appartments, Amaravathi Road, Undavalli (Rural), Tadepalle, Guntur, Andhra Pradesh &ndash; 522501
               </span>
             </div>
 
@@ -147,12 +147,12 @@ export const Footer = () => {
       <div className={styles.bottomBar}>
         <div className={styles.bottomContainer}>
           <p>
-            &copy; {new Date().getFullYear()} <strong>Bake Factory</strong>. All Rights Reserved. Artisanal Studio in Vijayawada.
+            &copy; {new Date().getFullYear()} <strong>Bake Factory</strong> (FBO: Venigalla Thushitha). All Rights Reserved.
           </p>
           <div className={styles.bottomLinks}>
-            <span>FSSAI Lic. No: 20124043000000</span>
+            <span>FSSAI Reg. No: <strong>20126141002411</strong></span>
             <span>•</span>
-            <span>PCI-DSS 256-Bit SSL Encrypted</span>
+            <span>PCI-DSS 256-Bit SSL Secured</span>
             <span>•</span>
             <span>100% Food Grade Quality</span>
           </div>

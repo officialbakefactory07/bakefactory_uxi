@@ -461,7 +461,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ data, onClose, onNew
             <div className="footer-closing" style={{ textAlign: 'center', marginTop: '8px', fontSize: '9.5px', lineHeight: 1.4 }}>
               <strong>THANK YOU FOR VISITING!</strong>
               <div style={{ fontWeight: 700, marginTop: '2px' }}>BAKE FACTORY</div>
-              <div style={{ fontSize: '8.5px', color: '#333' }}>CAKES & DESSERTS</div>
+              <div style={{ fontSize: '8.5px', color: '#333' }}>FSSAI Reg. No: 20126141002411</div>
               <div className="motto" style={{ fontStyle: 'italic', marginTop: '3px', color: '#444' }}>
                 Baked fresh. Served happy.
               </div>

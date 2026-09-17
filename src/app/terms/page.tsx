@@ -30,12 +30,12 @@ export default function TermsPage() {
           </div>
 
           <section className={styles.section}>
-            <h2>1. Introduction, Legal Entity & FSSAI Registration</h2>
+            <h2>1. Introduction, Legal Entity &amp; FSSAI Registration</h2>
             <p>
-              Welcome to <strong>Bake Factory</strong> (&ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;us&rdquo;). The website <Link href="/">https://bakefactory.in</Link> is owned and operated by the legal business entity <strong>Bake Factory</strong>, an artisanal bakery studio operating under <strong>FSSAI License / Registration No. 20124043000000</strong>.
+              Welcome to <strong>Bake Factory</strong> (&ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;us&rdquo;). The website <Link href="/">https://bakefactory.in</Link> is owned and operated by the registered Food Business Operator (FBO) <strong>VENIGALLA THUSHITHA (Trade Name: BAKE FACTORY)</strong>, operating under Government of Andhra Pradesh <strong>FSSAI Registration No. 20126141002411</strong>.
             </p>
             <p>
-              Our registered bakery studio address is: <strong>Maximilian Kolbe, Catholic Church Area, 12-1/2, Near Rohan&apos;s Pride Apartments, Tadepalle, Vijayawada, Andhra Pradesh &ndash; 522501, India</strong>.
+              Our registered food business premises address is: <strong>Bake Factory, #12-1/2, Near Rohan&apos;s Pride Appartments, Amaravathi Road, Undavalli (Rural), Tadepalle, Guntur, Andhra Pradesh &ndash; 522501, India</strong>.
             </p>
             <p>
               By accessing our website, placing an order, or utilizing our POS counter and online delivery services, you agree to be bound by these Terms and Conditions and our Privacy Policy.
@@ -91,9 +91,9 @@ export default function TermsPage() {
             <h2>7. Contact & Grievance Redressal</h2>
             <p>If you have any questions, inquiries, or grievances regarding our Terms & Conditions or order fulfillment, please contact our support team:</p>
             <div className={styles.contactBox}>
-              <p><strong>Legal Entity:</strong> Bake Factory</p>
-              <p><strong>FSSAI License / Registration No:</strong> 20124043000000</p>
-              <p><strong>Registered Address:</strong> Maximilian Kolbe, Catholic Church Area, 12-1/2, Near Rohan&apos;s Pride Apartments, Tadepalle, Vijayawada &ndash; 522501, AP, India</p>
+              <p><strong>Legal Entity / FBO:</strong> VENIGALLA THUSHITHA (Trade Name: BAKE FACTORY)</p>
+              <p><strong>FSSAI Registration No:</strong> 20126141002411 (Govt. of Andhra Pradesh)</p>
+              <p><strong>Registered Address:</strong> Bake Factory, #12-1/2, Near Rohan&apos;s Pride Appartments, Amaravathi Road, Undavalli (Rural), Tadepalle, Guntur, Andhra Pradesh &ndash; 522501, India</p>
               <p><strong>Customer Care Hotline:</strong> <a href="tel:+917989499446">+91 79894 99446</a></p>
               <p><strong>Official Email:</strong> <a href="mailto:officialbakefactory@gmail.com">officialbakefactory@gmail.com</a></p>
               <p><strong>Operating Hours:</strong> 9:00 AM &ndash; 10:30 PM (Mon &ndash; Sun)</p>

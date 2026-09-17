@@ -80,10 +80,11 @@ export default function RefundPolicyPage() {
             <h2>5. Contact Our Support Team</h2>
             <p>For any cancellation or refund requests, please reach out to us:</p>
             <div className={styles.contactBox}>
-              <p><strong>Bake Factory Helpdesk</strong></p>
-              <p>Hotline & WhatsApp: <a href="tel:+917989499446">+91 79894 99446</a></p>
-              <p>Email: <a href="mailto:officialbakefactory@gmail.com">officialbakefactory@gmail.com</a></p>
-              <p>Address: Catholic Church Area, Tadepalle, Vijayawada &ndash; 522501, AP</p>
+              <p><strong>Legal Entity / FBO:</strong> VENIGALLA THUSHITHA (BAKE FACTORY)</p>
+              <p><strong>FSSAI Registration No:</strong> 20126141002411</p>
+              <p><strong>Registered Address:</strong> Bake Factory, #12-1/2, Near Rohan&apos;s Pride Appartments, Amaravathi Road, Undavalli (Rural), Tadepalle, Guntur, AP &ndash; 522501</p>
+              <p><strong>Hotline &amp; WhatsApp:</strong> <a href="tel:+917989499446">+91 79894 99446</a></p>
+              <p><strong>Email:</strong> <a href="mailto:officialbakefactory@gmail.com">officialbakefactory@gmail.com</a></p>
             </div>
           </section>
         </div>

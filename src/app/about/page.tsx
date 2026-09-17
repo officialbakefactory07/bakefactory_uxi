@@ -6,7 +6,7 @@ import styles from './page.module.css';
 
 export const metadata = {
   title: 'Our Story, Legal Entity & FSSAI Standards | Bake Factory',
-  description: 'Discover the passion, FSSAI certified master bakers, and artisanal philosophy behind Bake Factory in Vijayawada.',
+  description: 'Discover the passion, FSSAI certified master bakers, and artisanal philosophy behind Bake Factory in Tadepalle & Vijayawada.',
 };
 
 export default function About() {
@@ -29,7 +29,7 @@ export default function About() {
     {
       icon: <ShieldCheck size={26} />,
       title: "FSSAI Food Safety Standards",
-      desc: "Operating strictly under FSSAI License No. 20124043000000 with zero harmful chemical preservatives and daily sanitized kitchens."
+      desc: "Operating strictly under FSSAI Registration No. 20126141002411 with zero harmful preservatives and daily sanitized kitchens."
     }
   ];
 
@@ -48,7 +48,7 @@ export default function About() {
     },
     {
       title: "Same-Day Express Delivery Services",
-      desc: "Temperature-controlled 45–60 minute delivery network covering Vijayawada, Tadepalle, Mangalagiri, and adjacent pin codes."
+      desc: "Temperature-controlled 45–60 minute delivery network covering Vijayawada, Tadepalle, Undavalli, and adjacent pin codes."
     }
   ];
 
@@ -60,7 +60,7 @@ export default function About() {
           <span className={styles.heroTag}>✦ OUR SWEET HERITAGE & LEGAL PROFILE</span>
           <h1 className={styles.heroTitle}>Baking Memories, One Celebration at a Time</h1>
           <p className={styles.heroSubtitle}>
-            What started as a heartfelt kitchen experiment in Vijayawada has evolved into a premier boutique dessert studio known for unmatched craftsmanship, food safety excellence, and irresistible flavors.
+            What started as a heartfelt kitchen experiment in Tadepalle &amp; Vijayawada has evolved into a premier boutique dessert studio known for unmatched craftsmanship, food safety excellence, and irresistible flavors.
           </p>
         </div>
       </section>
@@ -73,7 +73,7 @@ export default function About() {
               <span className={styles.sectionTag}>THE GENESIS</span>
               <h2>Born Out of a Deep Passion for Authentic Baking</h2>
               <p>
-                At <strong>Bake Factory</strong>, we believe that true baking is both an art and a science. Founded by culinary enthusiasts in Vijayawada, our mission has always been simple: create desserts that taste as extraordinary as they look.
+                At <strong>Bake Factory</strong> (Food Business Operator: <strong>VENIGALLA THUSHITHA</strong>), we believe that true baking is both an art and a science. Founded by culinary enthusiasts, our mission has always been simple: create desserts that taste as extraordinary as they look.
               </p>
               <p>
                 From the crisp flake of our artisanal crusts to the velvety smooth crumb of our celebration cakes, each recipe undergoes meticulous testing to achieve the perfect balance of richness, moisture, and aroma.
@@ -112,7 +112,7 @@ export default function About() {
             <div className={styles.legalHeader}>
               <Award size={28} className={styles.badgeGoldIcon} />
               <div>
-                <h2>Official Business Entity & Food Safety Registration</h2>
+                <h2>Official Business Entity &amp; FSSAI Registration</h2>
                 <p>Committed to 100% regulatory compliance, consumer transparency, and certified food hygiene standards.</p>
               </div>
             </div>
@@ -121,27 +121,27 @@ export default function About() {
               <div className={styles.legalItem}>
                 <Building2 size={22} className={styles.legalIcon} />
                 <div>
-                  <strong>Legal Business Entity</strong>
-                  <p>Bake Factory</p>
-                  <span>Trade Name: Bake Factory Artisanal Studio</span>
+                  <strong>Legal Entity / FBO</strong>
+                  <p>VENIGALLA THUSHITHA</p>
+                  <span>Trade Name: BAKE FACTORY</span>
                 </div>
               </div>
 
               <div className={styles.legalItem}>
                 <Award size={22} className={styles.legalIcon} />
                 <div>
-                  <strong>FSSAI Registration / License</strong>
-                  <p>License No: 20124043000000</p>
-                  <span>Food Safety and Standards Authority of India</span>
+                  <strong>FSSAI Registration Certificate</strong>
+                  <p>Reg. No: 20126141002411</p>
+                  <span>Govt. of Andhra Pradesh (Place of Issue: Guntur)</span>
                 </div>
               </div>
 
               <div className={styles.legalItem}>
                 <Utensils size={22} className={styles.legalIcon} />
                 <div>
-                  <strong>Business Category</strong>
-                  <p>Artisanal Bakery & Confectionery</p>
-                  <span>Cakes, Pastries, Desserts & Online Delivery</span>
+                  <strong>Kind of Business</strong>
+                  <p>Food Vending &amp; Bakery Confectionery</p>
+                  <span>Fresh Cakes, Pastries, Desserts &amp; Delivery</span>
                 </div>
               </div>
 
@@ -149,7 +149,7 @@ export default function About() {
                 <Clock size={22} className={styles.legalIcon} />
                 <div>
                   <strong>Operating Schedule</strong>
-                  <p>Monday &ndash; Sunday: 9:00 AM &ndash; 10:30 PM</p>
+                  <p>Mon &ndash; Sun: 9:00 AM &ndash; 10:30 PM</p>
                   <span>Hotline: +91 79894 99446</span>
                 </div>
               </div>
@@ -163,8 +163,8 @@ export default function About() {
         <div className={styles.pillarsContainer}>
           <div className={styles.centerHeader}>
             <span className={styles.sectionTag}>WHAT WE OFFER</span>
-            <h2>Our Products & Confectionery Services</h2>
-            <p>Handcrafted daily with fresh, high-grade ingredients and delivered across Vijayawada.</p>
+            <h2>Our Products &amp; Confectionery Services</h2>
+            <p>Handcrafted daily with fresh, high-grade ingredients and delivered across Vijayawada &amp; Tadepalle.</p>
           </div>
 
           <div className={styles.servicesGrid}>

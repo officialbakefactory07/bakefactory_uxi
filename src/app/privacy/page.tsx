@@ -85,9 +85,9 @@ export default function PrivacyPage() {
               You have the right to request access to or deletion of your personal data. For privacy inquiries, security concerns, or grievance redressal, contact our designated officer:
             </p>
             <div className={styles.contactBox}>
-              <p><strong>Legal Business Entity:</strong> Bake Factory</p>
-              <p><strong>FSSAI Registration / License No:</strong> 20124043000000</p>
-              <p><strong>Registered Address:</strong> Maximilian Kolbe, Catholic Church Area, 12-1/2, Near Rohan&apos;s Pride Apartments, Tadepalle, Vijayawada &ndash; 522501, AP, India</p>
+              <p><strong>Legal Entity / FBO:</strong> VENIGALLA THUSHITHA (Trade Name: BAKE FACTORY)</p>
+              <p><strong>FSSAI Registration No:</strong> 20126141002411 (Govt. of Andhra Pradesh)</p>
+              <p><strong>Registered Address:</strong> Bake Factory, #12-1/2, Near Rohan&apos;s Pride Appartments, Amaravathi Road, Undavalli (Rural), Tadepalle, Guntur, Andhra Pradesh &ndash; 522501, India</p>
               <p><strong>Support Email:</strong> <a href="mailto:officialbakefactory@gmail.com">officialbakefactory@gmail.com</a></p>
               <p><strong>Hotline:</strong> <a href="tel:+917989499446">+91 79894 99446</a></p>
             </div>

@@ -73,10 +73,11 @@ export default function ShippingPolicyPage() {
             <h2>6. Delivery Inquiries & Support</h2>
             <p>If you need to update your delivery instructions or check on driver status:</p>
             <div className={styles.contactBox}>
-              <p><strong>Bake Factory Dispatch Center</strong></p>
-              <p>Hotline: <a href="tel:+917989499446">+91 79894 99446</a></p>
-              <p>WhatsApp Support: +91 79894 99446</p>
-              <p>Email: <a href="mailto:officialbakefactory@gmail.com">officialbakefactory@gmail.com</a></p>
+              <p><strong>Legal Entity / FBO:</strong> VENIGALLA THUSHITHA (BAKE FACTORY)</p>
+              <p><strong>FSSAI Registration No:</strong> 20126141002411</p>
+              <p><strong>Registered Address:</strong> Bake Factory, #12-1/2, Near Rohan&apos;s Pride Appartments, Amaravathi Road, Undavalli (Rural), Tadepalle, Guntur, AP &ndash; 522501</p>
+              <p><strong>Hotline:</strong> <a href="tel:+917989499446">+91 79894 99446</a></p>
+              <p><strong>Email:</strong> <a href="mailto:officialbakefactory@gmail.com">officialbakefactory@gmail.com</a></p>
             </div>
           </section>
         </div>

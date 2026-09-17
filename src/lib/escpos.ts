@@ -242,7 +242,7 @@ export function generateReceiptBytes(data: ReceiptData, is80mm: boolean = false)
     .line('THANK YOU FOR VISITING!')
     .line('BAKE FACTORY')
     .bold(false)
-    .line('CAKES & DESSERTS')
+    .line('FSSAI Reg: 20126141002411')
     .line('Baked fresh. Served happy.')
     .divider('-', width)
     .cut();
