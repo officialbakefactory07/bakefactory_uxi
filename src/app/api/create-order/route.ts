@@ -7,13 +7,18 @@ export async function POST(req: NextRequest) {
     let { amount, currency = 'INR', receipt, notes, orderId, customerName, email, phone } = body;
 
     if (!amount || Number(amount) <= 0) {
-      return NextResponse.json({ error: 'Invalid order amount' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid amount. Minimum amount is 100 paise (₹1).' }, { status: 400 });
     }
 
-    // Support both rupees and paise format
+    // Ensure amount is in paise (minimum 100 paise)
     let amountInPaise = Math.round(Number(amount));
+    // If amount is small float like 45.5, convert to paise
     if (amountInPaise < 100 && Number(amount) > 0) {
       amountInPaise = Math.round(Number(amount) * 100);
+    }
+
+    if (amountInPaise < 100) {
+      return NextResponse.json({ error: 'Minimum order amount is 100 paise (₹1.00)' }, { status: 400 });
     }
 
     const receiptId = receipt || `rcpt_${orderId ? String(orderId).slice(0, 16) : Date.now()}`;
@@ -42,9 +47,9 @@ export async function POST(req: NextRequest) {
       key: RAZORPAY_KEY_ID,
     });
   } catch (err: any) {
-    console.error('API razorpay create-order error:', err);
+    console.error('API create-order error:', err);
     return NextResponse.json(
-      { error: err.message || 'Error initiating Razorpay checkout' },
+      { error: err.message || 'Failed to create Razorpay order' },
       { status: 500 }
     );
   }

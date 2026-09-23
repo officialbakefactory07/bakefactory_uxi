@@ -1,11 +1,26 @@
+import Razorpay from 'razorpay';
 import crypto from 'crypto';
 
 export const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '';
 export const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
 
 /**
+ * Initialize Razorpay SDK client instance
+ */
+export const getRazorpayClient = (): Razorpay => {
+  if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+    throw new Error('Razorpay credentials (RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET) are missing.');
+  }
+
+  return new Razorpay({
+    key_id: RAZORPAY_KEY_ID,
+    key_secret: RAZORPAY_KEY_SECRET,
+  });
+};
+
+/**
  * Verify Razorpay Payment Signature
- * Formula: hmac_sha256(order_id + "|" + payment_id, secret) == signature
+ * Algorithm: HMAC-SHA256(order_id + "|" + payment_id, KEY_SECRET)
  */
 export function verifyRazorpayPaymentSignature(params: {
   orderId: string;
@@ -13,11 +28,15 @@ export function verifyRazorpayPaymentSignature(params: {
   signature: string;
 }): boolean {
   if (!RAZORPAY_KEY_SECRET) {
-    console.warn('RAZORPAY_KEY_SECRET is not configured.');
-    return true; // Fallback in sandbox if secret is not set yet
+    console.error('Signature verification failed: RAZORPAY_KEY_SECRET is not configured.');
+    return false;
   }
 
   const { orderId, paymentId, signature } = params;
+  if (!orderId || !paymentId || !signature) {
+    return false;
+  }
+
   const body = `${orderId}|${paymentId}`;
 
   const expectedSignature = crypto

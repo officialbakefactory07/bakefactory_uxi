@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
           }
         }
       } catch (dbErr) {
-        console.error('Firestore order update error in razorpay verify-payment:', dbErr);
+        console.error('Firestore order update error in verify-payment:', dbErr);
       }
     }
 
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
       razorpay_payment_id: payment_id,
     });
   } catch (err: any) {
-    console.error('API razorpay verify-payment error:', err);
+    console.error('API verify-payment error:', err);
     return NextResponse.json(
       { success: false, error: err.message || 'Payment verification failed' },
       { status: 500 }

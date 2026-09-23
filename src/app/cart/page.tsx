@@ -267,7 +267,7 @@ function CartContent() {
         const isRzpLoaded = await loadRazorpayScript();
         
         try {
-          const rzpOrderRes = await fetch('/api/razorpay/create-order', {
+          const rzpOrderRes = await fetch('/api/create-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -280,16 +280,18 @@ function CartContent() {
           });
 
           const rzpOrderData = await rzpOrderRes.json();
+          const rzpKey = rzpOrderData.key || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+          const rzpOrderId = rzpOrderData.order_id || rzpOrderData.orderId || rzpOrderData.id;
 
-          if (isRzpLoaded && rzpOrderData.key && rzpOrderData.key !== 'rzp_test_placeholder') {
+          if (isRzpLoaded && rzpKey && rzpOrderId) {
             const options = {
-              key: rzpOrderData.key,
+              key: rzpKey,
               amount: rzpOrderData.amount,
               currency: rzpOrderData.currency || 'INR',
               name: 'Bake Factory',
               description: `Order #${docRef.id.slice(0, 8)} (${items.length} items)`,
               image: '/logo.png',
-              order_id: rzpOrderData.orderId,
+              order_id: rzpOrderId,
               prefill: {
                 name: profile?.fullName || user.displayName || 'Customer',
                 email: user.email,
@@ -300,7 +302,7 @@ function CartContent() {
               },
               handler: async function (response: any) {
                 try {
-                  await fetch('/api/razorpay/verify-payment', {
+                  const verifyRes = await fetch('/api/verify-payment', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -312,8 +314,15 @@ function CartContent() {
                     }),
                   });
 
-                  clearCart();
-                  router.push(`/order-success?id=${docRef.id}&status=success`);
+                  const verifyData = await verifyRes.json();
+                  if (verifyData.success) {
+                    clearCart();
+                    router.push(`/order-success?id=${docRef.id}&status=success`);
+                  } else {
+                    alert(`Payment verification issue: ${verifyData.error || 'Please contact support.'}`);
+                    clearCart();
+                    router.push(`/order-success?id=${docRef.id}&status=pending`);
+                  }
                 } catch (verifyErr) {
                   console.error('Error in signature verification:', verifyErr);
                   clearCart();
@@ -328,6 +337,13 @@ function CartContent() {
             };
 
             const rzp = new (window as any).Razorpay(options);
+            if (typeof rzp.on === 'function') {
+              rzp.on('payment.failed', function (response: any) {
+                console.error('Razorpay Payment Failed:', response?.error);
+                alert(`Payment failed: ${response?.error?.description || 'Transaction declined'}`);
+                setIsSubmitting(false);
+              });
+            }
             rzp.open();
             setIsSubmitting(false);
             return;
