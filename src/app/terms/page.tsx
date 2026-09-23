@@ -60,7 +60,7 @@ export default function TermsPage() {
               All prices displayed on Bake Factory are in <strong>Indian Rupees (INR &ndash; ₹)</strong> and are inclusive of applicable taxes unless stated otherwise.
             </p>
             <ul>
-              <li><strong>Payment Gateway:</strong> Online transactions are processed securely through certified RBI-authorized payment aggregators (including <strong>PayU Payments Private Limited</strong>).</li>
+              <li><strong>Payment Gateways:</strong> Online transactions are processed securely through certified RBI-authorized payment aggregators (including <strong>Razorpay Software Private Limited</strong> and <strong>PayU Payments Private Limited</strong>).</li>
               <li><strong>Accepted Methods:</strong> UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards (Visa, Mastercard, RuPay), Net Banking, and Cash on Delivery (COD) for eligible pin codes.</li>
               <li><strong>Transaction Security:</strong> We do not store credit card numbers, CVVs, or bank passwords on our servers. All sensitive financial information is encrypted with bank-grade 256-bit SSL protocols.</li>
             </ul>

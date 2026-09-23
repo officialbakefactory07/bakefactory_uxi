@@ -122,15 +122,16 @@ export const Footer = () => {
         </div>
       </div>
 
-      {/* PayU Payment Security Banner */}
+      {/* Payment Security Banner (Razorpay & PayU Verified) */}
       <div className={styles.paymentSecurityBar}>
         <div className={styles.paymentContainer}>
           <div className={styles.securityTag}>
             <ShieldCheck size={18} className={styles.securityIcon} />
-            <span>100% SECURE CHECKOUT POWERED BY PAYU</span>
+            <span>100% SECURE CHECKOUT &bull; RAZORPAY &amp; PAYU ENCRYPTED</span>
           </div>
           <div className={styles.paymentBadges}>
-            <span className={styles.payBadge}>PayU Gateway</span>
+            <span className={styles.payBadge}>Razorpay</span>
+            <span className={styles.payBadge}>PayU</span>
             <span className={styles.payBadge}>UPI</span>
             <span className={styles.payBadge}>Google Pay</span>
             <span className={styles.payBadge}>PhonePe</span>

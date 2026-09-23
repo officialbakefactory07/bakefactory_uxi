@@ -60,7 +60,7 @@ export default function RefundPolicyPage() {
               Approved refunds are credited directly back to the original source of payment:
             </p>
             <ul>
-              <li><strong>Online Payments (PayU &ndash; UPI / Cards / NetBanking):</strong> Refunds are initiated within <strong>24 hours</strong> of approval. Depending on your issuing bank, the amount will reflect in your account within <strong>5 to 7 business days</strong>.</li>
+              <li><strong>Online Payments (Razorpay &amp; PayU &ndash; UPI / Cards / NetBanking):</strong> Refunds are initiated within <strong>24 hours</strong> of approval. Depending on your issuing bank, the amount will reflect in your account within <strong>5 to 7 business days</strong>.</li>
               <li><strong>UPI / Instant Wallet:</strong> Usually reflects within <strong>24 to 48 hours</strong>.</li>
               <li><strong>Cash on Delivery (COD) Orders:</strong> Refunds for verified COD issues are processed via direct UPI transfer or store credit upon customer confirmation.</li>
             </ul>

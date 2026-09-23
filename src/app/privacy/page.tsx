@@ -51,12 +51,12 @@ export default function PrivacyPage() {
           </section>
 
           <section className={styles.section}>
-            <h2>3. Payment Data Security (PayU Gateway)</h2>
+            <h2>3. Payment Data Security (Razorpay &amp; PayU Gateways)</h2>
             <p>
               <strong>Bake Factory does NOT store or process your credit card numbers, debit card PINs, CVV, or NetBanking passwords on our servers.</strong>
             </p>
             <p>
-              All online payment transactions are directed to <strong>PayU Payments Private Limited</strong>, which is fully certified under <strong>PCI-DSS Level 1 compliance</strong> and encrypted using 256-bit SSL protocols.
+              All online payment transactions are directed to certified payment aggregators (<strong>Razorpay Software Private Limited</strong> and <strong>PayU Payments Private Limited</strong>), which are fully certified under <strong>PCI-DSS Level 1 compliance</strong> and encrypted using bank-grade 256-bit SSL protocols.
             </p>
           </section>
 

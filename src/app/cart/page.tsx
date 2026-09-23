@@ -33,7 +33,7 @@ function CartContent() {
   const [profile, setProfile] = useState<any>(null);
   const [fetchingProfile, setFetchingProfile] = useState(true);
 
-  // Payment Method State: 'online' (PayU) or 'cod'
+  // Payment Method State: 'online' (Razorpay / PayU) or 'cod'
   const [paymentMethod, setPaymentMethod] = useState<'online' | 'cod'>('online');
 
   // Address Selection & Management State
@@ -58,7 +58,6 @@ function CartContent() {
   // Order & Submission State
   const [instructions, setInstructions] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderSuccess, setOrderSuccess] = useState(false);
   const [savedSuccessMsg, setSavedSuccessMsg] = useState('');
 
   // Fetch account profile & saved addresses from Firestore
@@ -98,6 +97,21 @@ function CartContent() {
         setFetchingProfile(false);
       });
   }, [user]);
+
+  // Dynamic Razorpay Script Loader
+  const loadRazorpayScript = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      if (typeof window !== 'undefined' && (window as any).Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
 
   // Calculate coupon discount
   const discountAmount = useMemo(() => {
@@ -205,7 +219,7 @@ function CartContent() {
     }
   };
 
-  // Place Order Handler (PayU Payment Gateway or COD)
+  // Place Order Handler (Razorpay Gateway, PayU Gateway, or COD)
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
@@ -238,8 +252,8 @@ function CartContent() {
         couponCode: appliedCoupon ? appliedCoupon.code : null,
         deliveryFee,
         totalPrice: finalPrice,
-        paymentMethod: paymentMethod === 'online' ? 'PayU Payment Gateway' : 'Cash on Delivery (COD)',
-        paymentStatus: paymentMethod === 'online' ? 'Pending Payment (PayU)' : 'Pending (COD)',
+        paymentMethod: paymentMethod === 'online' ? 'Online Payment (Razorpay / PayU)' : 'Cash on Delivery (COD)',
+        paymentStatus: paymentMethod === 'online' ? 'Pending Payment' : 'Pending (COD)',
         specialInstructions: instructions,
         status: 'Preparing',
         createdAt: serverTimestamp()
@@ -247,8 +261,82 @@ function CartContent() {
 
       const docRef = await addDoc(collection(db, "orders"), orderPayload);
 
-      // If Online Payment via PayU
+      // ── IF ONLINE PAYMENT (Razorpay / PayU) ──
       if (paymentMethod === 'online') {
+        // Try Razorpay checkout first
+        const isRzpLoaded = await loadRazorpayScript();
+        
+        try {
+          const rzpOrderRes = await fetch('/api/razorpay/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              orderId: docRef.id,
+              amount: finalPrice,
+              customerName: profile?.fullName || user.displayName || 'Customer',
+              email: user.email,
+              phone: contactPhone,
+            })
+          });
+
+          const rzpOrderData = await rzpOrderRes.json();
+
+          if (isRzpLoaded && rzpOrderData.key && rzpOrderData.key !== 'rzp_test_placeholder') {
+            const options = {
+              key: rzpOrderData.key,
+              amount: rzpOrderData.amount,
+              currency: rzpOrderData.currency || 'INR',
+              name: 'Bake Factory',
+              description: `Order #${docRef.id.slice(0, 8)} (${items.length} items)`,
+              image: '/logo.png',
+              order_id: rzpOrderData.orderId,
+              prefill: {
+                name: profile?.fullName || user.displayName || 'Customer',
+                email: user.email,
+                contact: contactPhone,
+              },
+              theme: {
+                color: '#D4A017',
+              },
+              handler: async function (response: any) {
+                try {
+                  await fetch('/api/razorpay/verify-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      orderId: docRef.id,
+                      razorpay_order_id: response.razorpay_order_id,
+                      razorpay_payment_id: response.razorpay_payment_id,
+                      razorpay_signature: response.razorpay_signature,
+                      userEmail: user.email,
+                    }),
+                  });
+
+                  clearCart();
+                  router.push(`/order-success?id=${docRef.id}&status=success`);
+                } catch (verifyErr) {
+                  console.error('Error in signature verification:', verifyErr);
+                  clearCart();
+                  router.push(`/order-success?id=${docRef.id}&status=pending`);
+                }
+              },
+              modal: {
+                ondismiss: function () {
+                  setIsSubmitting(false);
+                }
+              }
+            };
+
+            const rzp = new (window as any).Razorpay(options);
+            rzp.open();
+            setIsSubmitting(false);
+            return;
+          }
+        } catch (rzpErr) {
+          console.warn('Razorpay initiation fallback, trying PayU:', rzpErr);
+        }
+
+        // PayU Gateway Fallback
         const payuRes = await fetch('/api/payu/create-payment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -264,32 +352,27 @@ function CartContent() {
 
         const payuData = await payuRes.json();
 
-        if (!payuRes.ok || !payuData.success) {
-          throw new Error(payuData.error || 'Failed to initialize PayU payment');
+        if (payuRes.ok && payuData.success) {
+          clearCart();
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = payuData.actionUrl;
+
+          Object.keys(payuData.params).forEach(key => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = payuData.params[key];
+            form.appendChild(input);
+          });
+
+          document.body.appendChild(form);
+          form.submit();
+          return;
         }
-
-        // Clear local cart before redirecting to PayU
-        clearCart();
-
-        // Create dynamic form and POST to PayU Gateway
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = payuData.actionUrl;
-
-        Object.keys(payuData.params).forEach(key => {
-          const input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = key;
-          input.value = payuData.params[key];
-          form.appendChild(input);
-        });
-
-        document.body.appendChild(form);
-        form.submit();
-        return;
       }
 
-      // If Cash on Delivery (COD)
+      // ── IF CASH ON DELIVERY (COD) ──
       if (user.email) {
         fetch('/api/order-email', {
           method: 'POST',
@@ -342,11 +425,11 @@ function CartContent() {
   return (
     <div className={styles.page}>
       
-      {/* Payment Error Alert from PayU Callback */}
+      {/* Payment Error Alert */}
       {paymentErrorParam && (
         <div className={styles.errorToastBanner}>
           <AlertCircle size={18} />
-          <span>Payment Failed or Cancelled: {decodeURIComponent(paymentErrorParam)}. You can retry payment below.</span>
+          <span>Payment was not completed: {decodeURIComponent(paymentErrorParam)}. You can retry payment below.</span>
         </div>
       )}
 
@@ -358,7 +441,7 @@ function CartContent() {
       )}
 
       <div className={styles.headerTitleRow}>
-        <h1 className={styles.pageTitle}>Checkout & Order Summary</h1>
+        <h1 className={styles.pageTitle}>Checkout &amp; Order Summary</h1>
         <span className={styles.itemBadge}>{totalItems} Item{totalItems > 1 ? 's' : ''}</span>
       </div>
 
@@ -516,11 +599,11 @@ function CartContent() {
                         rows={3}
                         value={newAddressInput}
                         onChange={e => setNewAddressInput(e.target.value)}
-                        placeholder="Enter full street address, apartment / flat number, landmark, Vijayawada pin code..."
+                        placeholder="Enter full street address, apartment / flat number, landmark, pin code..."
                         className={styles.addressInput}
                       />
                       <div className={styles.editActions}>
-                        <button className={styles.saveSmallBtn} onClick={handleSaveNewAddress}>Save & Select Address</button>
+                        <button className={styles.saveSmallBtn} onClick={handleSaveNewAddress}>Save &amp; Select Address</button>
                         <button className={styles.cancelSmallBtn} onClick={() => setIsAddingNewAddress(false)}>Cancel</button>
                       </div>
                     </div>
@@ -617,18 +700,18 @@ function CartContent() {
             )}
           </Card>
 
-          {/* Section 3: Payment Method Selection (PayU & COD) */}
+          {/* Section 3: Payment Method Selection (Razorpay / PayU & COD) */}
           <Card className={styles.sectionCard}>
             <div className={styles.cardHeaderRow}>
               <h2><CreditCard size={20} /> Payment Method</h2>
               <span className={styles.secureTag}>
-                <ShieldCheck size={13} /> PayU 256-Bit SSL Encrypted
+                <ShieldCheck size={13} /> Razorpay &amp; PayU 256-Bit SSL Encrypted
               </span>
             </div>
 
             <div className={styles.paymentOptionsList}>
               
-              {/* Option 1: Online Payment via PayU */}
+              {/* Option 1: Online Payment via Razorpay / PayU */}
               <div 
                 className={`${styles.paymentCard} ${paymentMethod === 'online' ? styles.selectedPaymentCard : ''}`}
                 onClick={() => setPaymentMethod('online')}
@@ -643,11 +726,11 @@ function CartContent() {
                 </div>
                 <div className={styles.paymentInfoCol}>
                   <div className={styles.paymentTitleRow}>
-                    <h3>Online Payment (PayU Gateway)</h3>
-                    <span className={styles.razorpayBadge}>Recommended</span>
+                    <h3>Online Payment (Razorpay / PayU)</h3>
+                    <span className={styles.razorpayBadge}>Instant &bull; 100% Safe</span>
                   </div>
                   <p className={styles.paymentDesc}>
-                    UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards (Visa, Mastercard, RuPay), and NetBanking.
+                    UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards (Visa, Mastercard, RuPay), NetBanking, and Wallets.
                   </p>
                 </div>
               </div>
@@ -671,7 +754,7 @@ function CartContent() {
                     <span className={styles.codBadge}>Pay at Doorstep</span>
                   </div>
                   <p className={styles.paymentDesc}>
-                    Pay with cash or scan delivery driver&apos;s UPI QR upon fresh delivery.
+                    Pay with cash or scan driver&apos;s UPI QR upon delivery.
                   </p>
                 </div>
               </div>
@@ -682,7 +765,7 @@ function CartContent() {
               <Sparkles size={16} className={styles.sparkleGold} />
               <span>
                 {paymentMethod === 'online' 
-                  ? '⚡ You will be securely redirected to PayU to complete payment.' 
+                  ? '⚡ Secure 256-bit encrypted checkout will launch when you proceed.' 
                   : '💵 Please keep exact cash or UPI ready at the time of delivery.'}
               </span>
             </div>
@@ -692,7 +775,7 @@ function CartContent() {
               <Clock size={18} className={styles.clockIcon} />
               <div>
                 <strong>⏱️ 30-Minute Cancellation Policy</strong>
-                <p>Orders can be cancelled within <strong>30 minutes</strong> of placement. See our full <a href="/refund-policy" target="_blank" style={{ color: '#D4A017', textDecoration: 'underline' }}>Cancellation & Refund Policy</a>.</p>
+                <p>Orders can be cancelled within <strong>30 minutes</strong> of placement. See our full <a href="/refund-policy" target="_blank" style={{ color: '#D4A017', textDecoration: 'underline' }}>Cancellation &amp; Refund Policy</a>.</p>
               </div>
             </div>
           </Card>
@@ -804,7 +887,7 @@ function CartContent() {
               <div className={styles.totalRow}>
                 <div>
                   <span className={styles.totalLabel}>To Pay</span>
-                  <p className={styles.taxIncludedText}>Includes all taxes & charges</p>
+                  <p className={styles.taxIncludedText}>Includes all taxes &amp; charges</p>
                 </div>
                 <span className={styles.totalAmount}>₹{finalPrice.toFixed(0)}</span>
               </div>
@@ -817,15 +900,15 @@ function CartContent() {
                 className={styles.placeOrderBtn}
               >
                 {isSubmitting 
-                  ? 'Connecting to PayU...' 
+                  ? 'Connecting to Payment...' 
                   : paymentMethod === 'online'
-                  ? `Pay with PayU • ₹${finalPrice.toFixed(0)}`
+                  ? `Proceed to Pay • ₹${finalPrice.toFixed(0)}`
                   : `Place COD Order • ₹${finalPrice.toFixed(0)}`
                 }
               </Button>
 
               <div className={styles.secureGuarantee}>
-                <ShieldCheck size={16} /> 100% Safe & Secure PayU Gateway
+                <ShieldCheck size={16} /> 100% Safe &amp; Secure Razorpay &amp; PayU Gateways
               </div>
 
             </div>
