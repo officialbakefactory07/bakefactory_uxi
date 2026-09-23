@@ -19,6 +19,7 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  isHydrated: boolean;
 }
 
 const CartContext = createContext<CartContextType>({
@@ -29,27 +30,39 @@ const CartContext = createContext<CartContextType>({
   clearCart: () => {},
   totalItems: 0,
   totalPrice: 0,
+  isHydrated: false,
 });
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Load cart from local storage on mount
+  // Safely load cart from localStorage once on client mount
   useEffect(() => {
-    const savedCart = localStorage.getItem('bakeFactoryCart');
-    if (savedCart) {
-      try {
-        setItems(JSON.parse(savedCart));
-      } catch (e) {
-        console.error("Failed to parse cart", e);
+    try {
+      const savedCart = localStorage.getItem('bakeFactoryCart');
+      if (savedCart) {
+        const parsed = JSON.parse(savedCart);
+        if (Array.isArray(parsed)) {
+          setItems(parsed);
+        }
       }
+    } catch (e) {
+      console.error("Failed to parse cart from localStorage:", e);
+    } finally {
+      setIsHydrated(true);
     }
   }, []);
 
-  // Save cart to local storage whenever it changes
+  // Save cart to local storage ONLY after hydration
   useEffect(() => {
-    localStorage.setItem('bakeFactoryCart', JSON.stringify(items));
-  }, [items]);
+    if (!isHydrated) return;
+    try {
+      localStorage.setItem('bakeFactoryCart', JSON.stringify(items));
+    } catch (e) {
+      console.error("Failed to save cart to localStorage:", e);
+    }
+  }, [items, isHydrated]);
 
   const addToCart = (newItem: CartItem) => {
     setItems((prev) => {
@@ -57,11 +70,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       if (existing) {
         return prev.map(item => 
           item.id === newItem.id 
-            ? { ...item, quantity: item.quantity + newItem.quantity }
+            ? { ...item, quantity: item.quantity + (newItem.quantity || 1) }
             : item
         );
       }
-      return [...prev, newItem];
+      return [...prev, { ...newItem, quantity: newItem.quantity || 1 }];
     });
   };
 
@@ -79,13 +92,20 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     ));
   };
 
-  const clearCart = () => setItems([]);
+  const clearCart = () => {
+    setItems([]);
+    try {
+      localStorage.removeItem('bakeFactoryCart');
+    } catch (e) {
+      console.error("Error clearing cart localStorage:", e);
+    }
+  };
 
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const totalItems = items.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+  const totalPrice = items.reduce((sum, item) => sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0);
 
   return (
-    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice }}>
+    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice, isHydrated }}>
       {children}
     </CartContext.Provider>
   );

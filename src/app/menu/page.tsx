@@ -4,9 +4,9 @@ import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import styles from './page.module.css';
-import { ShoppingCart, Search, Star, Plus, Minus, X } from 'lucide-react';
+import { ShoppingCart, Search, Star, Plus, Minus, X, ArrowRight } from 'lucide-react';
 import { useCart, CartItem } from '@/context/CartContext';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const CATEGORIES = ["All", "Cakes", "Desserts", "Cookies", "Combos"];
@@ -33,7 +33,8 @@ function MenuContent() {
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   
-  const { items: cart, addToCart, removeFromCart, updateQuantity } = useCart();
+  const { items: cart, addToCart, removeFromCart, updateQuantity, totalItems, totalPrice } = useCart();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const catParam = searchParams.get('category');
   const subParam = searchParams.get('subcategory');
@@ -499,6 +500,34 @@ function MenuContent() {
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Bottom Sticky Cart Bar when items are in cart */}
+      <AnimatePresence>
+        {totalItems > 0 && (
+          <motion.div 
+            className={styles.floatingCartBar}
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 350, damping: 28 }}
+          >
+            <div className={styles.floatingCartContent}>
+              <div className={styles.floatingCartInfo}>
+                <span className={styles.floatingCartCount}>{totalItems} Item{totalItems > 1 ? 's' : ''} Added</span>
+                <span className={styles.floatingCartTotal}>₹{totalPrice.toFixed(0)}</span>
+              </div>
+              <button 
+                className={styles.floatingCartBtn} 
+                onClick={() => router.push('/cart')}
+                id="floating-cart-btn"
+              >
+                <span>View Cart &amp; Checkout</span>
+                <ArrowRight size={18} />
+              </button>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 

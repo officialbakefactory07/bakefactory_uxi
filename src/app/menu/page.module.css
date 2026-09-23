@@ -710,3 +710,72 @@
   font-weight: 700;
   color: var(--color-heading);
 }
+
+/* ── Floating Sticky Bottom Cart Bar ── */
+.floatingCartBar {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  max-width: 540px;
+  width: calc(100% - 2rem);
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+.floatingCartContent {
+  background: var(--color-heading);
+  color: #FFFFFF;
+  border-radius: var(--radius-full);
+  padding: 0.75rem 1rem 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: 0 12px 36px rgba(35, 22, 14, 0.35), 0 0 0 1.5px rgba(212, 160, 23, 0.4);
+}
+
+.floatingCartInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.floatingCartCount {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-button);
+}
+
+.floatingCartTotal {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.1;
+}
+
+.floatingCartBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-gold-gradient);
+  color: var(--color-heading);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding: 0.7rem 1.35rem;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(212, 160, 23, 0.4);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.floatingCartBtn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 20px rgba(212, 160, 23, 0.6);
+}
