@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import styles from './page.module.css';
-import { ShoppingCart, Search, Star, Plus, Minus } from 'lucide-react';
+import { ShoppingCart, Search, Star, Plus, Minus, X } from 'lucide-react';
 import { useCart, CartItem } from '@/context/CartContext';
 import { useSearchParams } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -411,64 +411,65 @@ function MenuContent() {
           <div className={styles.modalOverlay} onClick={() => setSelectedItem(null)}>
             <motion.div 
               className={styles.modalContent}
-              initial={{ opacity: 0, y: 60, scale: 0.95 }}
+              initial={{ opacity: 0, y: 30, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 60, scale: 0.95 }}
-              transition={{ type: "spring", damping: 25, stiffness: 350 }}
+              exit={{ opacity: 0, y: 30, scale: 0.96 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
-              <button className={styles.closeModalBtn} onClick={() => setSelectedItem(null)}>
-                &times;
+              <button 
+                className={styles.closeModalBtn} 
+                onClick={() => setSelectedItem(null)}
+                aria-label="Close modal"
+              >
+                <X size={18} />
               </button>
 
-              {/* Large Image */}
+              {/* Product Image Banner */}
               <div className={styles.modalImageContainer}>
                 {selectedItem.image ? (
-                  <motion.img 
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img 
                     src={selectedItem.image} 
                     alt={selectedItem.name} 
                     className={styles.modalImage}
-                    animate={{ y: [0, -6, 0] }}
-                    transition={{ 
-                      repeat: Infinity, 
-                      duration: 4, 
-                      ease: "easeInOut" 
-                    }}
                   />
                 ) : (
                   <div className={styles.modalImagePlaceholder}>
                     <span>{selectedItem.category.charAt(0).toUpperCase()}</span>
                   </div>
                 )}
+                <span className={styles.modalCategoryBadge}>{selectedItem.category}</span>
               </div>
 
               {/* Details below the image */}
               <div className={styles.modalDetails}>
-                <h2 className={styles.modalName}>{selectedItem.name}</h2>
-                <div className={styles.modalMetaRow}>
-                  <span className={styles.modalPrice}>₹{selectedItem.price.toFixed(0)}</span>
-                  <div className={styles.modalRatingRow}>
-                    <span className={styles.modalRatingBadge}>
-                      <Star size={12} fill="currentColor" style={{ marginRight: '2px' }} /> {selectedItem.rating?.toFixed(1) || '4.8'}
-                    </span>
-                    <span className={styles.modalRatingCount}>({selectedItem.ratingCount || '120+'})</span>
+                <div className={styles.modalHeaderRow}>
+                  <div>
+                    <h2 className={styles.modalName}>{selectedItem.name}</h2>
+                    {selectedItem.subcategory && (
+                      <span className={styles.modalSubcategoryTag}>{selectedItem.subcategory}</span>
+                    )}
                   </div>
+                  <span className={styles.modalPrice}>₹{selectedItem.price.toFixed(0)}</span>
+                </div>
+
+                <div className={styles.modalRatingRow}>
+                  <span className={styles.modalRatingBadge}>
+                    <Star size={12} fill="currentColor" style={{ marginRight: '3px' }} /> {selectedItem.rating?.toFixed(1) || '4.8'}
+                  </span>
+                  <span className={styles.modalRatingCount}>({selectedItem.ratingCount || '120+'} verified reviews)</span>
                 </div>
 
                 <div className={styles.modalDivider} />
 
-                <h4 className={styles.modalSectionTitle}>Description</h4>
-                <p className={styles.modalDescription}>
-                  {selectedItem.description || selectedItem.ingredients || 'Delicious fresh dessert made with passion and premium ingredients.'}
-                </p>
-
-                {selectedItem.subcategory && (
-                  <div style={{ marginTop: '1.25rem' }}>
-                    <h4 className={styles.modalSectionTitle} style={{ marginBottom: '0.4rem' }}>Category Detail</h4>
-                    <span className={styles.modalSubcategoryTag}>{selectedItem.subcategory}</span>
-                  </div>
-                )}
+                <div className={styles.modalDescBlock}>
+                  <h4 className={styles.modalSectionTitle}>Description</h4>
+                  <p className={styles.modalDescription}>
+                    {selectedItem.description || selectedItem.ingredients || 'Delicious fresh dessert handcrafted with passion and premium ingredients.'}
+                  </p>
+                </div>
 
                 {/* Footer Action: Add to Cart */}
                 <div className={styles.modalActionRow}>
@@ -477,18 +478,19 @@ function MenuContent() {
                       className={styles.modalAddBtn}
                       onClick={(e) => handleAddToCart(selectedItem, e)}
                     >
-                      Add to Cart • ₹{selectedItem.price.toFixed(0)}
+                      <ShoppingCart size={18} />
+                      <span>Add to Cart • ₹{selectedItem.price.toFixed(0)}</span>
                     </button>
                   ) : (
                     <div className={styles.modalQuantityCtrl}>
-                      <span className={styles.modalQuantityLabel}>Added to Cart</span>
+                      <span className={styles.modalQuantityLabel}>Added to Cart ({getItemQuantity(selectedItem.id)})</span>
                       <div className={styles.quantityCtrl}>
                         <button className={styles.qtyBtn} onClick={(e) => handleDecrement(selectedItem, getItemQuantity(selectedItem.id), e)}>
-                          <Minus size={12} strokeWidth={3} />
+                          <Minus size={14} strokeWidth={2.5} />
                         </button>
                         <span className={styles.qtyText}>{getItemQuantity(selectedItem.id)}</span>
                         <button className={styles.qtyBtn} onClick={(e) => handleIncrement(selectedItem, getItemQuantity(selectedItem.id), e)}>
-                          <Plus size={12} strokeWidth={3} />
+                          <Plus size={14} strokeWidth={2.5} />
                         </button>
                       </div>
                     </div>

@@ -67,16 +67,16 @@ function OrderSuccessContent() {
               <span className={styles.paidBadge}>{order.paymentStatus}</span>
             </div>
           )}
-          {order?.payuPaymentId && (
+          {(order?.razorpayPaymentId || order?.payuPaymentId) && (
             <div className={styles.metaRow}>
-              <span>PayU Transaction ID:</span>
-              <span className={styles.txnId}>{order.payuPaymentId}</span>
+              <span>Payment Transaction ID:</span>
+              <span className={styles.txnId}>{order.razorpayPaymentId || order.payuPaymentId}</span>
             </div>
           )}
-          {order?.total && (
+          {(order?.totalPrice || order?.total) && (
             <div className={styles.metaRow}>
-              <span>Amount Paid:</span>
-              <strong className={styles.totalPrice}>₹{order.total.toFixed(0)}</strong>
+              <span>Amount:</span>
+              <strong className={styles.totalPrice}>₹{Number(order.totalPrice || order.total).toFixed(0)}</strong>
             </div>
           )}
         </div>
@@ -146,7 +146,7 @@ function OrderSuccessContent() {
         {/* Trust badge */}
         <div className={styles.trustFooter}>
           <ShieldCheck size={16} />
-          <span>Secure PayU Encrypted Transaction &bull; 100% Quality Guaranteed</span>
+          <span>Secure 256-Bit SSL Encrypted &bull; 100% Food Grade Quality Guaranteed</span>
         </div>
 
       </div>
