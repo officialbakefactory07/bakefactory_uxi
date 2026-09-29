@@ -4,16 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/Button/Button';
 import {
-  ChevronRight,
   Sparkles,
   Star,
-  Award,
   ShieldCheck,
-  Truck,
   Heart,
   ArrowRight,
   Clock,
-  Cake,
   MessageSquarePlus,
   CheckCircle2,
   X,
@@ -37,11 +33,9 @@ interface CustomerReview {
 
 export default function Home() {
   const { user } = useAuth();
-  const [bakeryImage, setBakeryImage] = useState<string>('');
   const [categories, setCategories] = useState<any[]>([]);
   const [reviews, setReviews] = useState<CustomerReview[]>([]);
   const [reviewsLoading, setReviewsLoading] = useState(true);
-
   // Write Review Modal State
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [reviewName, setReviewName] = useState('');
@@ -51,18 +45,6 @@ export default function Home() {
   const [reviewComment, setReviewComment] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
   const [reviewSuccessMsg, setReviewSuccessMsg] = useState(false);
-
-  useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'settings', 'general'), (snap) => {
-      if (snap.exists()) {
-        setBakeryImage(snap.data().bakeryImage || '');
-      }
-    }, (err) => {
-      console.error("Error listening to settings in Home page:", err);
-    });
-    return () => unsub();
-  }, []);
-
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'settings', 'categories'), async (snap) => {
       if (snap.exists()) {
@@ -333,113 +315,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. Artisanal Philosophy / Why Choose Us */}
-      <section className={styles.featuresSection}>
-        <div className={styles.featuresContainer}>
-          <div className={styles.sectionHeaderCenter}>
-            <div className={styles.collectionHeading}>THE BAKE FACTORY STANDARD</div>
-            <h2 className={styles.sectionTitle}>Why Dessert Lovers Choose Us</h2>
-          </div>
-
-          <div className={styles.featuresGrid}>
-            <div className={styles.featureCard}>
-              <div className={styles.featureIconWrap}>
-                <Award size={28} />
-              </div>
-              <h3>Master Patisserie Quality</h3>
-              <p>Every cake is sculpted by seasoned bakers using time-tested European techniques and premium chocolates.</p>
-            </div>
-
-            <div className={styles.featureCard}>
-              <div className={styles.featureIconWrap}>
-                <ShieldCheck size={28} />
-              </div>
-              <h3>100% Pure & Fresh</h3>
-              <p>No artificial preservatives or frozen batters. Only fresh dairy butter, real vanilla, and organic fruits.</p>
-            </div>
-
-            <div className={styles.featureCard}>
-              <div className={styles.featureIconWrap}>
-                <Cake size={28} />
-              </div>
-              <h3>Bespoke Custom Designs</h3>
-              <p>Dreaming of a custom theme, wedding masterpiece, or photo cake? We bring your celebration vision to life.</p>
-            </div>
-
-            <div className={styles.featureCard}>
-              <div className={styles.featureIconWrap}>
-                <Truck size={28} />
-              </div>
-              <h3>Safe & Timely Delivery</h3>
-              <p>Temperature-controlled careful handling so your tiered creations arrive pristine and ready to celebrate.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. About Story Snippet */}
-      <section className={styles.aboutSnippet}>
-        <div className={styles.aboutGrid}>
-          <motion.div 
-            className={styles.aboutText}
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-          >
-            <div className={styles.collectionHeading}>OUR BAKERY HERITAGE</div>
-            <h2>Crafted with Passion, Rooted in Love</h2>
-            <p>
-              At Bake Factory, we believe that every celebration deserves a touch of sweetness. Founded by passionate bakers in Vijayawada, we use only the finest natural ingredients to bring you recipes that have been perfected over time.
-            </p>
-            <p>
-              From morning fresh cookies to showstopper multi-tier wedding cakes, our ovens never stop creating moments of pure delight.
-            </p>
-
-            <div className={styles.aboutHighlights}>
-              <div className={styles.highlightItem}>
-                <span className={styles.highlightDot}>✦</span>
-                <span>FSSAI Certified Food Standards</span>
-              </div>
-              <div className={styles.highlightItem}>
-                <span className={styles.highlightDot}>✦</span>
-                <span>Eggless & Custom Dietary Options</span>
-              </div>
-            </div>
-
-            <Link href="/about" className={styles.storyLinkBtn}>
-              Read Our Full Story <ChevronRight size={18} />
-            </Link>
-          </motion.div>
-
-          <motion.div 
-            className={styles.aboutImageWrapper}
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
-          >
-            {bakeryImage ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={bakeryImage} alt="Bake Factory Bakery Studio" className={styles.aboutImage} />
-            ) : (
-              <div className={styles.aboutImagePlaceholder}>
-                <div className={styles.placeholderImg}>
-                  <Cake size={48} />
-                  <span>Artisan Bakery Studio</span>
-                </div>
-              </div>
-            )}
-            <div className={styles.floatingStoryBadge}>
-              <Award size={20} className={styles.goldBadgeIcon} />
-              <div>
-                <strong>Vijayawada&apos;s Favorite</strong>
-                <span>Artisan Dessert House</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       {/* 6. Authentic Customer Reviews (Admin Approved) */}
       <section className={styles.testimonialsSection}>
