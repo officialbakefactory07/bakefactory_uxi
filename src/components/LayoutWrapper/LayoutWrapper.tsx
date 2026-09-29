@@ -9,7 +9,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   const pathname = usePathname();
   
   // Do not show public Navbar and Footer on admin or pos billing pages
-  const isSpecialAppPage = pathname.startsWith('/dmins') || pathname.startsWith('/pos');
+  const isSpecialAppPage = pathname.startsWith('/admin') || pathname.startsWith('/dmins') || pathname.startsWith('/pos');
 
   return (
     <>

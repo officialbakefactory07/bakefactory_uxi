@@ -208,7 +208,7 @@ export default function StaffAccessPage() {
             </div>
             <div>
               <h2>Master Admin Password</h2>
-              <p>Change your master admin username and password for /dmins</p>
+              <p>Change your master admin username and password for /admin</p>
             </div>
           </div>
 

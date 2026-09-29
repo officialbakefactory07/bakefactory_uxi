@@ -192,7 +192,7 @@ export default function AdminDashboard() {
           <Link href="/pos" target="_blank" className={styles.bannerPosBtn}>
             <Printer size={16} /> Open POS Terminal <ArrowUpRight size={16} />
           </Link>
-          <Link href="/dmins/dashboard/pos-sales" className={styles.bannerSalesBtn}>
+          <Link href="/admin/dashboard/pos-sales" className={styles.bannerSalesBtn}>
             Daily Sales Log
           </Link>
         </div>

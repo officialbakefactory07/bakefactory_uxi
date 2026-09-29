@@ -8,17 +8,17 @@ import { LayoutDashboard, ShoppingCart, UtensilsCrossed, Users, BarChart3, Histo
 import styles from './layout.module.css';
 
 const NAV_ITEMS = [
-  { href: '/dmins/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/dmins/dashboard/pos-sales', label: 'POS & Billing', icon: Printer },
-  { href: '/dmins/dashboard/orders', label: 'Orders', icon: ShoppingCart },
-  { href: '/dmins/dashboard/menu', label: 'Menu', icon: UtensilsCrossed },
-  { href: '/dmins/dashboard/reviews', label: 'Reviews & Ratings', icon: Star },
-  { href: '/dmins/dashboard/customers', label: 'Customers', icon: Users },
-  { href: '/dmins/dashboard/staff', label: 'Staff & Passwords', icon: KeyRound },
-  { href: '/dmins/dashboard/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/dmins/dashboard/history', label: 'History', icon: History },
-  { href: '/dmins/dashboard/offers', label: 'Offers', icon: Tag },
-  { href: '/dmins/dashboard/settings', label: 'Settings', icon: Settings },
+  { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/dashboard/pos-sales', label: 'POS & Billing', icon: Printer },
+  { href: '/admin/dashboard/orders', label: 'Orders', icon: ShoppingCart },
+  { href: '/admin/dashboard/menu', label: 'Menu', icon: UtensilsCrossed },
+  { href: '/admin/dashboard/reviews', label: 'Reviews & Ratings', icon: Star },
+  { href: '/admin/dashboard/customers', label: 'Customers', icon: Users },
+  { href: '/admin/dashboard/staff', label: 'Staff & Passwords', icon: KeyRound },
+  { href: '/admin/dashboard/analytics', label: 'Analytics', icon: BarChart3 },
+  { href: '/admin/dashboard/history', label: 'History', icon: History },
+  { href: '/admin/dashboard/offers', label: 'Offers', icon: Tag },
+  { href: '/admin/dashboard/settings', label: 'Settings', icon: Settings },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (typeof window !== 'undefined') {
       const session = localStorage.getItem('bf_admin_session');
       if (session !== 'authenticated') {
-        router.replace('/dmins');
+        router.replace('/admin');
       } else {
         setAuthorized(true);
       }
@@ -40,7 +40,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = () => {
     localStorage.removeItem('bf_admin_session');
-    router.push('/dmins');
+    router.push('/admin');
   };
 
   if (!authorized) return null;

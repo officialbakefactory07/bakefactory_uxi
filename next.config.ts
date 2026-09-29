@@ -4,6 +4,16 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/dmins/:path*',
+        destination: '/admin/:path*',
+        permanent: true,
+      },
+      {
+        source: '/dmins',
+        destination: '/admin',
+        permanent: true,
+      },
+      {
         source: '/terms-and-conditions',
         destination: '/terms',
         permanent: true,
