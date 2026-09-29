@@ -7,6 +7,12 @@
   background: transparent;
 }
 
+@media (max-width: 768px) {
+  .page {
+    padding: 2rem 1rem 7rem;
+  }
+}
+
 /* ── Menu Header Banner ── */
 .menuHeader {
   text-align: center;
@@ -32,6 +38,18 @@
   color: var(--color-heading);
   line-height: 1.15;
   margin-bottom: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .menuHeader h1 {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .menuHeader h1 {
+    font-size: 1.8rem;
+  }
 }
 
 .menuHeader p {
@@ -244,6 +262,13 @@
 @media (max-width: 860px) {
   .itemsList {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .itemsList {
+    gap: 0.85rem;
   }
 }
 
@@ -259,6 +284,13 @@
   box-shadow: var(--shadow-sm);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+}
+
+@media (max-width: 480px) {
+  .menuItemRow {
+    padding: 1rem;
+    gap: 0.85rem;
+  }
 }
 
 .menuItemRow:hover {
@@ -778,4 +810,23 @@
 .floatingCartBtn:hover {
   transform: scale(1.04);
   box-shadow: 0 6px 20px rgba(212, 160, 23, 0.6);
+}
+
+@media (max-width: 480px) {
+  .floatingCartBar {
+    bottom: 1rem;
+    width: calc(100% - 1.5rem);
+    max-width: 100%;
+  }
+  .floatingCartContent {
+    padding: 0.6rem 0.85rem 0.6rem 1.15rem;
+    gap: 0.75rem;
+  }
+  .floatingCartTotal {
+    font-size: 1.05rem;
+  }
+  .floatingCartBtn {
+    font-size: 0.85rem;
+    padding: 0.6rem 1rem;
+  }
 }
