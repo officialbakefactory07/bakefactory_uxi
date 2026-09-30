@@ -15,6 +15,10 @@ import {
   X,
   MapPin,
   MessageSquareHeart,
+  ChefHat,
+  Crown,
+  Cake,
+  Truck,
 } from 'lucide-react';
 import styles from './page.module.css';
 import Link from 'next/link';
@@ -180,67 +184,121 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      {/* 1. Hero Section */}
+      {/* 1. Hero Section - Bespoke Artisanal Atelier */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <div className={styles.heroBadge}>
-            <span className={styles.badgeSparkle}>✦</span>
-            <span>ARTISANAL BAKERY & DESSERT STUDIO</span>
+            <span className={styles.badgePulseDot} />
+            <span>EST. 2024 &bull; VIJAYAWADA&apos;S ARTISANAL ATELIER</span>
           </div>
 
           <h1 className={styles.heroTitle}>
-            Love at <span className={styles.goldItalic}>First Bite</span>
+            Where Celebrations <span className={styles.goldItalic}>Taste Extraordinary</span>
           </h1>
           
           <p className={styles.heroSubtitle}>
-            Handcrafted desserts made with passion and unforgettable flavors. Experience luxury in every bite, right here in Vijayawada.
+            From velvety Belgian chocolate gateaux and French butter pastries to bespoke tiered wedding cakes &mdash; baked fresh every dawn in Vijayawada with 100% pure dairy butter and real fruit compotes.
           </p>
           
           <div className={styles.ctaButtons}>
             <Link href="/menu">
               <button className={styles.exploreBtn}>
-                Explore Menu <span className={styles.arrowIcon}>&rarr;</span>
+                <span>Order Fresh Today</span>
+                <ArrowRight size={18} className={styles.arrowIcon} />
               </button>
             </Link>
-            <Link href="/about">
-              <button className={styles.storyBtn}>Our Story</button>
+            <Link href="/contact">
+              <button className={styles.storyBtn}>
+                <span>Custom Cake Enquiry</span>
+              </button>
             </Link>
           </div>
           
-          <div className={styles.ratingSection}>
-            <div className={styles.avatars}>
-              <div className={styles.avatar} style={{ zIndex: 4, background: '#D4A017' }}>B</div>
-              <div className={styles.avatar} style={{ zIndex: 3, background: '#8E44AD' }}>A</div>
-              <div className={styles.avatar} style={{ zIndex: 2, background: '#2E7D32' }}>K</div>
-              <div className={styles.avatarCount}>★</div>
-            </div>
-            <div className={styles.ratingInfo}>
-              <div className={styles.stars}>
-                <span className={styles.starGold}>★★★★★</span> <span className={styles.ratingNum}>{avgRating}</span>
+          <div className={styles.trustBadge}>
+            <div className={styles.trustStarsRow}>
+              <div className={styles.starsCluster}>
+                <Star size={15} fill="#D4A017" color="#D4A017" />
+                <Star size={15} fill="#D4A017" color="#D4A017" />
+                <Star size={15} fill="#D4A017" color="#D4A017" />
+                <Star size={15} fill="#D4A017" color="#D4A017" />
+                <Star size={15} fill="#D4A017" color="#D4A017" />
               </div>
-              <div className={styles.ratingLabel}>
+              <span className={styles.trustRatingScore}>{avgRating}</span>
+              <span className={styles.trustDivider}>&bull;</span>
+              <span className={styles.trustHighlights}>
                 {reviews.length > 0
-                  ? `RATED ${avgRating}/5 BY ${reviews.length} VERIFIED CUSTOMER${reviews.length > 1 ? 'S' : ''}`
-                  : 'ARTISANAL DESSERT STUDIO IN VIJAYAWADA'}
-              </div>
+                  ? `${reviews.length} Verified Patron Review${reviews.length > 1 ? 's' : ''}`
+                  : '2,500+ Celebrations Made Special'}
+              </span>
+            </div>
+            <div className={styles.trustTags}>
+              <span className={styles.trustTag}>
+                <CheckCircle2 size={13} className={styles.trustCheckIcon} /> 100% Pure Butter
+              </span>
+              <span className={styles.trustTag}>
+                <CheckCircle2 size={13} className={styles.trustCheckIcon} /> Eggless Available
+              </span>
+              <span className={styles.trustTag}>
+                <CheckCircle2 size={13} className={styles.trustCheckIcon} /> Same-Day Delivery
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Floating Feature Cards */}
-        <div className={styles.heroFloatingCards}>
-          <div className={styles.floatingCard}>
-            <div className={styles.cardIconBadge}>✨</div>
-            <div className={styles.cardInfo}>
-              <strong>Oven-Fresh Daily</strong>
-              <span>100% Pure Organic Ingredients</span>
+        {/* Right Showcase: The Atelier Masterpiece Spotlight */}
+        <div className={styles.atelierSpotlight}>
+          <div className={styles.spotlightCard}>
+            <div className={styles.spotlightHeader}>
+              <div className={styles.spotlightTitleWrap}>
+                <ChefHat size={18} className={styles.spotlightGoldIcon} />
+                <span className={styles.spotlightTag}>THE ATELIER STANDARD</span>
+              </div>
+              <div className={styles.liveFreshBadge}>
+                <span className={styles.liveDot} />
+                <span>Baked Fresh Daily</span>
+              </div>
             </div>
-          </div>
-          <div className={`${styles.floatingCard} ${styles.floatingCardSecondary}`}>
-            <div className={styles.cardIconBadge}>🍰</div>
-            <div className={styles.cardInfo}>
-              <strong>Signature Cakes</strong>
-              <span>Custom Designed for Celebrations</span>
+
+            <div className={styles.spotlightFeatures}>
+              <div className={styles.spotlightFeatureItem}>
+                <div className={styles.featureIconBox}>
+                  <Crown size={19} />
+                </div>
+                <div>
+                  <strong>Bespoke Designer Cakes</strong>
+                  <p>Hand-sculpted theme cakes, elegant fondants &amp; luxury multi-tier wedding creations.</p>
+                </div>
+              </div>
+
+              <div className={styles.spotlightFeatureItem}>
+                <div className={styles.featureIconBox}>
+                  <Cake size={19} />
+                </div>
+                <div>
+                  <strong>Pure Belgian Truffle &amp; Gateaux</strong>
+                  <p>Single-origin chocolates, rich European butter &amp; slow-cooked fruit compotes.</p>
+                </div>
+              </div>
+
+              <div className={styles.spotlightFeatureItem}>
+                <div className={styles.featureIconBox}>
+                  <Truck size={19} />
+                </div>
+                <div>
+                  <strong>Temperature-Guarded Delivery</strong>
+                  <p>Safe, punctual doorstep delivery across Vijayawada, Tadepalle &amp; Guntur borders.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.spotlightFooter}>
+              <div className={styles.spotlightHours}>
+                <Clock size={14} className={styles.clockIcon} />
+                <span>Ovens Active 8:00 AM &ndash; 11:00 PM</span>
+              </div>
+              <Link href="/contact" className={styles.customEnquiryLink}>
+                Consult Master Baker &rarr;
+              </Link>
             </div>
           </div>
         </div>
