@@ -19,6 +19,7 @@ import {
   Crown,
   Cake,
   Truck,
+  ChevronRight,
 } from 'lucide-react';
 import styles from './page.module.css';
 import Link from 'next/link';
@@ -34,6 +35,27 @@ interface CustomerReview {
   rating: number;
   createdAt?: any;
 }
+
+const DEFAULT_CATEGORIES = [
+  {
+    id: 'cakes',
+    name: 'Artisanal Cakes',
+    tagline: 'Custom Designer & Fresh Gateaux',
+    image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'desserts',
+    name: 'Gourmet Desserts',
+    tagline: 'Truffles, Tarts & Pastries',
+    image: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'cookies',
+    name: 'Butter Cookies',
+    tagline: 'Oven-Baked Daily Delights',
+    image: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&auto=format&fit=crop&q=80',
+  },
+];
 
 export default function Home() {
   const { user } = useAuth();
@@ -245,61 +267,57 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Right Showcase: The Atelier Masterpiece Spotlight */}
-        <div className={styles.atelierSpotlight}>
-          <div className={styles.spotlightCard}>
-            <div className={styles.spotlightHeader}>
-              <div className={styles.spotlightTitleWrap}>
-                <ChefHat size={18} className={styles.spotlightGoldIcon} />
-                <span className={styles.spotlightTag}>THE ATELIER STANDARD</span>
-              </div>
-              <div className={styles.liveFreshBadge}>
-                <span className={styles.liveDot} />
-                <span>Baked Fresh Daily</span>
-              </div>
+        {/* Right Showcase: Mini Visual Category Strip (Compact Thumbnail Cards) */}
+        <div className={styles.categoryStripContainer}>
+          <div className={styles.categoryStripHeader}>
+            <div className={styles.stripHeaderLeft}>
+              <span className={styles.stripPulseDot} />
+              <span className={styles.stripHeaderTag}>DAILY ATELIER PICKS</span>
             </div>
+            <span className={styles.stripHeaderStatus}>Fresh From Oven</span>
+          </div>
 
-            <div className={styles.spotlightFeatures}>
-              <div className={styles.spotlightFeatureItem}>
-                <div className={styles.featureIconBox}>
-                  <Crown size={19} />
-                </div>
-                <div>
-                  <strong>Bespoke Designer Cakes</strong>
-                  <p>Hand-sculpted theme cakes, elegant fondants &amp; luxury multi-tier wedding creations.</p>
-                </div>
-              </div>
+          <div className={styles.stripList}>
+            {(categories.length > 0 ? categories.slice(0, 3) : DEFAULT_CATEGORIES).map((cat, idx) => {
+              const fallback = DEFAULT_CATEGORIES[idx] || DEFAULT_CATEGORIES[0];
+              const displayImage = cat.image || fallback.image;
+              const displayTagline = cat.tagline || fallback.tagline;
+              const displayBadge = idx === 0 ? 'Signature' : idx === 1 ? 'Popular' : 'Oven Fresh';
 
-              <div className={styles.spotlightFeatureItem}>
-                <div className={styles.featureIconBox}>
-                  <Cake size={19} />
-                </div>
-                <div>
-                  <strong>Pure Belgian Truffle &amp; Gateaux</strong>
-                  <p>Single-origin chocolates, rich European butter &amp; slow-cooked fruit compotes.</p>
-                </div>
-              </div>
+              return (
+                <Link
+                  key={cat.id}
+                  href={`/menu?category=${cat.id}`}
+                  className={styles.stripItem}
+                >
+                  <div className={styles.stripThumbWrap}>
+                    <div
+                      className={styles.stripThumb}
+                      style={{ backgroundImage: `url(${displayImage})` }}
+                    />
+                    <span className={styles.stripMiniBadge}>{displayBadge}</span>
+                  </div>
 
-              <div className={styles.spotlightFeatureItem}>
-                <div className={styles.featureIconBox}>
-                  <Truck size={19} />
-                </div>
-                <div>
-                  <strong>Temperature-Guarded Delivery</strong>
-                  <p>Safe, punctual doorstep delivery across Vijayawada, Tadepalle &amp; Guntur borders.</p>
-                </div>
-              </div>
-            </div>
+                  <div className={styles.stripMeta}>
+                    <div className={styles.stripTitleRow}>
+                      <h4 className={styles.stripName}>{cat.name}</h4>
+                      <ArrowRight size={15} className={styles.stripArrow} />
+                    </div>
+                    <p className={styles.stripTagline}>{displayTagline}</p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
 
-            <div className={styles.spotlightFooter}>
-              <div className={styles.spotlightHours}>
-                <Clock size={14} className={styles.clockIcon} />
-                <span>Ovens Active 8:00 AM &ndash; 11:00 PM</span>
-              </div>
-              <Link href="/contact" className={styles.customEnquiryLink}>
-                Consult Master Baker &rarr;
-              </Link>
-            </div>
+          <div className={styles.stripFooter}>
+            <Link href="/menu" className={styles.stripExploreAllBtn}>
+              <span>Explore All Treats</span>
+              <ChevronRight size={15} />
+            </Link>
+            <span className={styles.stripHoursNote}>
+              <Clock size={12} className={styles.stripClockIcon} /> Order before 6 PM for today
+            </span>
           </div>
         </div>
       </section>
