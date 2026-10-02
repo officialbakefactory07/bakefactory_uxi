@@ -56,7 +56,6 @@ export default function Login() {
   const [otpLoading, setOtpLoading] = useState<boolean>(false);
   const [otpVerifying, setOtpVerifying] = useState<boolean>(false);
   const [otpError, setOtpError] = useState<string>('');
-  const [devOtpHint, setDevOtpHint] = useState<string>('');
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // 60-second OTP cooldown ticker
@@ -127,11 +126,6 @@ export default function Login() {
       } else {
         setOtpToken(data.token);
         setOtpTimer(60);
-        if (data.devOtp) {
-          setDevOtpHint(data.devOtp);
-        } else {
-          setDevOtpHint('');
-        }
       }
     } catch (err: any) {
       setOtpError('Network connection failed. Could not request verification code.');
@@ -209,7 +203,6 @@ export default function Login() {
     setOtpToken('');
     setOtpDigits(['', '', '', '', '', '']);
     setOtpError('');
-    setDevOtpHint('');
     setError('');
   };
 
@@ -467,17 +460,6 @@ export default function Login() {
                 <ArrowLeft size={14} />
                 <span>Cancel and return to sign in</span>
               </button>
-
-              {/* Sandbox notice if test domain email delivery constraint applies */}
-              {devOtpHint && (
-                <div className={styles.devOtpHintBanner}>
-                  <strong>Sandbox Mode:</strong> Code for this session is <strong>{devOtpHint}</strong>
-                  <br />
-                  <span style={{ fontSize: '0.72rem', opacity: 0.85 }}>
-                    (To deliver real emails to all inboxes, configure your custom domain on Resend.com)
-                  </span>
-                </div>
-              )}
             </div>
           ) : (
             /* ─────────────────────────────────────────────────────────────

@@ -41,21 +41,19 @@ export async function POST(req: NextRequest) {
       resendErrorMsg = err.message || 'Email sending failed';
     }
 
-    // When using Resend's free test domain (onboarding@resend.dev), Resend strictly restricts
-    // recipients to the account owner's email. To prevent testers or store admins from being locked out,
-    // we provide devOtp hint if email delivery was constrained.
-    const isTestingSender = (process.env.RESEND_FROM_EMAIL || '').includes('onboarding@resend.dev');
-    const provideDevHint = !emailSent || isTestingSender || process.env.NODE_ENV !== 'production';
+    if (!emailSent) {
+      console.error('Failed to dispatch OTP email via Resend:', resendErrorMsg);
+      return NextResponse.json({
+        success: false,
+        error: `Unable to send verification email. (${resendErrorMsg})`,
+      }, { status: 502 });
+    }
 
     return NextResponse.json({
       success: true,
-      emailSent,
+      emailSent: true,
       token,
-      message: emailSent
-        ? `Verification code sent to ${email}`
-        : `Email delivery simulated (Resend test mode).`,
-      // Dev hint for sandbox testing if email couldn't be routed by test domain:
-      ...(provideDevHint ? { devOtp: otp } : {}),
+      message: `Verification code sent to ${email}`,
     });
   } catch (error: any) {
     console.error('API send-otp error:', error);

@@ -600,16 +600,3 @@
   color: #C0392B;
 }
 
-.devOtpHintBanner {
-  margin-top: 1rem;
-  padding: 0.65rem 0.85rem;
-  background: #FFF8E7;
-  border: 1px dashed #D4A017;
-  border-radius: 10px;
-  font-size: 0.78rem;
-  color: #7D5A12;
-  line-height: 1.4;
-  text-align: center;
-  width: 100%;
-}
-
