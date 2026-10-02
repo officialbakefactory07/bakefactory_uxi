@@ -93,6 +93,7 @@ export async function extractMenuFromText(menuText: string): Promise<ExtractedMe
               { role: 'user', content: `Please extract all menu items from this bakery text:\n\n${menuText}` },
             ],
             temperature: 0.1,
+            max_tokens: 800,
           }),
         });
 
@@ -123,7 +124,7 @@ export async function extractMenuFromText(menuText: string): Promise<ExtractedMe
 }
 
 /**
- * Extract menu items from a menu image via Groq Multimodal Vision
+ * Extract menu items from a menu image via Groq Multimodal Vision (Qwen 3.8-27B)
  */
 export async function extractMenuFromImage(base64Image: string): Promise<ExtractedMenuItem[]> {
   try {
@@ -132,7 +133,8 @@ export async function extractMenuFromImage(base64Image: string): Promise<Extract
       ? base64Image 
       : `data:image/jpeg;base64,${base64Image}`;
 
-    const modelsToTry = ['qwen/qwen3.8-27b', 'openai/gpt-oss-120b'];
+    // Only vision-capable models can accept multimodal array content
+    const modelsToTry = ['qwen/qwen3.8-27b'];
     let lastError: any = null;
 
     for (const model of modelsToTry) {
@@ -150,12 +152,13 @@ export async function extractMenuFromImage(base64Image: string): Promise<Extract
               {
                 role: 'user',
                 content: [
-                  { type: 'text', text: 'Extract all products, names, categories, and prices from this bakery menu image into structured JSON items list:' },
+                  { type: 'text', text: 'Extract all products, names, categories, and prices from this bakery menu image into a structured JSON array:' },
                   { type: 'image_url', image_url: { url: imageUrl } },
                 ],
               },
             ],
             temperature: 0.1,
+            max_tokens: 800,
           }),
         });
 

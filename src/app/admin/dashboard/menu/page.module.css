@@ -293,16 +293,18 @@
 }
 
 /* Modal / Overlay */
-.overlay {
+.overlay,
+.modalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 9999;
   padding: 1.5rem;
+  overflow-y: auto;
 }
 
 .modal {
@@ -486,15 +488,16 @@
   border-radius: var(--radius-lg);
   max-width: 800px;
   width: 100%;
-  max-height: 90vh;
+  max-height: 85vh;
   display: flex;
   flex-direction: column;
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
   border: 1px solid var(--color-border);
-  overflow: hidden;
+  overflow-y: auto;
   animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   padding: 1.75rem;
   gap: 1.25rem;
+  margin: auto;
 }
 
 .aiModalHeader {

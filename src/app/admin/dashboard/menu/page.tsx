@@ -172,16 +172,38 @@ export default function MenuPage() {
     reader.readAsDataURL(file);
   };
 
-  // ── AI Image Upload Handler ──
+  // ── AI Image Upload Handler (with automatic client-side optimization) ──
   const handleAiImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      const dataUrl = event.target?.result as string;
-      setAiImageBase64(dataUrl);
-      setAiStatusMsg(null);
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_DIM = 1200;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height && width > MAX_DIM) {
+          height = Math.round((height * MAX_DIM) / width);
+          width = MAX_DIM;
+        } else if (height > MAX_DIM) {
+          width = Math.round((width * MAX_DIM) / height);
+          height = MAX_DIM;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        const compressed = canvas.toDataURL('image/jpeg', 0.85);
+        setAiImageBase64(compressed);
+        setAiStatusMsg(null);
+      };
+      img.src = event.target?.result as string;
     };
     reader.readAsDataURL(file);
   };
@@ -513,7 +535,7 @@ export default function MenuPage() {
 
       {/* ── 1. MODAL: AI MENU IMPORTER (POWERED BY GROQ) ── */}
       {aiModalOpen && (
-        <div className={styles.modalOverlay} onClick={() => setAiModalOpen(false)}>
+        <div className={styles.overlay} onClick={() => setAiModalOpen(false)}>
           <div className={styles.aiModalCard} onClick={(e) => e.stopPropagation()}>
             
             {/* Header */}
