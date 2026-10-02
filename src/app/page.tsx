@@ -36,32 +36,49 @@ interface CustomerReview {
   createdAt?: any;
 }
 
+const CATEGORY_IMAGE_MAP: Record<string, string> = {
+  cakes: '/category-cakes.jpg',
+  desserts: '/category-desserts.jpg',
+  cookies: '/category-cookies.jpg',
+  combos: '/category-combos.jpg',
+};
+
 const DEFAULT_CATEGORIES = [
   {
     id: 'cakes',
     name: 'Artisanal Cakes',
-    tagline: 'Custom Designer & Fresh Gateaux',
-    image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&auto=format&fit=crop&q=80',
+    tagline: 'Dry, Cool & Custom Designer',
+    image: '/category-cakes.jpg',
   },
   {
     id: 'desserts',
     name: 'Gourmet Desserts',
-    tagline: 'Truffles, Tarts & Pastries',
-    image: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&auto=format&fit=crop&q=80',
+    tagline: 'Gourmet Sweet Indulgences',
+    image: '/category-desserts.jpg',
   },
   {
     id: 'cookies',
     name: 'Butter Cookies',
-    tagline: 'Oven-Baked Daily Delights',
+    tagline: 'Oven-Fresh Butter Delights',
     image: '/category-cookies.jpg',
+  },
+  {
+    id: 'combos',
+    name: 'Celebration Combos',
+    tagline: 'Celebration Boxes & Treats',
+    image: '/category-combos.jpg',
   },
 ];
 
 const resolveCategoryImage = (cat: any, fallbackImg?: string) => {
-  if (cat?.id === 'cookies' && (!cat?.image || cat?.image?.includes('unsplash'))) {
-    return '/category-cookies.jpg';
+  const catId = (cat?.id || '').toLowerCase();
+  if (catId && CATEGORY_IMAGE_MAP[catId]) {
+    if (!cat?.image || cat.image.includes('unsplash') || cat.image.includes('photo-')) {
+      return CATEGORY_IMAGE_MAP[catId];
+    }
+    return cat.image;
   }
-  return cat?.image || fallbackImg || '/category-cookies.jpg';
+  return cat?.image || fallbackImg || '/category-cakes.jpg';
 };
 
 export default function Home() {
@@ -81,14 +98,22 @@ export default function Home() {
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'settings', 'categories'), async (snap) => {
       if (snap.exists()) {
-        setCategories(snap.data().categories || []);
+        const rawCats = snap.data().categories || [];
+        const normalized = rawCats.map((cat: any) => {
+          const catId = (cat.id || '').toLowerCase();
+          if (CATEGORY_IMAGE_MAP[catId] && (!cat.image || cat.image.includes('unsplash') || cat.image.includes('photo-'))) {
+            return { ...cat, image: CATEGORY_IMAGE_MAP[catId] };
+          }
+          return cat;
+        });
+        setCategories(normalized.length > 0 ? normalized : DEFAULT_CATEGORIES);
       } else {
         const defaultCats = [
           {
             id: 'cakes',
             name: 'Cakes',
             tagline: 'Dry, Cool & Custom Designer',
-            image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&auto=format&fit=crop&q=80',
+            image: '/category-cakes.jpg',
             subcategories: [
               'Dry Cakes',
               'Cool Cakes',
@@ -102,7 +127,7 @@ export default function Home() {
             id: 'desserts',
             name: 'Desserts',
             tagline: 'Gourmet Sweet Indulgences',
-            image: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&auto=format&fit=crop&q=80',
+            image: '/category-desserts.jpg',
             subcategories: []
           },
           {
@@ -116,7 +141,7 @@ export default function Home() {
             id: 'combos',
             name: 'Combos',
             tagline: 'Celebration Boxes & Treats',
-            image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&auto=format&fit=crop&q=80',
+            image: '/category-combos.jpg',
             subcategories: []
           }
         ];
@@ -125,6 +150,7 @@ export default function Home() {
           setCategories(defaultCats);
         } catch (err) {
           console.error("Error seeding categories:", err);
+          setCategories(DEFAULT_CATEGORIES);
         }
       }
     });
@@ -395,6 +421,141 @@ export default function Home() {
               Explore Full Dessert Menu <ArrowRight size={18} />
             </button>
           </Link>
+        </div>
+      </section>
+
+      {/* 4. The Atelier Heritage & Craft (Luxury About Section) */}
+      <section className={styles.aboutAtelierSection}>
+        <div className={styles.aboutAtelierContainer}>
+          <div className={styles.aboutAtelierGrid}>
+            
+            {/* Left: Philosophy & Craft Story */}
+            <motion.div 
+              className={styles.aboutStoryCol}
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className={styles.aboutBadgeRow}>
+                <span className={styles.aboutPulseDot} />
+                <span className={styles.aboutBadgeText}>✦ THE ATELIER PHILOSOPHY &bull; EST. 2024</span>
+              </div>
+
+              <h2 className={styles.aboutMainTitle}>
+                Where European Artistry Meets <span className={styles.goldItalic}>Pure Indulgence</span>
+              </h2>
+
+              <p className={styles.aboutLeadText}>
+                At Bake Factory, every dessert is a celebration of uncompromising craftsmanship. 
+                We refuse industrial premixes, artificial cake improvers, and hydrogenated fats &mdash; 
+                instead honoring classical European baking where real flavor reigns supreme.
+              </p>
+
+              {/* 4 Culinary Pillars */}
+              <div className={styles.pillarsGrid}>
+                <div className={styles.pillarItem}>
+                  <div className={styles.pillarIconCircle}>
+                    <Heart size={18} />
+                  </div>
+                  <div className={styles.pillarText}>
+                    <strong>100% Cultured Butter</strong>
+                    <span>Pure dairy richness, zero margarine</span>
+                  </div>
+                </div>
+
+                <div className={styles.pillarItem}>
+                  <div className={styles.pillarIconCircle}>
+                    <Crown size={18} />
+                  </div>
+                  <div className={styles.pillarText}>
+                    <strong>Belgian Couverture</strong>
+                    <span>Pure cocoa butter &amp; silky ganaches</span>
+                  </div>
+                </div>
+
+                <div className={styles.pillarItem}>
+                  <div className={styles.pillarIconCircle}>
+                    <Sparkles size={18} />
+                  </div>
+                  <div className={styles.pillarText}>
+                    <strong>Real Vanilla &amp; Berries</strong>
+                    <span>Farm-fresh compotes, no artificial syrup</span>
+                  </div>
+                </div>
+
+                <div className={styles.pillarItem}>
+                  <div className={styles.pillarIconCircle}>
+                    <Clock size={18} />
+                  </div>
+                  <div className={styles.pillarText}>
+                    <strong>Dawn-Baked Fresh</strong>
+                    <span>Oven-fresh on your event day</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.aboutCtaRow}>
+                <Link href="/about">
+                  <button className={styles.aboutDiscoverBtn}>
+                    <span>Discover Our Story &amp; Standards</span>
+                    <ArrowRight size={17} />
+                  </button>
+                </Link>
+                <Link href="/contact" className={styles.aboutConsultLink}>
+                  <span>Book Custom Consultation &rarr;</span>
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Right: Layered Visual Atelier Composition */}
+            <motion.div 
+              className={styles.aboutVisualCol}
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className={styles.visualFrameWrap}>
+                <div 
+                  className={styles.visualMainPhoto} 
+                  style={{ backgroundImage: `url('/category-cakes.jpg')` }}
+                >
+                  <div className={styles.visualOverlayGradient} />
+                  <div className={styles.visualFloatingBadge}>
+                    <Sparkles size={16} className={styles.goldIcon} />
+                    <div>
+                      <strong>Master Pastry Art</strong>
+                      <span>Vijayawada Atelier</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating Secondary Inset Card */}
+                <div className={styles.visualSubCard}>
+                  <div 
+                    className={styles.visualSubPhoto} 
+                    style={{ backgroundImage: `url('/about-chef.jpg')` }} 
+                  />
+                  <div className={styles.visualSubMeta}>
+                    <div className={styles.starsSmall}>
+                      <Star size={12} fill="#D4A017" color="#D4A017" />
+                      <Star size={12} fill="#D4A017" color="#D4A017" />
+                      <Star size={12} fill="#D4A017" color="#D4A017" />
+                      <Star size={12} fill="#D4A017" color="#D4A017" />
+                      <Star size={12} fill="#D4A017" color="#D4A017" />
+                    </div>
+                    <strong>10,000+ Celebrations</strong>
+                    <span>Handcrafted in Vijayawada</span>
+                  </div>
+                </div>
+
+                {/* Luxury Gold Border Accent */}
+                <div className={styles.visualGoldBorder} />
+              </div>
+            </motion.div>
+
+          </div>
         </div>
       </section>
 

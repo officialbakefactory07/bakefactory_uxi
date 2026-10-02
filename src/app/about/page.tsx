@@ -234,9 +234,8 @@ export default function About() {
               </div>
 
               <p className={styles.storyParagraph}>
-                At <strong>Bake Factory</strong> (Food Business Operator: <strong>VENIGALLA THUSHITHA</strong>), 
-                we began with a single sacred conviction: that a celebration cake should not merely look stunning — 
-                it must be unforgettable upon the very first bite.
+                At <strong>Bake Factory</strong>, we began with a sacred conviction: that a celebration centerpiece 
+                should not merely look breathtaking &mdash; it must awaken the senses upon the very first bite.
               </p>
 
               <p className={styles.storyParagraph}>
