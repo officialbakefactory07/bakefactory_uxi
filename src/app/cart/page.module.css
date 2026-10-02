@@ -447,6 +447,44 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.blockHeaderBtnGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.gpsSmallBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #FEF8E7;
+  color: #8C6200;
+  border: 1px solid #F2D58E;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gpsSmallBtn:hover:not(:disabled) {
+  background: #FCEEC8;
+  border-color: #D4A017;
+}
+
+.gpsSmallBtn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.spinIcon {
+  animation: spin 0.8s linear infinite;
 }
 
 .blockHeader label, .blockLabel {
@@ -577,6 +615,96 @@
 .formSectionSubtitle {
   font-size: 0.78rem;
   color: var(--color-body-muted);
+}
+
+/* GPS One-Tap Auto-fill Bar */
+.gpsAutoFillBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, #FFF9EB 0%, #FFF3D6 100%);
+  border: 1.5px solid #F0CF7A;
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.gpsAutoFillBar:hover:not(:disabled) {
+  background: linear-gradient(135deg, #FFF3D6 0%, #FFE9B3 100%);
+  border-color: #D4A017;
+  box-shadow: 0 4px 14px rgba(212, 160, 23, 0.15);
+  transform: translateY(-1px);
+}
+
+.gpsAutoFillBar:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.gpsBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.gpsIconCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #D4A017;
+  color: #1E1E1E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gpsTextCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.gpsBarTitle {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #5C3D00;
+}
+
+.gpsBarDesc {
+  font-size: 0.75rem;
+  color: #7A5714;
+}
+
+.gpsBarTag {
+  background: #D4A017;
+  color: #1E1E1E;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.25rem 0.55rem;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .gpsAutoFillBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+  .gpsBarTag {
+    align-self: flex-start;
+  }
 }
 
 /* 1. Address Tag / Category Pills */
@@ -766,6 +894,42 @@
   color: var(--color-body-muted);
   width: 100%;
   box-sizing: border-box;
+}
+
+.noAddressBtnRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.useGpsBannerBtn {
+  background: #FEF8E7;
+  color: #8C6200;
+  border: 1.5px solid #F0CF7A;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-full);
+  font-weight: 800;
+  font-size: 0.88rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  box-shadow: 0 2px 8px rgba(212, 160, 23, 0.15);
+  transition: all 0.2s ease;
+}
+
+.useGpsBannerBtn:hover:not(:disabled) {
+  background: #FCEEC8;
+  border-color: #D4A017;
+  transform: translateY(-1px);
+}
+
+.useGpsBannerBtn:disabled {
+  opacity: 0.7;
+  cursor: wait;
 }
 
 .addFirstAddrBtn {

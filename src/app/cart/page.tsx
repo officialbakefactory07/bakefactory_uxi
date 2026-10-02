@@ -10,7 +10,7 @@ import { Card } from '@/components/Card/Card';
 import { 
   Trash2, Plus, Minus, Tag, Check, MapPin, Edit3, 
   PlusCircle, ShoppingBag, ShieldCheck, Sparkles, X, Phone, User, CheckCircle2,
-  Banknote, CreditCard, Wallet, Clock, AlertCircle, Home, Briefcase
+  Banknote, CreditCard, Wallet, Clock, AlertCircle, Home, Briefcase, Navigation, Loader2
 } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp, doc, getDoc, updateDoc } from 'firebase/firestore';
@@ -114,6 +114,7 @@ function CartContent() {
   const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [addressForm, setAddressForm] = useState<StructuredAddressForm>(INITIAL_ADDRESS_FORM);
+  const [isLocating, setIsLocating] = useState(false);
 
   // Contact Info State
   const [contactPhone, setContactPhone] = useState('');
@@ -309,6 +310,71 @@ function CartContent() {
         console.error('Error deleting address from profile:', err);
       }
     }
+  };
+
+  // GPS / Geolocation: Auto-detect user's current location & reverse geocode
+  const handleUseCurrentLocation = () => {
+    if (typeof window === 'undefined' || !('geolocation' in navigator)) {
+      alert('Geolocation is not supported by your browser or device.');
+      return;
+    }
+
+    setIsLocating(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const res = await fetch(`/api/reverse-geocode?lat=${latitude}&lng=${longitude}`);
+          const data = await res.json();
+
+          if (data.success) {
+            setAddressForm(prev => ({
+              ...prev,
+              area: data.area || prev.area,
+              landmark: data.landmark || prev.landmark,
+              city: ['Vijayawada', 'Tadepalle', 'Guntur', 'Mangalagiri'].includes(data.city)
+                ? data.city
+                : (data.city || prev.city),
+              pincode: data.pincode || prev.pincode,
+              receiverName: profile?.fullName || user?.displayName || prev.receiverName
+            }));
+            setIsAddingNewAddress(true);
+            setIsEditingAddress(false);
+            setSavedSuccessMsg('Location auto-detected! Please enter your Flat / House number to complete.');
+            setTimeout(() => setSavedSuccessMsg(''), 5000);
+          } else {
+            alert('Could not determine exact street address from GPS. Please fill in details manually.');
+            setIsAddingNewAddress(true);
+          }
+        } catch (err) {
+          console.error('Error fetching GPS address:', err);
+          alert('Could not fetch address details from GPS. Please enter manually.');
+          setIsAddingNewAddress(true);
+        } finally {
+          setIsLocating(false);
+        }
+      },
+      (error) => {
+        setIsLocating(false);
+        console.warn('Geolocation error:', error);
+        if (error.code === error.PERMISSION_DENIED) {
+          alert('Location permission was denied. Please allow location in your browser settings or enter your address manually.');
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          alert('GPS location information unavailable. Please enter your address manually.');
+        } else if (error.code === error.TIMEOUT) {
+          alert('Location detection timed out. Please try again or enter your address manually.');
+        } else {
+          alert('Unable to retrieve current location. Please enter your address manually.');
+        }
+        setIsAddingNewAddress(true);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 12000,
+        maximumAge: 15000
+      }
+    );
   };
 
   // Save contact phone
@@ -709,20 +775,32 @@ function CartContent() {
                   <div className={styles.blockHeader}>
                     <label><MapPin size={16} /> Delivery Address (Vijayawada / Tadepalle)</label>
                     {!isAddingNewAddress && !isEditingAddress && (
-                      <button 
-                        type="button"
-                        className={styles.textLinkBtn}
-                        onClick={() => {
-                          setAddressForm({
-                            ...INITIAL_ADDRESS_FORM,
-                            receiverName: profile?.fullName || user?.displayName || '',
-                          });
-                          setIsAddingNewAddress(true);
-                          setIsEditingAddress(false);
-                        }}
-                      >
-                        <PlusCircle size={14} /> Add New Address
-                      </button>
+                      <div className={styles.blockHeaderBtnGroup}>
+                        <button 
+                          type="button"
+                          className={styles.gpsSmallBtn}
+                          onClick={handleUseCurrentLocation}
+                          disabled={isLocating}
+                          title="Auto-detect address with GPS"
+                        >
+                          {isLocating ? <Loader2 size={13} className={styles.spinIcon} /> : <Navigation size={13} />}
+                          <span>{isLocating ? 'Locating...' : 'Use Current Location'}</span>
+                        </button>
+                        <button 
+                          type="button"
+                          className={styles.textLinkBtn}
+                          onClick={() => {
+                            setAddressForm({
+                              ...INITIAL_ADDRESS_FORM,
+                              receiverName: profile?.fullName || user?.displayName || '',
+                            });
+                            setIsAddingNewAddress(true);
+                            setIsEditingAddress(false);
+                          }}
+                        >
+                          <PlusCircle size={14} /> Add New
+                        </button>
+                      </div>
                     )}
                   </div>
 
@@ -737,6 +815,33 @@ function CartContent() {
                           Enter complete details for accurate doorstep delivery
                         </span>
                       </div>
+
+                      {/* GPS One-Tap Auto-fill Bar */}
+                      <button
+                        type="button"
+                        className={styles.gpsAutoFillBar}
+                        onClick={handleUseCurrentLocation}
+                        disabled={isLocating}
+                      >
+                        <div className={styles.gpsBarLeft}>
+                          {isLocating ? (
+                            <Loader2 size={18} className={styles.spinIcon} />
+                          ) : (
+                            <div className={styles.gpsIconCircle}>
+                              <Navigation size={15} />
+                            </div>
+                          )}
+                          <div className={styles.gpsTextCol}>
+                            <span className={styles.gpsBarTitle}>
+                              {isLocating ? 'Detecting your GPS location...' : 'Use Current Location'}
+                            </span>
+                            <span className={styles.gpsBarDesc}>
+                              {isLocating ? 'Fetching street, area & pincode' : 'Tap to auto-fill Street, Locality & Pincode with GPS'}
+                            </span>
+                          </div>
+                        </div>
+                        <span className={styles.gpsBarTag}>{isLocating ? 'FETCHING' : '1-TAP AUTOFILL'}</span>
+                      </button>
 
                       {/* 1. Address Tag / Category */}
                       <div className={styles.tagSelectorGroup}>
@@ -863,19 +968,30 @@ function CartContent() {
                   {!isAddingNewAddress && !isEditingAddress && addresses.length === 0 && (
                     <div className={styles.noAddressBox}>
                       <p>You have no saved delivery addresses.</p>
-                      <button 
-                        type="button"
-                        className={styles.addFirstAddrBtn}
-                        onClick={() => {
-                          setAddressForm({
-                            ...INITIAL_ADDRESS_FORM,
-                            receiverName: profile?.fullName || user?.displayName || '',
-                          });
-                          setIsAddingNewAddress(true);
-                        }}
-                      >
-                        <PlusCircle size={15} /> Add Delivery Address
-                      </button>
+                      <div className={styles.noAddressBtnRow}>
+                        <button 
+                          type="button"
+                          className={styles.useGpsBannerBtn}
+                          onClick={handleUseCurrentLocation}
+                          disabled={isLocating}
+                        >
+                          {isLocating ? <Loader2 size={15} className={styles.spinIcon} /> : <Navigation size={15} />}
+                          <span>{isLocating ? 'Detecting Location...' : 'Use Current Location'}</span>
+                        </button>
+                        <button 
+                          type="button"
+                          className={styles.addFirstAddrBtn}
+                          onClick={() => {
+                            setAddressForm({
+                              ...INITIAL_ADDRESS_FORM,
+                              receiverName: profile?.fullName || user?.displayName || '',
+                            });
+                            setIsAddingNewAddress(true);
+                          }}
+                        >
+                          <PlusCircle size={15} /> Enter Manually
+                        </button>
+                      </div>
                     </div>
                   )}
 
