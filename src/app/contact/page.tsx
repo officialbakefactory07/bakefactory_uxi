@@ -203,16 +203,34 @@ export default function Contact() {
           {/* Operating Hours & Studio Map */}
           <div className={styles.sideSection}>
             <div className={styles.hoursCard}>
-              <div className={styles.cardHeader}>
-                <Clock size={20} className={styles.goldIcon} />
-                <h3>Operating Hours</h3>
+              <div className={styles.hoursHeader}>
+                <div className={styles.hoursIconCircle}>
+                  <Clock size={22} className={styles.hoursIcon} />
+                </div>
+                <div>
+                  <h3>Operating Hours</h3>
+                  <span>Fresh From Oven &bull; 7 Days a Week</span>
+                </div>
               </div>
-              <ul className={styles.hoursList}>
-                <li><span>Monday &ndash; Friday</span><strong>9:00 AM &ndash; 10:30 PM</strong></li>
-                <li><span>Saturday</span><strong>9:00 AM &ndash; 11:00 PM</strong></li>
-                <li><span>Sunday</span><strong>9:00 AM &ndash; 11:00 PM</strong></li>
-                <li><span>Midnight Cake Delivery</span><strong>11:00 PM &ndash; 12:30 AM (Pre-booked)</strong></li>
-              </ul>
+
+              <div className={styles.timingsList}>
+                <div className={styles.timingRow}>
+                  <span className={styles.timingDay}>Monday &ndash; Friday</span>
+                  <span className={styles.timingTime}>9:00 AM &ndash; 10:30 PM</span>
+                </div>
+                <div className={styles.timingRow}>
+                  <span className={styles.timingDay}>Saturday</span>
+                  <span className={styles.timingTime}>9:00 AM &ndash; 11:00 PM</span>
+                </div>
+                <div className={styles.timingRow}>
+                  <span className={styles.timingDay}>Sunday</span>
+                  <span className={styles.timingTime}>9:00 AM &ndash; 11:00 PM</span>
+                </div>
+                <div className={styles.timingRow}>
+                  <span className={styles.timingDay}>Midnight Delivery</span>
+                  <span className={styles.timingTime}>11:00 PM &ndash; 12:30 AM (Pre-booked)</span>
+                </div>
+              </div>
             </div>
 
             <div className={styles.mapCard}>
