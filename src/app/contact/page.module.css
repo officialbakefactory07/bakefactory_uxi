@@ -7,7 +7,7 @@
 
 /* ==================== 1. HEADER ==================== */
 .header {
-  padding: 5rem 2rem 4rem 2rem;
+  padding: 6.5rem 2rem 4rem 2rem;
   background: linear-gradient(180deg, rgba(244, 236, 225, 0.7) 0%, rgba(252, 248, 242, 1) 100%);
   text-align: center;
   border-bottom: 1px solid var(--color-border);
@@ -255,38 +255,46 @@
   }
 }
 
-.formGroup {
+.formGroup,
+.inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.5rem;
+  width: 100%;
 }
 
-.formGroup label {
+.formGroup label,
+.inputGroup label {
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--color-heading);
 }
 
 .formGroup input,
-.formGroup textarea {
+.formGroup textarea,
+.inputGroup input,
+.inputGroup textarea {
   width: 100%;
-  padding: 0.85rem 1rem;
-  border: 1px solid var(--color-border);
+  padding: 0.9rem 1.1rem;
+  border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
   font-family: var(--font-sans);
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   color: var(--color-heading);
   background: var(--color-background-cream);
   outline: none;
+  box-sizing: border-box;
   transition: all 0.2s ease;
 }
 
 .formGroup input:focus,
-.formGroup textarea:focus {
+.formGroup textarea:focus,
+.inputGroup input:focus,
+.inputGroup textarea:focus {
   background: #FFFFFF;
   border-color: var(--color-button);
-  box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.15);
+  box-shadow: 0 0 0 3.5px rgba(212, 160, 23, 0.18);
 }
 
 .submitBtn {

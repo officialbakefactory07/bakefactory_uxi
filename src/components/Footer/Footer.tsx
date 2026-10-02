@@ -1,145 +1,120 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, Clock, ShieldCheck, Award } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, ShieldCheck, ArrowUpRight } from 'lucide-react';
 import styles from './Footer.module.css';
 
 export const Footer = () => {
   return (
     <footer className={styles.footer}>
-      {/* Top Newsletter / Brand Banner */}
+      {/* Top Banner */}
       <div className={styles.topBanner}>
         <div className={styles.topBannerContainer}>
           <div className={styles.topBannerText}>
-            <span className={styles.bannerTag}>✦ FRESHLY BAKED HAPPINESS</span>
-            <h3>Celebrate Every Moment with Artisanal Luxury</h3>
+            <span className={styles.bannerTag}>✦ ARTISANAL ATELIER</span>
+            <h3>Celebrate Life&apos;s Moments with Extraordinary Flavors</h3>
           </div>
           <Link href="/menu" className={styles.bannerCta}>
-            Explore Our Menu &rarr;
+            <span>Explore Menu</span>
+            <ArrowUpRight size={16} />
           </Link>
         </div>
       </div>
 
       <div className={styles.mainContainer}>
-        {/* Brand & FSSAI Column */}
+        {/* Brand Column */}
         <div className={styles.brandCol}>
           <div className={styles.brandHeader}>
             <div className={styles.logoCircle}>
               <Image
                 src="/logo.png"
-                alt="Bake Factory Logo"
-                width={56}
-                height={56}
+                alt="Bake Factory"
+                width={48}
+                height={48}
                 className={styles.footerLogo}
               />
             </div>
             <div>
               <h3 className={styles.brandName}>BAKE FACTORY</h3>
-              <p className={styles.brandSub}>Artisanal Cakes & Gourmet Desserts</p>
+              <p className={styles.brandSub}>Artisanal Patisserie & Bespoke Cakes</p>
             </div>
           </div>
+
           <p className={styles.brandDesc}>
-            Vijayawada &amp; Tadepalle&apos;s premier boutique dessert studio. Handcrafted designer cakes, authentic European pastries, and fresh oven treats prepared with 100% natural ingredients.
+            Vijayawada&apos;s premier boutique bakery atelier. Handcrafted with 100% pure butter, genuine Belgian chocolate, and uncompromising passion.
           </p>
-          
-          {/* Official FSSAI & Legal Entity Details */}
-          <div className={styles.fssaiBox}>
-            <div className={styles.fssaiHeader}>
-              <Award size={18} className={styles.goldIcon} />
-              <strong>FSSAI CERTIFIED FOOD BUSINESS</strong>
-            </div>
-            <p className={styles.fssaiText}>
-              FSSAI Registration No: <strong>20126141002411</strong>
-            </p>
-            <p className={styles.legalEntityText}>
-              Legal Entity / FBO: <strong>VENIGALLA THUSHITHA (BAKE FACTORY)</strong>
-            </p>
-          </div>
 
           <div className={styles.socialRow}>
             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} aria-label="Instagram">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
             </a>
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className={styles.socialIcon} aria-label="Facebook">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
             </a>
           </div>
         </div>
 
-        {/* Quick Links */}
+        {/* Column 1: Creations */}
         <div className={styles.linksCol}>
-          <h4 className={styles.colTitle}>Products & Services</h4>
+          <h4 className={styles.colTitle}>Creations</h4>
           <ul className={styles.linkList}>
-            <li><Link href="/menu?category=Cakes" className={styles.footerLink}>Custom Designer Cakes</Link></li>
-            <li><Link href="/menu?category=Cakes" className={styles.footerLink}>Fondant & Birthday Cakes</Link></li>
-            <li><Link href="/menu?category=Desserts" className={styles.footerLink}>Pastries & Cheesecakes</Link></li>
-            <li><Link href="/menu?category=Cookies" className={styles.footerLink}>Oven-Fresh Cookies</Link></li>
-            <li><Link href="/menu?category=Combos" className={styles.footerLink}>Celebration Party Combos</Link></li>
-            <li><Link href="/menu" className={styles.footerLink}>Same-Day Express Delivery</Link></li>
+            <li><Link href="/menu?category=cakes" className={styles.footerLink}>Designer Cakes</Link></li>
+            <li><Link href="/menu?category=desserts" className={styles.footerLink}>Gourmet Desserts</Link></li>
+            <li><Link href="/menu?category=cookies" className={styles.footerLink}>Butter Cookies</Link></li>
+            <li><Link href="/menu?category=combos" className={styles.footerLink}>Party Combos</Link></li>
           </ul>
         </div>
 
-        {/* Legal & Compliance */}
+        {/* Column 2: Guest Care */}
         <div className={styles.linksCol}>
-          <h4 className={styles.colTitle}>Policies & Legal</h4>
+          <h4 className={styles.colTitle}>Guest Care</h4>
           <ul className={styles.linkList}>
-            <li><Link href="/terms" className={styles.footerLink}>Terms & Conditions</Link></li>
-            <li><Link href="/privacy" className={styles.footerLink}>Privacy Policy</Link></li>
-            <li><Link href="/refund-policy" className={styles.footerLink}>Cancellation & Refund Policy</Link></li>
-            <li><Link href="/shipping-policy" className={styles.footerLink}>Shipping & Delivery Policy</Link></li>
-            <li><Link href="/contact" className={styles.footerLink}>Customer Care & Grievances</Link></li>
-            <li><Link href="/about" className={styles.footerLink}>About Us & Legal Info</Link></li>
+            <li><Link href="/about" className={styles.footerLink}>About Us</Link></li>
+            <li><Link href="/contact" className={styles.footerLink}>Contact & Studio</Link></li>
+            <li><Link href="/shipping-policy" className={styles.footerLink}>Delivery Info</Link></li>
+            <li><Link href="/refund-policy" className={styles.footerLink}>Refund Policy</Link></li>
           </ul>
         </div>
 
-        {/* Store & Registered Address */}
+        {/* Column 3: Atelier Studio */}
         <div className={styles.contactCol}>
-          <h4 className={styles.colTitle}>Registered Premises & Studio</h4>
+          <h4 className={styles.colTitle}>Studio & Orders</h4>
           <div className={styles.contactItems}>
             <div className={styles.contactItem}>
-              <MapPin size={18} className={styles.itemIcon} />
-              <span>
-                <strong>Bake Factory</strong><br/>
-                #12-1/2, Near Rohan&apos;s Pride Appartments, Amaravathi Road, Undavalli (Rural), Tadepalle, Guntur, Andhra Pradesh &ndash; 522501
-              </span>
+              <MapPin size={16} className={styles.itemIcon} />
+              <span>Amaravathi Road, Tadepalle &ndash; Vijayawada</span>
             </div>
 
             <a href="tel:+917989499446" className={styles.contactItem}>
-              <Phone size={18} className={styles.itemIcon} />
-              <span>Hotline: +91 79894 99446</span>
+              <Phone size={16} className={styles.itemIcon} />
+              <span>+91 79894 99446</span>
             </a>
 
             <a href="mailto:officialbakefactory@gmail.com" className={styles.contactItem}>
-              <Mail size={18} className={styles.itemIcon} />
-              <span>Email: officialbakefactory@gmail.com</span>
+              <Mail size={16} className={styles.itemIcon} />
+              <span>officialbakefactory@gmail.com</span>
             </a>
 
             <div className={styles.contactItem}>
-              <Clock size={18} className={styles.itemIcon} />
-              <span>Operating Hours: Mon &ndash; Sun: 9:00 AM &ndash; 10:30 PM</span>
+              <Clock size={16} className={styles.itemIcon} />
+              <span>Daily: 9:00 AM &ndash; 10:30 PM</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Payment Security Banner (Razorpay & PayU Verified) */}
+      {/* Subtle Trust & Security Bar */}
       <div className={styles.paymentSecurityBar}>
         <div className={styles.paymentContainer}>
           <div className={styles.securityTag}>
-            <ShieldCheck size={18} className={styles.securityIcon} />
-            <span>100% SECURE CHECKOUT &bull; RAZORPAY &amp; PAYU ENCRYPTED</span>
+            <ShieldCheck size={16} className={styles.securityIcon} />
+            <span>256-Bit SSL Encrypted Checkout &bull; UPI &bull; Cards &bull; NetBanking</span>
           </div>
           <div className={styles.paymentBadges}>
             <span className={styles.payBadge}>Razorpay</span>
             <span className={styles.payBadge}>PayU</span>
             <span className={styles.payBadge}>UPI</span>
-            <span className={styles.payBadge}>Google Pay</span>
-            <span className={styles.payBadge}>PhonePe</span>
-            <span className={styles.payBadge}>Paytm</span>
-            <span className={styles.payBadge}>Visa</span>
-            <span className={styles.payBadge}>Mastercard</span>
-            <span className={styles.payBadge}>RuPay</span>
-            <span className={styles.payBadge}>NetBanking</span>
+            <span className={styles.payBadge}>Cards</span>
           </div>
         </div>
       </div>
@@ -148,14 +123,12 @@ export const Footer = () => {
       <div className={styles.bottomBar}>
         <div className={styles.bottomContainer}>
           <p>
-            &copy; {new Date().getFullYear()} <strong>Bake Factory</strong> (FBO: Venigalla Thushitha). All Rights Reserved.
+            &copy; {new Date().getFullYear()} Bake Factory. Handcrafted with passion.
           </p>
           <div className={styles.bottomLinks}>
-            <span>FSSAI Reg. No: <strong>20126141002411</strong></span>
-            <span>•</span>
-            <span>PCI-DSS 256-Bit SSL Secured</span>
-            <span>•</span>
-            <span>100% Food Grade Quality</span>
+            <Link href="/privacy" className={styles.bottomLink}>Privacy</Link>
+            <span className={styles.dotDivider}>&bull;</span>
+            <Link href="/terms" className={styles.bottomLink}>Terms</Link>
           </div>
         </div>
       </div>

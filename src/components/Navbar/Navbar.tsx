@@ -145,11 +145,7 @@ export const Navbar = () => {
 
         {/* Right Utility Section */}
         <div className={styles.rightSection}>
-          {/* Direct WhatsApp / Call Shortcut on larger screens */}
-          <a href="tel:+917989499446" className={styles.phoneQuickLink} title="Call Bakery">
-            <PhoneCall size={17} />
-            <span>Order Hotline</span>
-          </a>
+
 
           {/* Cart Icon */}
           <Link href="/cart" className={styles.cartLink} id="cart-link" aria-label="Shopping Cart">

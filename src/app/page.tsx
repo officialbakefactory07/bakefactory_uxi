@@ -53,9 +53,16 @@ const DEFAULT_CATEGORIES = [
     id: 'cookies',
     name: 'Butter Cookies',
     tagline: 'Oven-Baked Daily Delights',
-    image: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&auto=format&fit=crop&q=80',
+    image: '/category-cookies.jpg',
   },
 ];
+
+const resolveCategoryImage = (cat: any, fallbackImg?: string) => {
+  if (cat?.id === 'cookies' && (!cat?.image || cat?.image?.includes('unsplash'))) {
+    return '/category-cookies.jpg';
+  }
+  return cat?.image || fallbackImg || '/category-cookies.jpg';
+};
 
 export default function Home() {
   const { user } = useAuth();
@@ -102,7 +109,7 @@ export default function Home() {
             id: 'cookies',
             name: 'Cookies',
             tagline: 'Oven-Fresh Butter Delights',
-            image: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&auto=format&fit=crop&q=80',
+            image: '/category-cookies.jpg',
             subcategories: []
           },
           {
@@ -280,7 +287,7 @@ export default function Home() {
           <div className={styles.stripList}>
             {(categories.length > 0 ? categories.slice(0, 3) : DEFAULT_CATEGORIES).map((cat, idx) => {
               const fallback = DEFAULT_CATEGORIES[idx] || DEFAULT_CATEGORIES[0];
-              const displayImage = cat.image || fallback.image;
+              const displayImage = resolveCategoryImage(cat, fallback.image);
               const displayTagline = cat.tagline || fallback.tagline;
               const displayBadge = idx === 0 ? 'Signature' : idx === 1 ? 'Popular' : 'Oven Fresh';
 
@@ -372,7 +379,7 @@ export default function Home() {
                   
                   <div 
                     className={styles.categoryImage} 
-                    style={{ backgroundImage: `url(${cat.image})` }}
+                    style={{ backgroundImage: `url(${resolveCategoryImage(cat)})` }}
                   />
                 </div>
                 <h3 className={styles.categoryTitle}>{cat.name}</h3>
