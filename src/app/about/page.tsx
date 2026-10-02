@@ -21,7 +21,6 @@ import {
   ChefHat,
   Leaf,
   Star,
-  MapPin,
   Gift,
 } from 'lucide-react';
 import styles from './page.module.css';
@@ -31,80 +30,80 @@ export default function About() {
     { value: '10,000+', label: 'Celebrations Sweetened', icon: Cake },
     { value: '100%', label: 'Pure Dairy Butter & Real Cocoa', icon: Heart },
     { value: '45–60m', label: 'Express Delivery Network', icon: Truck },
-    { value: '4.9 ★', label: 'Over 1,200+ Foodie Reviews', icon: Star },
+    { value: '4.9 ★', label: 'Rated by 1,200+ Happy Customers', icon: Star },
   ];
 
   const craftSteps = [
     {
       step: '01',
-      title: 'Single-Origin Sourcing',
+      title: 'Finest Natural Ingredients',
       subtitle: 'Pure Ingredients Only',
-      desc: 'We source genuine Belgian couverture chocolate, fresh cultured cream butter, Madagascar bourbon vanilla, and hand-selected seasonal fruits. Zero palm oil, zero chemical premixes.',
+      desc: 'We use genuine Belgian couverture chocolate, fresh dairy butter, natural vanilla, and hand-selected seasonal fruits. Zero margarine, zero artificial premixes.',
       icon: Leaf,
     },
     {
       step: '02',
-      title: 'Small-Batch Slow Baking',
-      subtitle: 'Precision Temperature Craft',
-      desc: 'Our sponges are baked daily in small batches with European heat circulation curves to guarantee unmatched moisture, airy sponge crumb, and heavenly aroma.',
+      title: 'Small-Batch Daily Baking',
+      subtitle: 'Fresh Out of the Oven',
+      desc: 'Our sponges are baked fresh daily in small batches to guarantee unmatched moisture, airy sponge texture, and mouth-watering freshness.',
       icon: Flame,
     },
     {
       step: '03',
-      title: 'Master Pastry Artistry',
-      subtitle: 'Hand-Sculpted Perfection',
-      desc: 'Every celebration cake is intricately decorated by hand — from delicate French buttercream piping and mirror chocolate glazes to 24k edible gold leaf and custom fondant sculptures.',
+      title: 'Artisan Pastry Decor',
+      subtitle: 'Handcrafted with Love',
+      desc: 'Every celebration cake is intricately finished by hand — from silky chocolate ganache drizzles and fresh whipped cream to custom birthday themes.',
       icon: ChefHat,
     },
     {
       step: '04',
-      title: 'White-Glove Cold Transit',
-      subtitle: 'Delivered In Pristine Condition',
-      desc: 'Packaged in rigid, gold-foiled luxury gift boxes and delivered via shock-absorbing temperature-controlled riders across Vijayawada, Tadepalle & Undavalli.',
+      title: 'Safe Doorstep Delivery',
+      subtitle: 'Delivered Fresh & Intact',
+      desc: 'Packaged in sturdy luxury gift boxes and delivered carefully across Vijayawada, Tadepalle & Undavalli in 45–60 minutes.',
       icon: Truck,
     },
   ];
 
   const bentoStandards = [
     {
-      title: 'Belgian Couverture Chocolate',
-      tag: '54.5% – 70% DARK SILK',
-      desc: 'We strictly melt authentic Belgian chocolate with pure cocoa butter for rich, melt-in-your-mouth ganache instead of cheap compound slabs.',
+      title: 'Real Belgian Chocolate',
+      tag: 'RICH COCOA BUTTER',
+      desc: 'We strictly melt authentic Belgian chocolate with pure cocoa butter for rich, melt-in-your-mouth ganache instead of cheap compound chocolate.',
       icon: Award,
       badge: 'Gourmet Grade',
     },
     {
-      title: '100% Pure Cultured Dairy',
+      title: '100% Pure Dairy Butter',
       tag: 'FRESH MILK CREAM & BUTTER',
       desc: 'Every bite is enriched with fresh dairy butter and whipped dairy creams. We never use hydrogenated vegetable fats (Dalda/Vanaspati).',
       icon: Heart,
       badge: 'Zero Margarine',
     },
     {
-      title: 'Eggless Mastery Without Compromise',
+      title: 'Delicious Eggless Options',
       tag: '100% VEGETARIAN FRIENDLY',
-      desc: 'Our proprietary eggless sponge formulas achieve the exact same cloud-like softness, height, and velvety texture as classic European cakes.',
+      desc: 'Our eggless sponge recipes achieve the exact same cloud-like softness, height, and velvety texture that everyone loves.',
       icon: Sparkles,
       badge: 'Pure Veg Available',
     },
     {
-      title: 'Daily Fresh Baking Promise',
+      title: 'Baked Fresh Every Morning',
       tag: 'OVEN-FRESH ON EVENT DAY',
       desc: 'Your celebration cake is baked fresh on the very morning of delivery. We never freeze sponges or deliver day-old leftover bakes.',
       icon: Clock,
-      badge: 'Never Stored',
+      badge: 'Always Fresh',
     },
     {
-      title: 'FSSAI Certified Hygiene Standards',
+      title: 'FSSAI Certified Hygiene',
       tag: 'REG. NO: 20126141002411',
-      desc: 'Our boutique kitchen maintains daily hospital-grade sanitization protocols, UV water purification, and certified food handling protocols.',
+      desc: 'Our kitchen maintains strict food safety standards, regular sanitization, and certified hygienic food preparation.',
       icon: ShieldCheck,
       badge: 'Certified Safe',
     },
     {
-      title: 'Complimentary Celebration Kit',
+      title: 'Complimentary Party Kit',
       tag: 'FREE WITH EVERY CAKE',
-      desc: 'Includes custom golden cake topper, matching designer birthday candles, cake knife, wooden cutlery, and your personalized greeting note.',
+      desc: 'Includes designer birthday candles, cake knife, wooden cutlery, and a personalized celebration greeting card.',
       icon: Gift,
       badge: 'All-In-One Box',
     },
@@ -112,17 +111,17 @@ export default function About() {
 
   const specialtyCreations = [
     {
-      title: 'Tiered Designer & Fondant Cakes',
-      desc: 'From fairy-tale wedding tiers to whimsical birthday themes, our sugar artists bring any imagination to edible life.',
+      title: 'Custom Birthday & Theme Cakes',
+      desc: 'From colorful kids birthday themes to elegant milestone anniversary tiers, crafted exactly as you envision.',
       link: '/menu?category=Cakes',
     },
     {
-      title: 'European Gourmet Cheesecakes',
-      desc: 'Baked New York style with Madagascar vanilla, wild blueberry swirls, and buttery Graham cracker crusts.',
+      title: 'Gourmet Cheesecakes & Desserts',
+      desc: 'Creamy baked New York cheesecakes with blueberry swirls and buttery biscuit crusts.',
       link: '/menu?category=Desserts',
     },
     {
-      title: 'Artisanal Truffles & Jar Cakes',
+      title: 'Dessert Jars & Chocolate Truffles',
       desc: 'Layered Belgian chocolate ganache, red velvet cream cheese cups, and Ferrero indulgence jars.',
       link: '/menu?category=Desserts',
     },
@@ -149,7 +148,7 @@ export default function About() {
             className={styles.heroBadge}
           >
             <Sparkles size={14} className={styles.goldSparkle} />
-            <span>ATELIER DE HAUTE PÂTISSERIE • VIJAYAWADA & TADEPALLE</span>
+            <span>ARTISANAL BAKERY • VIJAYAWADA &amp; TADEPALLE</span>
           </motion.div>
 
           <motion.h1
@@ -169,9 +168,9 @@ export default function About() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className={styles.heroSubtitle}
           >
-            Where authentic European pastry technique meets pure, uncompromised indulgence. 
-            Every tier, crumb, and ganache drizzle is sculpted in small daily batches using 
-            100% fresh dairy butter, Belgian cocoa, and hand-selected fruits.
+            Real ingredients, pure dairy butter, and authentic bakery craft. 
+            Every tier, crumb, and chocolate drizzle is baked fresh daily in small batches using 
+            100% fresh dairy butter, rich Belgian cocoa, and hand-selected fruits.
           </motion.p>
 
           {/* Hero CTAs */}
@@ -182,12 +181,12 @@ export default function About() {
             className={styles.heroBtnGroup}
           >
             <Link href="/menu" className={styles.primaryHeroBtn}>
-              <span>Explore Artisanal Menu</span>
+              <span>Explore Bakery Menu</span>
               <ArrowRight size={18} />
             </Link>
             <Link href="/contact" className={styles.secondaryHeroBtn}>
               <Phone size={17} />
-              <span>Talk to Master Baker</span>
+              <span>Talk to Our Bakers</span>
             </Link>
           </motion.div>
         </div>
@@ -227,32 +226,31 @@ export default function About() {
               className={styles.storyContent}
             >
               <div className={styles.sectionHeaderWrap}>
-                <span className={styles.sectionKicker}>✦ OUR PHILOSOPHY & HERITAGE</span>
+                <span className={styles.sectionKicker}>✦ OUR STORY &amp; PASSION</span>
                 <h2 className={styles.sectionTitle}>
-                  Born from an Uncompromising Love for Authentic Baking
+                  Baked with Love, Served with Pride
                 </h2>
               </div>
 
               <p className={styles.storyParagraph}>
-                At <strong>Bake Factory</strong>, we began with a sacred conviction: that a celebration centerpiece 
-                should not merely look breathtaking &mdash; it must awaken the senses upon the very first bite.
+                At <strong>Bake Factory</strong>, we started with a clear belief: that a celebration cake 
+                should not just look magnificent on the table &mdash; it must taste absolutely heavenly upon the very first bite.
               </p>
 
               <p className={styles.storyParagraph}>
-                Frustrated by mass-market bakeries relying on chemical premixes, artificial cake improvers, 
-                and hydrogenated fats, we dedicated our studio to European classical methods. We hand-whisk, 
-                temperature-temper pure Belgian chocolates, and formulate proprietary sponges that melt gracefully on the tongue.
+                We prepare everything fresh using authentic bakery traditions. We hand-whisk fresh dairy cream, 
+                melt rich Belgian chocolate, and bake tender, fluffy sponges that melt in your mouth. No premixes, no artificial compromises.
               </p>
 
               <div className={styles.pullQuoteCard}>
                 <div className={styles.quoteMark}>“</div>
                 <p className={styles.quoteBody}>
-                  We do not simply bake cakes. We sculpt the sweet centerpiece of your family&apos;s 
-                  most cherished memories, milestones, and dreams.
+                  We do not simply bake cakes. We create the sweet centerpiece of your family&apos;s 
+                  most cherished memories, birthdays, and celebrations.
                 </p>
                 <div className={styles.quoteSignature}>
-                  <strong>— Head Pastry Chef &amp; Founders</strong>
-                  <span>Bake Factory Boutique Studio</span>
+                  <strong>— Bake Factory Bakers</strong>
+                  <span>Vijayawada &amp; Tadepalle</span>
                 </div>
               </div>
 
@@ -261,7 +259,7 @@ export default function About() {
                 <ShieldCheck size={22} className={styles.fssaiIcon} />
                 <div>
                   <strong>FSSAI Certified Food Safety Standards</strong>
-                  <span>Govt. Registration No. <strong>20126141002411</strong> • Sterile Sanitized Atelier</span>
+                  <span>Govt. Registration No. <strong>20126141002411</strong> • Fresh Daily Preparation &amp; Strict Hygiene</span>
                 </div>
               </div>
             </motion.div>
@@ -274,11 +272,11 @@ export default function About() {
               transition={{ duration: 0.7 }}
               className={styles.collageContainer}
             >
-              {/* Main Showstopper Image (3-Tier Gold Cake) */}
+              {/* Main Showstopper Image (Cake) */}
               <div className={styles.mainImageFrame}>
                 <Image
                   src="/about-cake.jpg"
-                  alt="Bake Factory Artisanal 3-Tier Chocolate Cake"
+                  alt="Bake Factory Artisanal Celebration Cake"
                   width={600}
                   height={500}
                   className={styles.collageImgMain}
@@ -289,7 +287,7 @@ export default function About() {
                   <Sparkles size={18} />
                   <div>
                     <strong>Handcrafted Daily</strong>
-                    <span>24k Gold &amp; Wild Berries</span>
+                    <span>Fresh Cream &amp; Wild Berries</span>
                   </div>
                 </div>
               </div>
@@ -305,7 +303,7 @@ export default function About() {
                 />
                 <div className={styles.subImageBadge}>
                   <ChefHat size={16} />
-                  <span>Master Patisserie</span>
+                  <span>Master Pastry Chef</span>
                 </div>
               </div>
 
@@ -321,11 +319,11 @@ export default function About() {
       <section className={styles.journeySection}>
         <div className={styles.storyContainer}>
           <div className={styles.centerSectionHeader}>
-            <span className={styles.sectionKicker}>✦ THE ART OF PERFECTION</span>
-            <h2 className={styles.sectionTitle}>How We Craft Your Masterpiece</h2>
+            <span className={styles.sectionKicker}>✦ OUR BAKING PROCESS</span>
+            <h2 className={styles.sectionTitle}>How We Craft Your Cake</h2>
             <p className={styles.centerSubtitle}>
-              From responsible sourcing to temperature-regulated express doorstep delivery, 
-              discover the craftsmanship poured into every creation.
+              From premium ingredients to safe doorstep delivery, 
+              here is the care and craftsmanship poured into every single order.
             </p>
           </div>
 
@@ -355,14 +353,14 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── 4. THE LUXURY BENTO STANDARDS SHOWCASE ── */}
+      {/* ── 4. THE STANDARDS SHOWCASE ── */}
       <section className={styles.bentoSection}>
         <div className={styles.storyContainer}>
           <div className={styles.centerSectionHeader}>
             <span className={styles.sectionKicker}>✦ THE BAKE FACTORY PROMISE</span>
-            <h2 className={styles.sectionTitle}>Ingredients &amp; Standards We Never Compromise</h2>
+            <h2 className={styles.sectionTitle}>Ingredients &amp; Standards We Swear By</h2>
             <p className={styles.centerSubtitle}>
-              Transparency is the hallmark of gourmet culinary art. Here is exactly what goes into our cakes — and what stays out.
+              Quality and honesty are at the heart of our bakery. Here is what goes into our cakes &mdash; and what we strictly avoid.
             </p>
           </div>
 
@@ -398,10 +396,10 @@ export default function About() {
       <section className={styles.specialtiesSection}>
         <div className={styles.storyContainer}>
           <div className={styles.centerSectionHeader}>
-            <span className={styles.sectionKicker}>✦ ATELIER PORTFOLIO</span>
-            <h2 className={styles.sectionTitle}>Our Signature Offerings</h2>
+            <span className={styles.sectionKicker}>✦ OUR SPECIALTIES</span>
+            <h2 className={styles.sectionTitle}>Our Signature Creations</h2>
             <p className={styles.centerSubtitle}>
-              Tailored cakes and gourmet desserts for everyday cravings and grand once-in-a-lifetime milestones.
+              From fresh birthday cakes to gourmet dessert jars, discover our most loved bakery treats.
             </p>
           </div>
 
@@ -468,7 +466,7 @@ export default function About() {
               <div className={styles.legalGridItem}>
                 <Clock size={20} className={styles.legalIcon} />
                 <div>
-                  <strong>Studio Operating Hours</strong>
+                  <strong>Bakery Operating Hours</strong>
                   <p>Mon &ndash; Sun: 9:00 AM &ndash; 10:30 PM</p>
                   <span>Direct Hotline: +91 79894 99446</span>
                 </div>
@@ -481,14 +479,14 @@ export default function About() {
       {/* ── 7. LUXURY GRAND CTA ── */}
       <section className={styles.ctaGrandSection}>
         <div className={styles.ctaGrandContainer}>
-          <span className={styles.ctaKicker}>✦ ELEVATE YOUR CELEBRATION</span>
+          <span className={styles.ctaKicker}>✦ CELEBRATE WITH BAKE FACTORY</span>
           <h2 className={styles.ctaGrandTitle}>
-            Ready to Experience the Artisanal Difference?
+            Ready to Taste the Difference?
           </h2>
           <p className={styles.ctaGrandSubtitle}>
-            Whether you need a last-minute same-day chocolate truffle cake or wish to 
-            consult our head pastry artist for a bespoke tiered wedding centerpiece, 
-            we are ready to make your sweet vision come true.
+            Whether you need a rich chocolate truffle cake delivered in 45 minutes or want to 
+            plan a custom celebration cake for a wedding or birthday, 
+            our bakers are ready to bake for you.
           </p>
 
           <div className={styles.ctaGrandBtnRow}>
@@ -500,15 +498,15 @@ export default function About() {
 
             <Link href="/contact" className={styles.ctaSecondaryBtn}>
               <Phone size={17} />
-              <span>Contact Bakery Atelier</span>
+              <span>Contact Bake Factory</span>
             </Link>
           </div>
 
           <div className={styles.ctaGuaranteesRow}>
             <span>✦ 100% Fresh Daily</span>
             <span>✦ Pure Dairy Butter</span>
-            <span>✦ 45-Min Express Delivery</span>
-            <span>✦ 100% Eggless Variations</span>
+            <span>✦ 45–60 Min Delivery</span>
+            <span>✦ Pure Veg Eggless Available</span>
           </div>
         </div>
       </section>
