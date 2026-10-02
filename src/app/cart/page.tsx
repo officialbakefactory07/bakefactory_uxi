@@ -10,10 +10,82 @@ import { Card } from '@/components/Card/Card';
 import { 
   Trash2, Plus, Minus, Tag, Check, MapPin, Edit3, 
   PlusCircle, ShoppingBag, ShieldCheck, Sparkles, X, Phone, User, CheckCircle2,
-  Banknote, CreditCard, Wallet, Clock, AlertCircle
+  Banknote, CreditCard, Wallet, Clock, AlertCircle, Home, Briefcase
 } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp, doc, getDoc, updateDoc } from 'firebase/firestore';
+
+// Address Form Types & Helpers (Swiggy / Zomato style)
+export type AddressTag = 'Home' | 'Work' | 'Other';
+
+export interface StructuredAddressForm {
+  tag: AddressTag;
+  flat: string;       // Flat, House no., Floor, Building / Apartment
+  area: string;       // Street, Sector, Area, Locality
+  landmark: string;   // Landmark (Optional)
+  city: string;       // City / Region (Vijayawada / Tadepalle)
+  pincode: string;    // Pincode (6 digits)
+  receiverName: string;
+}
+
+const INITIAL_ADDRESS_FORM: StructuredAddressForm = {
+  tag: 'Home',
+  flat: '',
+  area: '',
+  landmark: '',
+  city: 'Vijayawada',
+  pincode: '520010',
+  receiverName: '',
+};
+
+const formatAddressString = (form: StructuredAddressForm): string => {
+  const parts = [
+    `[${form.tag}]`,
+    form.flat.trim(),
+    form.area.trim(),
+    form.landmark.trim() ? `Near ${form.landmark.trim()}` : '',
+    `${form.city.trim() || 'Vijayawada'} - ${form.pincode.trim() || '520010'}`
+  ].filter(Boolean);
+  return parts.join(', ');
+};
+
+const parseAddressToForm = (raw: string): StructuredAddressForm => {
+  if (!raw) return { ...INITIAL_ADDRESS_FORM };
+  let tag: AddressTag = 'Home';
+  let str = raw.trim();
+
+  const tagMatch = str.match(/^\[(Home|Work|Other)\]\s*(.*)$/i);
+  if (tagMatch) {
+    tag = (tagMatch[1].charAt(0).toUpperCase() + tagMatch[1].slice(1).toLowerCase()) as AddressTag;
+    str = tagMatch[2];
+  }
+
+  const parts = str.split(',').map(s => s.trim()).filter(Boolean);
+  if (parts.length >= 3) {
+    const flat = parts[0] || '';
+    const area = parts[1] || '';
+    let landmark = '';
+    let city = 'Vijayawada';
+    let pincode = '520010';
+
+    const last = parts[parts.length - 1];
+    const pinMatch = last.match(/(\d{6})/);
+    if (pinMatch) {
+      pincode = pinMatch[1];
+      city = last.replace(/-\s*\d{6}/, '').replace(/\d{6}/, '').trim() || 'Vijayawada';
+    } else {
+      city = last;
+    }
+
+    if (parts.length >= 4) {
+      landmark = parts.slice(2, parts.length - 1).join(', ').replace(/^Near\s+/i, '');
+    }
+
+    return { tag, flat, area, landmark, city: city || 'Vijayawada', pincode: pincode || '520010', receiverName: '' };
+  }
+
+  return { ...INITIAL_ADDRESS_FORM, tag, flat: str };
+};
 
 // Pre-configured coupons for instant testing & usage
 const AVAILABLE_COUPONS = [
@@ -40,9 +112,8 @@ function CartContent() {
   const [addresses, setAddresses] = useState<string[]>([]);
   const [selectedAddressIndex, setSelectedAddressIndex] = useState<number>(0);
   const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
-  const [newAddressInput, setNewAddressInput] = useState('');
   const [isEditingAddress, setIsEditingAddress] = useState(false);
-  const [editingAddressInput, setEditingAddressInput] = useState('');
+  const [addressForm, setAddressForm] = useState<StructuredAddressForm>(INITIAL_ADDRESS_FORM);
 
   // Contact Info State
   const [contactPhone, setContactPhone] = useState('');
@@ -155,14 +226,22 @@ function CartContent() {
     setCouponSuccess('');
   };
 
-  // Save new delivery address
+  // Save new delivery address (Swiggy / Zomato style)
   const handleSaveNewAddress = async () => {
-    if (!newAddressInput.trim()) return;
-    const updatedList = [...addresses, newAddressInput.trim()];
+    if (!addressForm.flat.trim() || !addressForm.area.trim()) {
+      alert('Please enter your Flat / House number and Street / Area.');
+      return;
+    }
+    if (!addressForm.pincode.trim() || addressForm.pincode.trim().length < 6) {
+      alert('Please enter a valid 6-digit delivery pincode.');
+      return;
+    }
+    const formatted = formatAddressString(addressForm);
+    const updatedList = [...addresses, formatted];
     setAddresses(updatedList);
     setSelectedAddressIndex(updatedList.length - 1);
     setIsAddingNewAddress(false);
-    setNewAddressInput('');
+    setAddressForm(INITIAL_ADDRESS_FORM);
 
     if (user) {
       try {
@@ -170,7 +249,7 @@ function CartContent() {
           address: updatedList[0],
           savedAddresses: updatedList
         });
-        setSavedSuccessMsg('Address saved to your profile!');
+        setSavedSuccessMsg('✨ Delivery address saved!');
         setTimeout(() => setSavedSuccessMsg(''), 3000);
       } catch (err) {
         console.error('Error saving address to profile:', err);
@@ -180,11 +259,20 @@ function CartContent() {
 
   // Update existing address
   const handleUpdateAddress = async () => {
-    if (!editingAddressInput.trim()) return;
+    if (!addressForm.flat.trim() || !addressForm.area.trim()) {
+      alert('Please enter your Flat / House number and Street / Area.');
+      return;
+    }
+    if (!addressForm.pincode.trim() || addressForm.pincode.trim().length < 6) {
+      alert('Please enter a valid 6-digit delivery pincode.');
+      return;
+    }
+    const formatted = formatAddressString(addressForm);
     const updatedList = [...addresses];
-    updatedList[selectedAddressIndex] = editingAddressInput.trim();
+    updatedList[selectedAddressIndex] = formatted;
     setAddresses(updatedList);
     setIsEditingAddress(false);
+    setAddressForm(INITIAL_ADDRESS_FORM);
 
     if (user) {
       try {
@@ -192,10 +280,33 @@ function CartContent() {
           address: updatedList[0],
           savedAddresses: updatedList
         });
-        setSavedSuccessMsg('Address updated successfully!');
+        setSavedSuccessMsg('✨ Delivery address updated!');
         setTimeout(() => setSavedSuccessMsg(''), 3000);
       } catch (err) {
         console.error('Error updating address in profile:', err);
+      }
+    }
+  };
+
+  // Delete saved address
+  const handleDeleteAddress = async (idxToDelete: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm('Are you sure you want to remove this delivery address?')) return;
+    const updatedList = addresses.filter((_, i) => i !== idxToDelete);
+    setAddresses(updatedList);
+    if (selectedAddressIndex >= updatedList.length) {
+      setSelectedAddressIndex(Math.max(0, updatedList.length - 1));
+    }
+    if (user) {
+      try {
+        await updateDoc(doc(db, 'users', user.uid), {
+          address: updatedList[0] || '',
+          savedAddresses: updatedList
+        });
+        setSavedSuccessMsg('Address removed.');
+        setTimeout(() => setSavedSuccessMsg(''), 3000);
+      } catch (err) {
+        console.error('Error deleting address from profile:', err);
       }
     }
   };
@@ -227,7 +338,10 @@ function CartContent() {
       return;
     }
 
-    const currentAddress = addresses[selectedAddressIndex] || newAddressInput.trim();
+    let currentAddress = addresses[selectedAddressIndex] || '';
+    if (!currentAddress && addressForm.flat.trim() && addressForm.area.trim()) {
+      currentAddress = formatAddressString(addressForm);
+    }
     if (!currentAddress) {
       alert('Please enter or select a delivery address before placing your order.');
       return;
@@ -596,9 +710,13 @@ function CartContent() {
                     <label><MapPin size={16} /> Delivery Address (Vijayawada / Tadepalle)</label>
                     {!isAddingNewAddress && !isEditingAddress && (
                       <button 
+                        type="button"
                         className={styles.textLinkBtn}
                         onClick={() => {
-                          setNewAddressInput('');
+                          setAddressForm({
+                            ...INITIAL_ADDRESS_FORM,
+                            receiverName: profile?.fullName || user?.displayName || '',
+                          });
                           setIsAddingNewAddress(true);
                           setIsEditingAddress(false);
                         }}
@@ -608,96 +726,229 @@ function CartContent() {
                     )}
                   </div>
 
-                  {/* Add New Address Form */}
-                  {isAddingNewAddress && (
-                    <div className={styles.addressEditBox}>
-                      <textarea 
-                        rows={3}
-                        value={newAddressInput}
-                        onChange={e => setNewAddressInput(e.target.value)}
-                        placeholder="Enter full street address, apartment / flat number, landmark, pin code..."
-                        className={styles.addressInput}
-                      />
-                      <div className={styles.editActions}>
-                        <button className={styles.saveSmallBtn} onClick={handleSaveNewAddress}>Save &amp; Select Address</button>
-                        <button className={styles.cancelSmallBtn} onClick={() => setIsAddingNewAddress(false)}>Cancel</button>
+                  {/* Structured Add / Edit Address Form (Swiggy / Zomato Style) */}
+                  {(isAddingNewAddress || isEditingAddress) && (
+                    <div className={styles.structuredAddressBox}>
+                      <div className={styles.formSectionHeadingRow}>
+                        <span className={styles.formSectionTitle}>
+                          {isEditingAddress ? 'Edit Delivery Address' : 'Add New Delivery Address'}
+                        </span>
+                        <span className={styles.formSectionSubtitle}>
+                          Enter complete details for accurate doorstep delivery
+                        </span>
+                      </div>
+
+                      {/* 1. Address Tag / Category */}
+                      <div className={styles.tagSelectorGroup}>
+                        <span className={styles.fieldHeading}>Save Address As:</span>
+                        <div className={styles.tagPillsRow}>
+                          {(['Home', 'Work', 'Other'] as AddressTag[]).map((t) => (
+                            <button
+                              key={t}
+                              type="button"
+                              className={`${styles.tagPillBtn} ${addressForm.tag === t ? styles.tagPillActive : ''}`}
+                              onClick={() => setAddressForm({ ...addressForm, tag: t })}
+                            >
+                              {t === 'Home' && <Home size={14} />}
+                              {t === 'Work' && <Briefcase size={14} />}
+                              {t === 'Other' && <MapPin size={14} />}
+                              <span>{t}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* 2. Flat / House No / Building */}
+                      <div className={styles.formFieldGroup}>
+                        <label className={styles.inputLabel}>
+                          Flat / House / Floor / Building Name <span className={styles.reqStar}>*</span>
+                        </label>
+                        <input 
+                          type="text"
+                          className={styles.cleanInput}
+                          placeholder="e.g. Flat 402, Sai Residency / House # 12-4"
+                          value={addressForm.flat}
+                          onChange={e => setAddressForm({ ...addressForm, flat: e.target.value })}
+                          required
+                        />
+                      </div>
+
+                      {/* 3. Street / Area / Locality */}
+                      <div className={styles.formFieldGroup}>
+                        <label className={styles.inputLabel}>
+                          Street / Sector / Area / Locality <span className={styles.reqStar}>*</span>
+                        </label>
+                        <input 
+                          type="text"
+                          className={styles.cleanInput}
+                          placeholder="e.g. MG Road, Near Benz Circle / Moghalrajpuram"
+                          value={addressForm.area}
+                          onChange={e => setAddressForm({ ...addressForm, area: e.target.value })}
+                          required
+                        />
+                      </div>
+
+                      {/* 4. Landmark (Optional) */}
+                      <div className={styles.formFieldGroup}>
+                        <label className={styles.inputLabel}>
+                          Nearby Landmark <span className={styles.optHint}>(Optional)</span>
+                        </label>
+                        <input 
+                          type="text"
+                          className={styles.cleanInput}
+                          placeholder="e.g. Opposite Axis Bank / Beside Sweet Magic"
+                          value={addressForm.landmark}
+                          onChange={e => setAddressForm({ ...addressForm, landmark: e.target.value })}
+                        />
+                      </div>
+
+                      {/* 5. City & Pincode Grid */}
+                      <div className={styles.twoColRow}>
+                        <div className={styles.formFieldGroup}>
+                          <label className={styles.inputLabel}>City / Town</label>
+                          <select 
+                            className={styles.cleanSelect}
+                            value={addressForm.city}
+                            onChange={e => setAddressForm({ ...addressForm, city: e.target.value })}
+                          >
+                            <option value="Vijayawada">Vijayawada</option>
+                            <option value="Tadepalle">Tadepalle</option>
+                            <option value="Guntur">Guntur</option>
+                            <option value="Mangalagiri">Mangalagiri</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+
+                        <div className={styles.formFieldGroup}>
+                          <label className={styles.inputLabel}>
+                            Delivery Pincode <span className={styles.reqStar}>*</span>
+                          </label>
+                          <input 
+                            type="text"
+                            maxLength={6}
+                            className={styles.cleanInput}
+                            placeholder="e.g. 520010"
+                            value={addressForm.pincode}
+                            onChange={e => setAddressForm({ ...addressForm, pincode: e.target.value.replace(/\D/g, '') })}
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      {/* 6. Form Actions */}
+                      <div className={styles.addressFormActions}>
+                        <button 
+                          type="button" 
+                          className={styles.saveAddressBtn}
+                          onClick={isEditingAddress ? handleUpdateAddress : handleSaveNewAddress}
+                        >
+                          <Check size={16} />
+                          <span>{isEditingAddress ? 'Update & Deliver Here' : 'Save & Deliver Here'}</span>
+                        </button>
+                        <button 
+                          type="button" 
+                          className={styles.cancelAddressBtn}
+                          onClick={() => {
+                            setIsAddingNewAddress(false);
+                            setIsEditingAddress(false);
+                          }}
+                        >
+                          Cancel
+                        </button>
                       </div>
                     </div>
                   )}
 
-                  {/* Edit Existing Address Form */}
-                  {isEditingAddress && (
-                    <div className={styles.addressEditBox}>
-                      <textarea 
-                        rows={3}
-                        value={editingAddressInput}
-                        onChange={e => setEditingAddressInput(e.target.value)}
-                        placeholder="Update full address..."
-                        className={styles.addressInput}
-                      />
-                      <div className={styles.editActions}>
-                        <button className={styles.saveSmallBtn} onClick={handleUpdateAddress}>Update Address</button>
-                        <button className={styles.cancelSmallBtn} onClick={() => setIsEditingAddress(false)}>Cancel</button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Address Selection List */}
+                  {/* Empty Address State */}
                   {!isAddingNewAddress && !isEditingAddress && addresses.length === 0 && (
                     <div className={styles.noAddressBox}>
                       <p>You have no saved delivery addresses.</p>
                       <button 
+                        type="button"
                         className={styles.addFirstAddrBtn}
-                        onClick={() => setIsAddingNewAddress(true)}
+                        onClick={() => {
+                          setAddressForm({
+                            ...INITIAL_ADDRESS_FORM,
+                            receiverName: profile?.fullName || user?.displayName || '',
+                          });
+                          setIsAddingNewAddress(true);
+                        }}
                       >
                         <PlusCircle size={15} /> Add Delivery Address
                       </button>
                     </div>
                   )}
 
+                  {/* Saved Address Cards (Swiggy / Zomato Style) */}
                   {!isAddingNewAddress && !isEditingAddress && addresses.length > 0 && (
                     <div className={styles.addressList}>
-                      {addresses.map((addr, idx) => {
+                      {addresses.map((rawAddr, idx) => {
+                        const parsed = parseAddressToForm(rawAddr);
                         const isSelected = selectedAddressIndex === idx;
                         return (
                           <div 
                             key={idx} 
-                            className={`${styles.addressCard} ${isSelected ? styles.selectedAddressCard : ''}`}
+                            className={`${styles.savedAddressCard} ${isSelected ? styles.savedAddressActive : ''}`}
                             onClick={() => {
                               setSelectedAddressIndex(idx);
                               setIsEditingAddress(false);
                             }}
                           >
-                            <div className={styles.radioCol}>
-                              <div className={`${styles.radioOuter} ${isSelected ? styles.radioChecked : ''}`}>
-                                {isSelected && <div className={styles.radioInner} />}
+                            <div className={styles.addressCardTop}>
+                              <div className={styles.addressTagRow}>
+                                <span className={`${styles.tagPill} ${styles['tagPill_' + parsed.tag]}`}>
+                                  {parsed.tag === 'Home' && <Home size={12} />}
+                                  {parsed.tag === 'Work' && <Briefcase size={12} />}
+                                  {parsed.tag === 'Other' && <MapPin size={12} />}
+                                  <span>{parsed.tag.toUpperCase()}</span>
+                                </span>
+                                {isSelected && (
+                                  <span className={styles.deliverBadge}>
+                                    <CheckCircle2 size={12} /> DELIVER HERE
+                                  </span>
+                                )}
+                              </div>
+
+                              <div className={styles.addressCardActions}>
+                                <button 
+                                  type="button"
+                                  className={styles.iconActionBtn}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedAddressIndex(idx);
+                                    setAddressForm(parsed);
+                                    setIsEditingAddress(true);
+                                    setIsAddingNewAddress(false);
+                                  }}
+                                  title="Edit Address"
+                                >
+                                  <Edit3 size={14} />
+                                </button>
+                                <button 
+                                  type="button"
+                                  className={`${styles.iconActionBtn} ${styles.deleteActionBtn}`}
+                                  onClick={(e) => handleDeleteAddress(idx, e)}
+                                  title="Delete Address"
+                                >
+                                  <Trash2 size={14} />
+                                </button>
                               </div>
                             </div>
-                            <div className={styles.addressInfoCol}>
-                              <span className={styles.addressTag}>
-                                {idx === 0 ? 'Primary Address' : `Saved Address ${idx + 1}`}
-                              </span>
-                              <p className={styles.addressText}>{addr}</p>
+
+                            <div className={styles.addressCardBody}>
+                              <strong className={styles.addressPrimaryLine}>{parsed.flat}</strong>
+                              <p className={styles.addressSecondaryLine}>
+                                {[parsed.area, parsed.landmark ? `Near ${parsed.landmark}` : ''].filter(Boolean).join(', ')}
+                              </p>
+                              <p className={styles.addressCityPin}>
+                                {parsed.city} - {parsed.pincode}
+                              </p>
                             </div>
-                            {isSelected && (
-                              <button 
-                                className={styles.editAddrBtn}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setEditingAddressInput(addr);
-                                  setIsEditingAddress(true);
-                                  setIsAddingNewAddress(false);
-                                }}
-                              >
-                                <Edit3 size={15} /> Edit
-                              </button>
-                            )}
                           </div>
                         );
                       })}
                     </div>
                   )}
-
                 </div>
 
                 {/* Special Delivery Instructions */}
