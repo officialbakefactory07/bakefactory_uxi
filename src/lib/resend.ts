@@ -5,8 +5,8 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 
 export const resend = new Resend(RESEND_API_KEY);
 
-// Default sender address (Using verified domain or resend dev onboarding address)
-export const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Bake Factory <onboarding@resend.dev>';
+// Default sender address using verified custom domain bakefactory.in
+export const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Bake Factory <orders@bakefactory.in>';
 export const ADMIN_NOTIFICATION_EMAIL = process.env.ADMIN_EMAIL || 'officialbakefactory@gmail.com';
 
 /**
