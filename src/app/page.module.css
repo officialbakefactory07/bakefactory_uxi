@@ -726,6 +726,13 @@
   }
 }
 
+@media (max-width: 380px) {
+  .categoryGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
 .categoryCard {
   background: #FFFFFF;
   border-radius: var(--radius-lg);

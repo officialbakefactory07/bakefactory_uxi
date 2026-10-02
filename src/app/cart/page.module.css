@@ -237,14 +237,33 @@
 
 @media (max-width: 480px) {
   .cartItemRow {
+    flex-wrap: wrap;
     gap: 0.85rem;
     padding: 0.85rem 0.75rem;
   }
   .itemImageWrapper {
-    width: 58px;
-    height: 58px;
+    width: 60px;
+    height: 60px;
+  }
+  .itemInfoCol {
+    flex: 1 1 calc(100% - 75px);
   }
   .itemName {
+    font-size: 1.05rem;
+  }
+  .quantityControls {
+    margin-left: 68px;
+  }
+  .itemTotalCol {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 360px) {
+  .quantityControls {
+    margin-left: 0;
+  }
+  .itemTotalPrice {
     font-size: 1rem;
   }
 }

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { LayoutDashboard, ShoppingCart, UtensilsCrossed, Users, BarChart3, History, Tag, Settings, LogOut, ExternalLink, ChevronLeft, Printer, KeyRound, Star } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, UtensilsCrossed, Users, BarChart3, History, Tag, Settings, LogOut, ExternalLink, ChevronLeft, Printer, KeyRound, Star, Menu, X } from 'lucide-react';
 import styles from './layout.module.css';
 
 const NAV_ITEMS = [
@@ -26,6 +26,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [authorized, setAuthorized] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -47,8 +52,29 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className={styles.adminRoot}>
+      {/* Mobile Top Bar */}
+      <header className={styles.mobileTopBar}>
+        <button
+          type="button"
+          className={styles.mobileMenuBtn}
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle navigation menu"
+        >
+          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+        <div className={styles.mobileBrand}>
+          <Image src="/logo.png" alt="Bake Factory" width={30} height={30} style={{ mixBlendMode: 'multiply', borderRadius: '6px' }} />
+          <strong>Bake Factory Admin</strong>
+        </div>
+      </header>
+
+      {/* Mobile Backdrop */}
+      {mobileOpen && (
+        <div className={styles.mobileBackdrop} onClick={() => setMobileOpen(false)} />
+      )}
+
       {/* Sidebar */}
-      <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
+      <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''} ${mobileOpen ? styles.mobileOpen : ''}`}>
         <div className={styles.sidebarTop}>
           <div className={styles.brand}>
             <Image src="/logo.png" alt="Bake Factory" width={40} height={40} style={{ mixBlendMode: 'multiply', borderRadius: '8px' }} />
