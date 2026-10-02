@@ -11,27 +11,32 @@ export interface ExtractedMenuItem {
 }
 
 const SYSTEM_PROMPT = `
-You are an expert restaurant/bakery menu parsing AI for "Bake Factory" (an artisanal bakery in Vijayawada).
-Your job is to analyze unstructured menu text or menu card images and extract all bakery/dessert products into clean, structured JSON.
+You are an expert restaurant and bakery catalog parsing AI for "Bake Factory" (an artisanal boutique bakery in Vijayawada).
+Your job is to parse ANY items, cake designs, customized tiers, add-ons, extra charges, or priced offerings from the input into clean, structured JSON products.
+
+Important Guidelines:
+1. Even if an item is labeled as "Extra Charges", "Custom Design", "Photo Theme", "Fondant", or "Add-on", extract each line as a valid product item with its specified price.
+2. If price is specified "per kg" (e.g. "300 per kg" or "800 per kg"), use the numeric rate (e.g. 300 or 800) and note "Priced per kg" in the description.
+3. Category must strictly be one of: "Cakes", "Desserts", "Cookies", "Combos".
+   - Anything relating to cakes, sponge, fondant, theme, birthday tiers -> "Cakes"
+   - Pastries, brownies, cheesecakes, jar cakes, mousses, tartlets -> "Desserts"
+   - Cookies, biscuits, tea treats -> "Cookies"
+   - Hampers, gift boxes, party packs -> "Combos"
 
 Return ONLY a valid JSON array of objects with this schema:
 [
   {
     "name": "Product Name (clean, capitalized)",
-    "description": "Short delicious description (1-2 sentences)",
-    "price": 250,
+    "description": "Short appetizing description (1-2 sentences)",
+    "price": 300,
     "category": "Cakes",
-    "subcategory": "e.g. Birthday Cakes, Pastries, Cheesecakes, Jar Cakes, Cupcakes, Brownies",
+    "subcategory": "Custom Design / Add-on",
     "available": true,
     "bestSeller": false
   }
 ]
 
-Rules:
-1. Category must strictly be one of: "Cakes", "Desserts", "Cookies", "Combos".
-2. If price is given with weight (e.g., "500g ₹450 / 1kg ₹850"), use the base price (450) and note the size in description or name.
-3. Clean up abbreviations, typos, and formatting.
-4. Output MUST be strictly valid JSON without any markdown wraps or backticks if possible, or inside standard json fences.
+Output MUST be strictly valid JSON without any conversational text.
 `;
 
 function cleanAndParseJson(rawContent: string): ExtractedMenuItem[] {
@@ -71,11 +76,72 @@ function cleanAndParseJson(rawContent: string): ExtractedMenuItem[] {
 }
 
 /**
- * Extract menu items from raw text via Groq
+ * Bulletproof heuristic regex parser for plain text lines containing prices.
+ * Used as a fallback if an AI model returns an empty list or encounters format issues.
+ */
+function heuristicMenuParser(text: string): ExtractedMenuItem[] {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const items: ExtractedMenuItem[] = [];
+
+  for (const line of lines) {
+    // Skip general non-item headers
+    if (/^(extra\s+charges|menu|price\s*list|categories|catalogue|items)$/i.test(line)) continue;
+
+    // Match numbers in line (e.g. "300", "₹450", "Extra 500 per kg", "120/-")
+    const priceMatch = line.match(/(?:₹|rs\.?|inr|extra\s*)?\s*(\d{2,6})(?:\s*\/-|\s*per\s*kg)?/i);
+    if (!priceMatch) continue;
+
+    const price = parseInt(priceMatch[1], 10);
+    if (isNaN(price) || price <= 0) continue;
+
+    // Clean out price number and extra keywords from the item name
+    let name = line
+      .replace(/(?:-|:|\bextra\b|₹|rs\.?|inr)?\s*\d{2,6}(?:\s*\/-|\s*per\s*kg)?.*$/i, '')
+      .replace(/^[-•*–\s]+/, '')
+      .trim();
+
+    if (!name || name.length < 2) {
+      name = line.split(/[-:]/)[0]?.trim() || line;
+    }
+    name = name.replace(/^[-•*–\s]+/, '').trim();
+    if (!name) continue;
+
+    const lower = (name + ' ' + line).toLowerCase();
+    let category: 'Cakes' | 'Desserts' | 'Cookies' | 'Combos' = 'Cakes';
+    if (lower.includes('cookie') || lower.includes('biscuit')) {
+      category = 'Cookies';
+    } else if (lower.includes('pastry') || lower.includes('cheesecake') || lower.includes('brownie') || lower.includes('dessert') || lower.includes('jar') || lower.includes('cupcake') || lower.includes('mousse')) {
+      category = 'Desserts';
+    } else if (lower.includes('combo') || lower.includes('box') || lower.includes('hamper')) {
+      category = 'Combos';
+    }
+
+    const isPerKg = line.toLowerCase().includes('per kg');
+    const isCustom = lower.includes('fondant') || lower.includes('theme') || lower.includes('custom') || lower.includes('design');
+
+    items.push({
+      name,
+      description: isPerKg 
+        ? `${name} — artisanal customization priced per kilogram.` 
+        : `${name} — freshly handcrafted bake from Bake Factory.`,
+      price,
+      category,
+      subcategory: isCustom ? 'Custom Design / Add-on' : '',
+      available: true,
+      bestSeller: false,
+    });
+  }
+
+  return items;
+}
+
+/**
+ * Extract menu items from raw text via Groq (OpenAI GPT-OSS-120B / Qwen 3.8-27B)
  */
 export async function extractMenuFromText(menuText: string): Promise<ExtractedMenuItem[]> {
   try {
-    const modelsToTry = ['qwen/qwen3.8-27b', 'openai/gpt-oss-120b', 'openai/gpt-oss-20b'];
+    // Primary model is gpt-oss-120b for superior text parsing and complex structured reasoning
+    const modelsToTry = ['openai/gpt-oss-120b', 'qwen/qwen3.8-27b', 'openai/gpt-oss-20b'];
     let lastError: any = null;
 
     for (const model of modelsToTry) {
@@ -90,7 +156,7 @@ export async function extractMenuFromText(menuText: string): Promise<ExtractedMe
             model,
             messages: [
               { role: 'system', content: SYSTEM_PROMPT },
-              { role: 'user', content: `Please extract all menu items from this bakery text:\n\n${menuText}` },
+              { role: 'user', content: `Please extract all menu items, add-ons, and priced offerings from this bakery text:\n\n${menuText}` },
             ],
             temperature: 0.1,
             max_tokens: 800,
@@ -115,10 +181,21 @@ export async function extractMenuFromText(menuText: string): Promise<ExtractedMe
       }
     }
 
+    // If AI models return 0 items or encounter issues, run the heuristic parser
+    const fallbackItems = heuristicMenuParser(menuText);
+    if (fallbackItems.length > 0) {
+      return fallbackItems;
+    }
+
     if (lastError) throw lastError;
     return [];
   } catch (error) {
     console.error('Error in extractMenuFromText:', error);
+    // Final fallback attempt before throwing
+    const fallbackItems = heuristicMenuParser(menuText);
+    if (fallbackItems.length > 0) {
+      return fallbackItems;
+    }
     throw error;
   }
 }

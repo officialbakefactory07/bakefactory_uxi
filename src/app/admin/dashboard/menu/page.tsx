@@ -240,17 +240,22 @@ export default function MenuPage() {
       if (data.items.length === 0) {
         setAiStatusMsg({ type: 'error', text: 'No products could be extracted. Try providing clearer text or a sharper menu image.' });
       } else {
-        const mappedItems: ExtractedItem[] = data.items.map((item: any, i: number) => ({
-          id: 'temp_' + i,
-          name: item.name || 'Delicious Treat',
-          description: item.description || 'Artisanal creation from Bake Factory',
-          price: parseFloat(item.price) || 150,
-          category: item.category || 'Cakes',
-          subcategory: item.subcategory || '',
-          available: true,
-          bestSeller: item.bestSeller || false,
-          selected: true,
-        }));
+        const validCats = ['Cakes', 'Desserts', 'Cookies', 'Combos'];
+        const mappedItems: ExtractedItem[] = data.items.map((item: any, i: number) => {
+          const rawCat = (item.category || '').trim();
+          const matchedCat = validCats.find((c) => c.toLowerCase() === rawCat.toLowerCase());
+          return {
+            id: 'temp_' + i,
+            name: item.name || 'Delicious Treat',
+            description: item.description || 'Artisanal creation from Bake Factory',
+            price: parseFloat(item.price) || 150,
+            category: matchedCat || 'Cakes',
+            subcategory: item.subcategory || (matchedCat ? '' : rawCat),
+            available: true,
+            bestSeller: item.bestSeller || false,
+            selected: true,
+          };
+        });
         setAiExtractedItems(mappedItems);
         setAiStatusMsg({ type: 'success', text: `✨ Extracted ${mappedItems.length} products with AI! Review and import below.` });
       }
