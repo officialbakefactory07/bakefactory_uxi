@@ -67,10 +67,24 @@ const INITIAL_FORM: FormData = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Cakes: '#d4a017',
-  Desserts: '#e74c3c',
-  Cookies: '#5c2f0e',
-  Combos: '#2980b9',
+  Cakes: '#B8820B',
+  Desserts: '#D9534F',
+  Cookies: '#795548',
+  Combos: '#2563EB',
+};
+
+const CATEGORY_DEFAULT_IMAGES: Record<string, string> = {
+  Cakes: '/category-cakes.jpg',
+  Desserts: '/category-desserts.jpg',
+  Cookies: '/category-cookies.jpg',
+  Combos: '/category-combos.jpg',
+};
+
+const getItemImage = (item: MenuItem) => {
+  if (item.image && item.image !== '/logo.png') {
+    return item.image;
+  }
+  return CATEGORY_DEFAULT_IMAGES[item.category] || '/category-cakes.jpg';
 };
 
 export default function MenuPage() {
@@ -286,7 +300,7 @@ export default function MenuPage() {
           available: item.available,
           bestSeller: item.bestSeller,
           special: false,
-          image: '/logo.png', // Default high-res bakery emblem placeholder
+          image: CATEGORY_DEFAULT_IMAGES[item.category] || '/category-cakes.jpg',
           createdAt: serverTimestamp(),
         });
       }
@@ -403,6 +417,21 @@ export default function MenuPage() {
     }
   };
 
+  // ── Toggle Availability ──
+  const handleToggleAvailable = async (item: MenuItem, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await updateDoc(doc(db, 'menu', item.id), {
+        available: !item.available,
+      });
+      setItems((prev) =>
+        prev.map((i) => (i.id === item.id ? { ...i, available: !i.available } : i))
+      );
+    } catch (err) {
+      console.error('Error toggling availability:', err);
+    }
+  };
+
   return (
     <div className={styles.page}>
       
@@ -469,22 +498,20 @@ export default function MenuPage() {
       ) : (
         <div className={styles.grid}>
           {filtered.map((item) => {
-            const catColor = CATEGORY_COLORS[item.category] || '#d4a017';
+            const catColor = CATEGORY_COLORS[item.category] || '#B8820B';
+            const displayImg = getItemImage(item);
             return (
               <div key={item.id} className={styles.card}>
                 <div className={styles.imageWrap}>
-                  {item.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className={styles.cardImage}
-                    />
-                  ) : (
-                    <div className={styles.placeholderImage}>
-                      <span>{item.name.charAt(0)}</span>
-                    </div>
-                  )}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={displayImg}
+                    alt={item.name}
+                    className={`${styles.cardImage} ${displayImg.includes('logo.png') ? styles.logoImage : ''}`}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = CATEGORY_DEFAULT_IMAGES[item.category] || '/category-cakes.jpg';
+                    }}
+                  />
 
                   <span
                     className={styles.catBadge}
@@ -495,38 +522,53 @@ export default function MenuPage() {
 
                   <div className={styles.cardActions}>
                     <button
+                      type="button"
                       className={styles.actionBtn}
                       onClick={() => handleOpenEdit(item)}
-                      title="Edit"
+                      title="Edit Item"
                     >
-                      <Pencil size={15} />
+                      <Pencil size={14} />
                     </button>
                     <button
+                      type="button"
                       className={`${styles.actionBtn} ${styles.deleteBtn}`}
                       onClick={() => handleDelete(item.id)}
-                      title="Delete"
+                      title="Delete Item"
                     >
-                      <Trash2 size={15} />
+                      <Trash2 size={14} />
                     </button>
                   </div>
                 </div>
 
                 <div className={styles.cardBody}>
                   <div className={styles.nameRow}>
-                    <h3 className={styles.itemName}>{item.name}</h3>
+                    <h3 className={styles.itemName} title={item.name}>{item.name}</h3>
                     <span className={styles.itemPrice}>₹{item.price.toFixed(0)}</span>
                   </div>
+
+                  {item.subcategory && (
+                    <span className={styles.subcatBadge}>{item.subcategory}</span>
+                  )}
+
                   <p className={styles.itemDesc}>{item.description}</p>
 
                   <div className={styles.cardFooter}>
-                    <span
-                      className={`${styles.availDot} ${
-                        item.available ? styles.availOn : styles.availOff
-                      }`}
-                    />
-                    <span className={styles.availText}>
-                      {item.available ? 'In Stock' : 'Out of Stock'}
-                    </span>
+                    <button
+                      type="button"
+                      className={`${styles.stockPill} ${item.available ? styles.stockPillIn : styles.stockPillOut}`}
+                      onClick={(e) => handleToggleAvailable(item, e)}
+                      title="Click to toggle stock status"
+                    >
+                      <span
+                        className={`${styles.availDot} ${
+                          item.available ? styles.availOn : styles.availOff
+                        }`}
+                      />
+                      <span className={styles.availText}>
+                        {item.available ? 'In Stock' : 'Out of Stock'}
+                      </span>
+                    </button>
+
                     {item.bestSeller && (
                       <span className={styles.bestSellerBadge}>★ Best Seller</span>
                     )}
