@@ -420,3 +420,196 @@
 .perkIcon {
   color: var(--color-button);
 }
+
+/* ── Two-Factor OTP Verification Screen ── */
+.otpCard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.otpShieldWrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212, 160, 23, 0.15), rgba(200, 106, 61, 0.1));
+  border: 2px solid rgba(212, 160, 23, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-hover-accent);
+  margin-bottom: 1.25rem;
+  box-shadow: 0 8px 24px rgba(212, 160, 23, 0.2);
+}
+
+.otpTitle {
+  font-family: var(--font-luxury);
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-bottom: 0.5rem;
+}
+
+.otpSubtitle {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--color-body-muted);
+  line-height: 1.5;
+  margin-bottom: 1.75rem;
+  max-width: 360px;
+}
+
+.otpEmailBadge {
+  display: inline-block;
+  color: var(--color-heading);
+  font-weight: 700;
+  background: #F4EDE2;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  margin-top: 0.25rem;
+  word-break: break-all;
+  border: 1px solid rgba(35, 22, 14, 0.1);
+}
+
+.otpInputsContainer {
+  display: flex;
+  gap: 0.65rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.otpDigitBox {
+  width: 48px;
+  height: 56px;
+  border-radius: 12px;
+  border: 2px solid rgba(35, 22, 14, 0.15);
+  background: #FFFFFF;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-heading);
+  font-family: var(--font-sans);
+  transition: all 0.2s ease;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.otpDigitBox:focus {
+  border-color: var(--color-button);
+  box-shadow: 0 0 0 4px rgba(212, 160, 23, 0.2);
+  transform: translateY(-2px);
+  background: #FFFAF2;
+}
+
+.otpDigitBoxFilled {
+  border-color: var(--color-hover-accent);
+  background: #FCF8F2;
+}
+
+@media (max-width: 420px) {
+  .otpInputsContainer {
+    gap: 0.4rem;
+  }
+  .otpDigitBox {
+    width: 40px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+}
+
+.otpVerifyBtn {
+  width: 100%;
+  padding: 0.95rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-button) 0%, var(--color-hover-accent) 100%);
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(212, 160, 23, 0.35);
+  transition: all 0.25s ease;
+  margin-bottom: 1.25rem;
+}
+
+.otpVerifyBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(212, 160, 23, 0.45);
+}
+
+.otpVerifyBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.otpResendRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.84rem;
+  color: var(--color-body-muted);
+  margin-bottom: 1.25rem;
+}
+
+.resendActiveBtn {
+  background: none;
+  border: none;
+  color: var(--color-button);
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: 0.84rem;
+}
+
+.resendActiveBtn:hover {
+  color: var(--color-hover-accent);
+}
+
+.resendDisabledText {
+  color: var(--color-body-muted);
+  font-weight: 600;
+}
+
+.cancelOtpBtn {
+  background: none;
+  border: none;
+  color: var(--color-body-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 auto;
+  transition: color 0.2s;
+}
+
+.cancelOtpBtn:hover {
+  color: #C0392B;
+}
+
+.devOtpHintBanner {
+  margin-top: 1rem;
+  padding: 0.65rem 0.85rem;
+  background: #FFF8E7;
+  border: 1px dashed #D4A017;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  color: #7D5A12;
+  line-height: 1.4;
+  text-align: center;
+  width: 100%;
+}
+
