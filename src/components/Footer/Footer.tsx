@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, Clock, ShieldCheck, ArrowUpRight } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, ArrowUpRight } from 'lucide-react';
 import styles from './Footer.module.css';
 
 export const Footer = () => {
@@ -103,21 +103,6 @@ export const Footer = () => {
         </div>
       </div>
 
-      {/* Subtle Trust & Security Bar */}
-      <div className={styles.paymentSecurityBar}>
-        <div className={styles.paymentContainer}>
-          <div className={styles.securityTag}>
-            <ShieldCheck size={16} className={styles.securityIcon} />
-            <span>256-Bit SSL Encrypted Checkout &bull; UPI &bull; Cards &bull; NetBanking</span>
-          </div>
-          <div className={styles.paymentBadges}>
-            <span className={styles.payBadge}>Razorpay</span>
-            <span className={styles.payBadge}>PayU</span>
-            <span className={styles.payBadge}>UPI</span>
-            <span className={styles.payBadge}>Cards</span>
-          </div>
-        </div>
-      </div>
 
       {/* Bottom Bar */}
       <div className={styles.bottomBar}>

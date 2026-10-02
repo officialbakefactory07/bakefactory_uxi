@@ -281,58 +281,6 @@
   margin-top: 0.15rem;
 }
 
-/* Subtle Payment Security Bar */
-.paymentSecurityBar {
-  background: #140C07;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-  padding: 0.75rem 0;
-}
-
-.paymentContainer {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.securityTag {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-sans);
-  font-size: 0.73rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: #D4A017;
-}
-
-.securityIcon {
-  color: #D4A017;
-}
-
-.paymentBadges {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-}
-
-.payBadge {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.68rem;
-  font-weight: 600;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  letter-spacing: 0.02em;
-}
-
 /* Bottom Bar */
 .bottomBar {
   border-top: 1px solid rgba(255, 255, 255, 0.04);
@@ -378,10 +326,6 @@
 }
 
 @media (max-width: 600px) {
-  .paymentContainer {
-    flex-direction: column;
-    align-items: flex-start;
-  }
   .bottomContainer {
     flex-direction: column;
     gap: 0.5rem;
