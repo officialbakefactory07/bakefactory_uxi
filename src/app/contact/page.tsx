@@ -64,7 +64,7 @@ export default function Contact() {
 
       <div className={styles.container}>
         
-        {/* 2. Direct Concierge Contact Cards */}
+        {/* 2. Direct Concierge Contact Cards (2x2 on Mobile, 4-in-a-row on Desktop) */}
         <div className={styles.infoSection}>
           {/* Card 1: WhatsApp Concierge */}
           <a 
@@ -74,29 +74,29 @@ export default function Contact() {
             className={styles.infoCard}
           >
             <div className={`${styles.iconCircle} ${styles.iconWhatsApp}`}>
-              <MessageCircle size={24} />
+              <MessageCircle size={22} />
             </div>
             <div className={styles.cardHeaderMeta}>
-              <span className={styles.cardMiniTag}>FASTEST RESPONSE</span>
-              <h3>WhatsApp Concierge</h3>
+              <span className={styles.cardMiniTag}>FASTEST CHAT</span>
+              <h3>WhatsApp</h3>
             </div>
             <p className={styles.phoneText}>+91 79894 99446</p>
-            <p className={styles.cardDesc}>Instant chats for custom designs, reference photos, &amp; same-day delivery slots.</p>
-            <span className={styles.cardAction}>Chat on WhatsApp &rarr;</span>
+            <p className={styles.cardDesc}>Instant chats for custom designs &amp; same-day delivery.</p>
+            <span className={styles.cardAction}>Chat &rarr;</span>
           </a>
 
           {/* Card 2: Phone Hotline */}
           <a href="tel:+917989499446" className={styles.infoCard}>
             <div className={styles.iconCircle}>
-              <Phone size={24} />
+              <Phone size={22} />
             </div>
             <div className={styles.cardHeaderMeta}>
-              <span className={styles.cardMiniTag}>DIRECT LINE</span>
-              <h3>Call Our Atelier</h3>
+              <span className={styles.cardMiniTag}>DIRECT CALL</span>
+              <h3>Call Studio</h3>
             </div>
             <p className={styles.phoneText}>+91 79894 99446</p>
-            <p className={styles.cardDesc}>Speak directly with our pastry team for rush orders or consultation guidance.</p>
-            <span className={styles.cardAction}>Call Atelier &rarr;</span>
+            <p className={styles.cardDesc}>Speak directly with our chefs for rush orders &amp; guidance.</p>
+            <span className={styles.cardAction}>Call Now &rarr;</span>
           </a>
 
           {/* Card 3: Studio Location */}
@@ -107,16 +107,31 @@ export default function Contact() {
             className={styles.infoCard}
           >
             <div className={styles.iconCircle}>
-              <MapPin size={24} />
+              <MapPin size={22} />
             </div>
             <div className={styles.cardHeaderMeta}>
-              <span className={styles.cardMiniTag}>ATELIER STUDIO</span>
-              <h3>Studio &amp; Pickups</h3>
+              <span className={styles.cardMiniTag}>STUDIO</span>
+              <h3>Visit Atelier</h3>
             </div>
             <p className={styles.addressText}>
-              Bake Factory, #12-1/2, Near Rohan&apos;s Pride Apartments, Amaravathi Road, Undavalli (Rural), Tadepalle &ndash; 522501
+              Amaravathi Road, Undavalli, Tadepalle &ndash; 522501
             </p>
-            <span className={styles.cardAction}>Open in Google Maps &rarr;</span>
+            <p className={styles.cardDesc}>Self pickup &amp; custom cake consultations.</p>
+            <span className={styles.cardAction}>Directions &rarr;</span>
+          </a>
+
+          {/* Card 4: Email Concierge */}
+          <a href="mailto:officialbakefactory@gmail.com" className={styles.infoCard}>
+            <div className={`${styles.iconCircle} ${styles.iconEmail}`}>
+              <Mail size={22} />
+            </div>
+            <div className={styles.cardHeaderMeta}>
+              <span className={styles.cardMiniTag}>OFFICIAL INQUIRY</span>
+              <h3>Email Desk</h3>
+            </div>
+            <p className={styles.phoneText}>officialbakefactory@gmail.com</p>
+            <p className={styles.cardDesc}>Corporate bulk gifting &amp; event catering inquiries.</p>
+            <span className={styles.cardAction}>Write Us &rarr;</span>
           </a>
         </div>
 
@@ -125,16 +140,16 @@ export default function Contact() {
           {/* Custom Cake & Order Inquiry Form */}
           <div className={styles.formSection}>
             <div className={styles.formHeader}>
-              <Sparkles size={22} className={styles.formIcon} />
+              <Sparkles size={20} className={styles.formIcon} />
               <h2>Bespoke Cake &amp; Order Inquiry</h2>
             </div>
             <p className={styles.formSub}>
-              Share your celebration details below. Our chefs will review and reach out with tailored flavor profiles and design suggestions.
+              Share your celebration details below. Our chefs will review and reach out with tailored flavor profiles.
             </p>
 
             {submitted ? (
               <div className={styles.successBox}>
-                <CheckCircle2 size={48} className={styles.successIcon} />
+                <CheckCircle2 size={44} className={styles.successIcon} />
                 <h3>Thank You, {formState.name}!</h3>
                 <p>Your inquiry has been received. Our atelier team will connect with you via WhatsApp / Phone shortly.</p>
                 <button 
@@ -149,6 +164,7 @@ export default function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className={styles.contactForm}>
+                {/* Row 1 (2 by 2): Full Name & Phone */}
                 <div className={styles.formRow}>
                   <div className={styles.inputGroup}>
                     <label htmlFor="name">Full Name <span className={styles.reqStar}>*</span></label>
@@ -174,18 +190,8 @@ export default function Contact() {
                   </div>
                 </div>
 
+                {/* Row 2 (2 by 2): Occasion & Delivery Date */}
                 <div className={styles.formRow}>
-                  <div className={styles.inputGroup}>
-                    <label htmlFor="email">Email Address <span className={styles.optionalTag}>(Optional)</span></label>
-                    <input 
-                      type="email" 
-                      id="email" 
-                      placeholder="you@example.com"
-                      value={formState.email}
-                      onChange={e => setFormState({...formState, email: e.target.value})}
-                    />
-                  </div>
-
                   <div className={styles.inputGroup}>
                     <label htmlFor="occasion">Occasion / Type</label>
                     <select
@@ -203,24 +209,37 @@ export default function Contact() {
                       <option value="General Inquiry">General Inquiry</option>
                     </select>
                   </div>
+
+                  <div className={styles.inputGroup}>
+                    <label htmlFor="eventDate">Delivery / Event Date</label>
+                    <input 
+                      type="date" 
+                      id="eventDate" 
+                      value={formState.eventDate}
+                      onChange={e => setFormState({...formState, eventDate: e.target.value})}
+                    />
+                  </div>
                 </div>
 
+                {/* Row 3: Email Address */}
                 <div className={styles.inputGroup}>
-                  <label htmlFor="eventDate">Preferred Delivery / Event Date <span className={styles.optionalTag}>(Optional)</span></label>
+                  <label htmlFor="email">Email Address <span className={styles.optionalTag}>(Optional)</span></label>
                   <input 
-                    type="date" 
-                    id="eventDate" 
-                    value={formState.eventDate}
-                    onChange={e => setFormState({...formState, eventDate: e.target.value})}
+                    type="email" 
+                    id="email" 
+                    placeholder="you@example.com"
+                    value={formState.email}
+                    onChange={e => setFormState({...formState, email: e.target.value})}
                   />
                 </div>
 
+                {/* Row 4: Message */}
                 <div className={styles.inputGroup}>
                   <label htmlFor="message">Cake Specifications / Requirements <span className={styles.reqStar}>*</span></label>
                   <textarea 
                     id="message" 
                     required 
-                    rows={4} 
+                    rows={3} 
                     placeholder="Tell us about your celebration theme, flavor preferences (e.g. Belgian Truffle, Lotus Biscoff), dietary needs (eggless), or approximate guest count..."
                     value={formState.message}
                     onChange={e => setFormState({...formState, message: e.target.value})}
@@ -228,7 +247,7 @@ export default function Contact() {
                 </div>
 
                 <button type="submit" disabled={sending} className={styles.submitBtn}>
-                  <Send size={18} />
+                  <Send size={17} />
                   <span>{sending ? 'Transmitting to Atelier...' : 'Submit Consultation Request'}</span>
                 </button>
               </form>
@@ -241,7 +260,7 @@ export default function Contact() {
             <div className={styles.hoursCard}>
               <div className={styles.hoursHeader}>
                 <div className={styles.hoursIconCircle}>
-                  <Clock size={22} className={styles.hoursIcon} />
+                  <Clock size={20} className={styles.hoursIcon} />
                 </div>
                 <div>
                   <h3>Atelier Timings</h3>
@@ -271,21 +290,12 @@ export default function Contact() {
                 title="Bake Factory Location"
                 src="https://maps.google.com/maps?q=16.4815522,80.6128612&hl=en;z=14&output=embed"
                 width="100%" 
-                height="230" 
+                height="210" 
                 style={{ border: 0, borderRadius: '16px', display: 'block' }} 
                 allowFullScreen={false} 
                 loading="lazy" 
                 referrerPolicy="no-referrer-when-downgrade"
               />
-            </div>
-
-            {/* Direct Email Support Note */}
-            <div className={styles.emailPillCard}>
-              <Mail size={18} className={styles.emailIcon} />
-              <div>
-                <strong>Direct Email Inquiries</strong>
-                <a href="mailto:officialbakefactory@gmail.com">officialbakefactory@gmail.com</a>
-              </div>
             </div>
           </div>
         </div>
@@ -293,10 +303,10 @@ export default function Contact() {
         {/* 4. Elegant Minimal Credential Badge */}
         <div className={styles.credentialFooter}>
           <div className={styles.credentialPill}>
-            <Award size={16} className={styles.credentialIcon} />
+            <Award size={15} className={styles.credentialIcon} />
             <span>FSSAI Reg. No: <strong>20126141002411</strong></span>
             <span className={styles.credentialDot}>&bull;</span>
-            <span>100% Food Safety Certified Artisanal Kitchen</span>
+            <span>100% Food Safety Certified</span>
             <span className={styles.credentialDot}>&bull;</span>
             <span>Tadepalle, Andhra Pradesh</span>
           </div>
