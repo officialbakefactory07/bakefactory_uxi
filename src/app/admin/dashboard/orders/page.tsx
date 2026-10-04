@@ -90,11 +90,6 @@ export default function OrdersPage() {
   const cancelledCount = orders.filter((o) => o.status === 'Cancelled' || o.status === 'Payment Pending').length;
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
-    const currentOrder = orders.find((o) => o.id === orderId);
-    if (currentOrder && (currentOrder.status === 'Cancelled' || currentOrder.status === 'Payment Pending')) {
-      alert('This order was cancelled or payment was not completed. Its status cannot be modified.');
-      return;
-    }
     try {
       await updateDoc(doc(db, 'orders', orderId), { status: newStatus });
     } catch (err) {
@@ -250,29 +245,23 @@ export default function OrdersPage() {
                           </span>
                         </td>
                         <td>
-                          {order.status === 'Cancelled' || order.status === 'Payment Pending' ? (
-                            <span className={styles.cancelledDisabledTag} title="Order is cancelled or unpaid. Status cannot be modified.">
-                              {order.status === 'Payment Pending' ? 'Unpaid (Cancelled)' : 'Cancelled (Locked)'}
-                            </span>
-                          ) : (
-                            <select
-                              className={styles.statusSelect}
-                              value={order.status || ''}
-                              onChange={(e) =>
-                                handleStatusChange(order.id, e.target.value)
-                              }
-                              style={{
-                                borderColor: statusStyle.color,
-                                color: statusStyle.color,
-                              }}
-                            >
-                              {STATUS_OPTIONS.map((s) => (
-                                <option key={s} value={s}>
-                                  {s}
-                                </option>
-                              ))}
-                            </select>
-                          )}
+                          <select
+                            className={styles.statusSelect}
+                            value={order.status || 'Preparing'}
+                            onChange={(e) =>
+                              handleStatusChange(order.id, e.target.value)
+                            }
+                            style={{
+                              borderColor: statusStyle.color,
+                              color: statusStyle.color,
+                            }}
+                          >
+                            {STATUS_OPTIONS.map((s) => (
+                              <option key={s} value={s}>
+                                {s}
+                              </option>
+                            ))}
+                          </select>
                         </td>
                       </tr>
                     );
@@ -332,29 +321,23 @@ export default function OrdersPage() {
                     </div>
                     <div className={styles.mobileCardFoot}>
                       <label>Update Status:</label>
-                      {order.status === 'Cancelled' || order.status === 'Payment Pending' ? (
-                        <span className={styles.cancelledDisabledTag} title="Order is cancelled or unpaid. Status cannot be modified.">
-                          {order.status === 'Payment Pending' ? 'Unpaid (Cancelled)' : 'Cancelled (Locked)'}
-                        </span>
-                      ) : (
-                        <select
-                          className={styles.statusSelect}
-                          value={order.status || ''}
-                          onChange={(e) =>
-                            handleStatusChange(order.id, e.target.value)
-                          }
-                          style={{
-                            borderColor: statusStyle.color,
-                            color: statusStyle.color,
-                          }}
-                        >
-                          {STATUS_OPTIONS.map((s) => (
-                            <option key={s} value={s}>
-                              {s}
-                            </option>
-                          ))}
-                        </select>
-                      )}
+                      <select
+                        className={styles.statusSelect}
+                        value={order.status || 'Preparing'}
+                        onChange={(e) =>
+                          handleStatusChange(order.id, e.target.value)
+                        }
+                        style={{
+                          borderColor: statusStyle.color,
+                          color: statusStyle.color,
+                        }}
+                      >
+                        {STATUS_OPTIONS.map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
                 );

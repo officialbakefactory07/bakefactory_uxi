@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import styles from './page.module.css';
 import { 
   MapPin, Phone, Mail, Clock, Send, CheckCircle2, 
-  MessageCircle, Sparkles, Award
+  MessageCircle, Cake, Award
 } from 'lucide-react';
 
 export default function Contact() {
@@ -140,7 +140,7 @@ export default function Contact() {
           {/* Custom Cake & Order Inquiry Form */}
           <div className={styles.formSection}>
             <div className={styles.formHeader}>
-              <Sparkles size={20} className={styles.formIcon} />
+              <Cake size={20} className={styles.formIcon} />
               <h2>Bespoke Cake &amp; Order Inquiry</h2>
             </div>
             <p className={styles.formSub}>

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Lock, Eye, EyeOff, ShieldCheck, User, ArrowLeft, KeyRound, Sparkles } from 'lucide-react';
+import { Lock, Eye, EyeOff, User, ArrowLeft, ShieldAlert } from 'lucide-react';
 import styles from './page.module.css';
 import { getAdminCredentials } from '@/lib/authStaff';
 
@@ -48,58 +48,42 @@ export default function AdminLogin() {
 
   return (
     <div className={styles.page}>
-      {/* Ambient background glows & micro grid */}
+      {/* Warm ambient bakery glow matching main website */}
       <div className={styles.ambientGlowTop} />
       <div className={styles.ambientGlowBottom} />
-      <div className={styles.gridOverlay} />
 
-      {/* Top Bar with Return to Store */}
-      <div className={styles.topBar}>
-        <Link href="/" className={styles.backLink}>
-          <ArrowLeft size={16} />
-          <span>Return to Storefront</span>
-        </Link>
-        <div className={styles.systemStatusBadge}>
-          <span className={styles.statusPulseDot} />
-          <span>SECURE SYSTEM</span>
+      <div className={styles.authContainer}>
+        {/* Return to storefront link */}
+        <div className={styles.backLinkWrap}>
+          <Link href="/" className={styles.backLink}>
+            <ArrowLeft size={16} />
+            <span>Back to Store</span>
+          </Link>
         </div>
-      </div>
 
-      <div className={styles.cardContainer}>
-        <div className={styles.cardGlowBorder} />
-        
-        <div className={styles.card}>
-          {/* Executive Medallion */}
-          <div className={styles.emblemContainer}>
-            <div className={styles.emblemHalo} />
-            <div className={styles.emblemRing}>
-              <div className={styles.logoCircle}>
-                <Image 
-                  src="/logo.png" 
-                  alt="Bake Factory" 
-                  width={72} 
-                  height={72} 
-                  className={styles.logoImg}
-                  priority
-                />
-              </div>
-            </div>
+        <div className={styles.authCard}>
+          {/* Brand Logo & Header */}
+          <div className={styles.cardHeader}>
+            <Link href="/" className={styles.logoWrap}>
+              <Image 
+                src="/logo.png" 
+                alt="Bake Factory" 
+                width={70} 
+                height={70} 
+                className={styles.logoImg}
+                priority
+              />
+            </Link>
+            <span className={styles.studioTag}>Bake Factory Atelier</span>
+            <h1 className={styles.title}>Admin Access</h1>
+            <p className={styles.subtitle}>
+              Authorized management and operations portal
+            </p>
           </div>
-
-          {/* Luxury Badge */}
-          <div className={styles.pillBadge}>
-            <Sparkles size={12} className={styles.pillBadgeIcon} />
-            <span>EXECUTIVE COMMAND PORTAL</span>
-          </div>
-
-          <h1 className={styles.title}>Admin Access</h1>
-          <p className={styles.subtitle}>
-            Authorized management environment • 256-bit encrypted console
-          </p>
 
           {error && (
             <div className={styles.error}>
-              <ShieldCheck size={18} className={styles.errorIcon} />
+              <ShieldAlert size={18} className={styles.errorIcon} />
               <span>{error}</span>
             </div>
           )}
@@ -107,7 +91,7 @@ export default function AdminLogin() {
           <form onSubmit={handleLogin} className={styles.form}>
             <div className={styles.field}>
               <label htmlFor="admin-user" className={styles.fieldLabel}>
-                Administrator Username
+                Admin Username
               </label>
               <div className={styles.inputWrapper}>
                 <div className={styles.inputIconBox}>
@@ -116,7 +100,7 @@ export default function AdminLogin() {
                 <input
                   id="admin-user"
                   type="text"
-                  placeholder="Enter administrator ID"
+                  placeholder="Enter admin username"
                   value={username}
                   onChange={e => setUsername(e.target.value)}
                   required
@@ -128,16 +112,16 @@ export default function AdminLogin() {
 
             <div className={styles.field}>
               <label htmlFor="admin-pass" className={styles.fieldLabel}>
-                Security Passcode
+                Password
               </label>
               <div className={styles.inputWrapper}>
                 <div className={styles.inputIconBox}>
-                  <KeyRound size={18} />
+                  <Lock size={18} />
                 </div>
                 <input
                   id="admin-pass"
                   type={showPass ? 'text' : 'password'}
-                  placeholder="Enter access passphrase"
+                  placeholder="Enter password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
@@ -160,22 +144,17 @@ export default function AdminLogin() {
               {loading ? (
                 <div className={styles.loadingWrapper}>
                   <span className={styles.btnSpinner} />
-                  <span>Authenticating...</span>
+                  <span>Signing In...</span>
                 </div>
               ) : (
-                <div className={styles.btnContent}>
-                  <Lock size={17} />
-                  <span>Enter Master Dashboard</span>
-                </div>
+                'Access Master Dashboard'
               )}
             </button>
           </form>
 
-          {/* Security Assurance Footer */}
-          <div className={styles.footerInfo}>
-            <ShieldCheck size={14} className={styles.footerShieldIcon} />
-            <span>Encrypted Atelier Console • Access telemetry strictly monitored</span>
-          </div>
+          <p className={styles.footerNote}>
+            Restricted to authorized personnel only. All access sessions are logged.
+          </p>
         </div>
       </div>
     </div>
