@@ -234,7 +234,7 @@ function MenuContent() {
     <div className={styles.page}>
       {/* Menu Header Banner */}
       <div className={styles.menuHeader}>
-        <span className={styles.menuTag}>✦ FRESH FROM OUR OVENS</span>
+        <span className={styles.menuTag}>FRESH FROM OUR OVENS</span>
         <h1>Artisanal Dessert Menu</h1>
         <p>Explore handcrafted cakes, signature pastries, and freshly baked sweet indulgences.</p>
       </div>

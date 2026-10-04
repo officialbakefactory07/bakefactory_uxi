@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/Button/Button';
 import {
-  Sparkles,
   Star,
   ShieldCheck,
   Heart,
@@ -20,6 +19,7 @@ import {
   Cake,
   Truck,
   ChevronRight,
+  Leaf,
 } from 'lucide-react';
 import styles from './page.module.css';
 import Link from 'next/link';
@@ -439,7 +439,7 @@ export default function Home() {
             >
               <div className={styles.aboutBadgeRow}>
                 <span className={styles.aboutPulseDot} />
-                <span className={styles.aboutBadgeText}>✦ THE ATELIER PHILOSOPHY &bull; EST. 2024</span>
+                <span className={styles.aboutBadgeText}>OUR BAKERY PHILOSOPHY • EST. 2024</span>
               </div>
 
               <h2 className={styles.aboutMainTitle}>
@@ -476,7 +476,7 @@ export default function Home() {
 
                 <div className={styles.pillarItem}>
                   <div className={styles.pillarIconCircle}>
-                    <Sparkles size={18} />
+                    <Leaf size={18} />
                   </div>
                   <div className={styles.pillarText}>
                     <strong>Real Vanilla &amp; Berries</strong>
@@ -523,7 +523,7 @@ export default function Home() {
                 >
                   <div className={styles.visualOverlayGradient} />
                   <div className={styles.visualFloatingBadge}>
-                    <Sparkles size={16} className={styles.goldIcon} />
+                    <ChefHat size={16} className={styles.goldIcon} />
                     <div>
                       <strong>Master Pastry Art</strong>
                       <span>Vijayawada Atelier</span>
@@ -623,7 +623,7 @@ export default function Home() {
       <section className={styles.ctaSection}>
         <div className={styles.ctaCard}>
           <div className={styles.ctaContent}>
-            <span className={styles.ctaTag}>✦ READY FOR SOMETHING SWEET?</span>
+            <span className={styles.ctaTag}>READY FOR SOMETHING SWEET?</span>
             <h2>Order Your Custom Celebration Cake Today</h2>
             <p>Choose from our delicious catalog or speak directly with our head pastry chef for bespoke designs.</p>
             <div className={styles.ctaButtonRow}>
@@ -652,7 +652,7 @@ export default function Home() {
             >
               <div className={styles.modalHeader}>
                 <div className={styles.modalHeaderLeft}>
-                  <Sparkles size={18} className={styles.goldIcon} />
+                  <Star size={18} className={styles.goldIcon} />
                   <h3>Share Your Experience</h3>
                 </div>
                 <button

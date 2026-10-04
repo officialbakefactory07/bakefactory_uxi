@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { db } from '@/lib/firebase';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { IndianRupee, ShoppingBag, Banknote, Smartphone, TrendingUp, Printer, ArrowUpRight, Sparkles } from 'lucide-react';
+import { IndianRupee, ShoppingBag, Banknote, Smartphone, TrendingUp, Printer, ArrowUpRight, Store } from 'lucide-react';
 import styles from './page.module.css';
 
 interface OrderItem {
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
       {/* Top Banner / Fast POS Launcher */}
       <div className={styles.posBanner}>
         <div className={styles.posBannerText}>
-          <Sparkles size={20} className={styles.sparkleIcon} />
+          <Store size={20} className={styles.sparkleIcon} />
           <div>
             <strong>Point of Sale & Billing Terminal Active</strong>
             <span>Cashier billing, Bluetooth 58mm/80mm receipt printing and live shift reports enabled.</span>

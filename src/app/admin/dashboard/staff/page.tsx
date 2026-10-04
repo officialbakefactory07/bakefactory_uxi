@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   KeyRound, Shield, UserCheck, Plus, Trash2, Edit2, Check, X, 
-  Lock, Eye, EyeOff, Mail, Store, AlertCircle, Save, Sparkles, RefreshCw 
+  Lock, Eye, EyeOff, Mail, Store, AlertCircle, Save, RefreshCw 
 } from 'lucide-react';
 import { 
   getAdminCredentials, updateAdminCredentials, 

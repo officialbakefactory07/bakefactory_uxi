@@ -23,7 +23,6 @@ import {
   ShieldCheck,
   Search,
   MessageSquare,
-  Sparkles,
 } from 'lucide-react';
 import styles from './page.module.css';
 
@@ -174,7 +173,7 @@ export default function AdminReviewsPage() {
       <div className={styles.header}>
         <div>
           <div className={styles.tagline}>
-            <Sparkles size={14} className={styles.goldSparkle} />
+            <Star size={14} className={styles.goldSparkle} />
             <span>MODERATION &amp; TESTIMONIALS</span>
           </div>
           <h1 className={styles.title}>Customer Reviews</h1>

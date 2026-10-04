@@ -7,7 +7,7 @@ import { db } from '@/lib/firebase';
 import { doc, getDoc, updateDoc, collection, query, where, onSnapshot } from 'firebase/firestore';
 import { 
   Package, Heart, MapPin, ChevronRight, Edit3, Check, X, Phone, Calendar, 
-  Mail, User, HelpCircle, ChefHat, Truck, CircleCheckBig, Sparkles, CreditCard,
+  Mail, User, HelpCircle, ChefHat, Truck, CircleCheckBig, CreditCard,
   Clock, AlertTriangle, XCircle
 } from 'lucide-react';
 import styles from './page.module.css';
@@ -356,7 +356,7 @@ export default function ProfilePage() {
 
                   {/* Live Status Callout Box */}
                   <div className={`${styles.statusAlertBox} ${isCompleted ? styles.completedBox : isCancelled ? styles.cancelledBox : ''}`}>
-                    <Sparkles size={16} className={styles.sparkleIcon} />
+                    <ChefHat size={16} className={styles.sparkleIcon} />
                     <span>{getLiveMessage(order.status)}</span>
                   </div>
 

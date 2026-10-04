@@ -8,7 +8,7 @@ import { collection, onSnapshot, addDoc, serverTimestamp } from 'firebase/firest
 import { 
   Search, Plus, Minus, Trash2, ShoppingBag, CreditCard, 
   Banknote, QrCode, User, Phone, Tag, Edit3, Printer, 
-  RotateCcw, CheckCircle2, Clock, LogOut, FileText, ChevronRight, X, Sparkles, ArrowLeft, ArrowRight
+  RotateCcw, CheckCircle2, Clock, LogOut, FileText, ChevronRight, X, ArrowLeft, ArrowRight
 } from 'lucide-react';
 import { ReceiptData, ReceiptItem } from '@/lib/escpos';
 import { ReceiptModal } from '@/components/POS/ReceiptModal';

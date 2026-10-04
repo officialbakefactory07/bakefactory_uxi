@@ -11,7 +11,7 @@ export const Footer = () => {
       <div className={styles.topBanner}>
         <div className={styles.topBannerContainer}>
           <div className={styles.topBannerText}>
-            <span className={styles.bannerTag}>✦ ARTISANAL ATELIER</span>
+            <span className={styles.bannerTag}>FRESH ARTISANAL BAKES</span>
             <h3>Celebrate Life&apos;s Moments with Extraordinary Flavors</h3>
           </div>
           <Link href="/menu" className={styles.bannerCta}>

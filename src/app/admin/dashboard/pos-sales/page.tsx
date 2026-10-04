@@ -5,7 +5,7 @@ import { db } from '@/lib/firebase';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { 
   Banknote, QrCode, CreditCard, ShoppingCart, Calendar, 
-  Search, Printer, Download, Eye, FileText, TrendingUp, Sparkles, Filter
+  Search, Printer, Download, Eye, FileText, TrendingUp, Filter
 } from 'lucide-react';
 import { ReceiptData } from '@/lib/escpos';
 import { ReceiptModal } from '@/components/POS/ReceiptModal';
@@ -130,8 +130,8 @@ export default function PosSalesDashboard() {
       {/* ── Page Header ── */}
       <div className={styles.header}>
         <div>
-          <span className={styles.pageTag}>✦ EVERYDAY OPERATIONS</span>
-          <h1>Daily POS & Billing Analytics</h1>
+          <span className={styles.pageTag}>STORE OPERATIONS</span>
+          <h1>Daily POS &amp; Billing Analytics</h1>
           <p>Real-time point of sale metrics, cash collections, shift totals, and customer receipts.</p>
         </div>
 

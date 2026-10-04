@@ -20,7 +20,6 @@ import {
   User,
   Eye,
   EyeOff,
-  Sparkles,
   ShieldCheck,
   Award,
   ArrowRight,
@@ -343,21 +342,6 @@ export default function Login() {
 
       {/* Floating Animated Sparks */}
       <motion.div
-        className={styles.floatingSparkle1}
-        animate={{ y: [0, -15, 0], opacity: [0.4, 0.9, 0.4] }}
-        transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
-      >
-        ✦
-      </motion.div>
-      <motion.div
-        className={styles.floatingSparkle2}
-        animate={{ y: [0, 20, 0], opacity: [0.3, 0.8, 0.3] }}
-        transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut', delay: 1 }}
-      >
-        ✦
-      </motion.div>
-
-      <motion.div
         className={styles.authContainer}
         initial={{ opacity: 0, y: 35, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -376,7 +360,7 @@ export default function Login() {
                 <ShieldCheck size={36} />
               </div>
 
-              <span className={styles.studioTag}>✦ TWO-FACTOR AUTHENTICATION</span>
+              <span className={styles.studioTag}>SECURE TWO-FACTOR AUTHENTICATION</span>
               <h2 className={styles.otpTitle}>Verify It&apos;s You</h2>
               
               <p className={styles.otpSubtitle}>
@@ -483,7 +467,7 @@ export default function Login() {
                   />
                 </motion.div>
 
-                <span className={styles.studioTag}>✦ ARTISANAL DESSERT STUDIO</span>
+                <span className={styles.studioTag}>BAKE FACTORY</span>
                 <h1>{forgotPasswordMode ? 'Reset Password' : isLogin ? 'Welcome Back' : 'Join Bake Factory'}</h1>
                 <p>
                   {forgotPasswordMode
@@ -670,7 +654,7 @@ export default function Login() {
 
                   {/* Submit CTA */}
                   <button type="submit" disabled={loading} className={styles.submitBtn}>
-                    <Sparkles size={16} />
+                    <CheckCircle2 size={16} />
                     <span>
                       {loading
                         ? 'Connecting to Bakery...'

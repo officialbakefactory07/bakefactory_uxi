@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 import {
   Award,
   Heart,
-  Sparkles,
   ShieldCheck,
   Cake,
   Clock,
@@ -83,7 +82,7 @@ export default function About() {
       title: 'Delicious Eggless Options',
       tag: '100% VEGETARIAN FRIENDLY',
       desc: 'Our eggless sponge recipes achieve the exact same cloud-like softness, height, and velvety texture that everyone loves.',
-      icon: Sparkles,
+      icon: Leaf,
       badge: 'Pure Veg Available',
     },
     {
@@ -147,7 +146,7 @@ export default function About() {
             transition={{ duration: 0.6 }}
             className={styles.heroBadge}
           >
-            <Sparkles size={14} className={styles.goldSparkle} />
+            <ChefHat size={15} className={styles.goldSparkle} />
             <span>ARTISANAL BAKERY • VIJAYAWADA &amp; TADEPALLE</span>
           </motion.div>
 
@@ -226,7 +225,7 @@ export default function About() {
               className={styles.storyContent}
             >
               <div className={styles.sectionHeaderWrap}>
-                <span className={styles.sectionKicker}>✦ OUR STORY &amp; PASSION</span>
+                <span className={styles.sectionKicker}>OUR STORY &amp; PASSION</span>
                 <h2 className={styles.sectionTitle}>
                   Baked with Love, Served with Pride
                 </h2>
@@ -284,7 +283,7 @@ export default function About() {
                 />
                 <div className={styles.imageOverlayGradient} />
                 <div className={styles.goldBadgeFloating}>
-                  <Sparkles size={18} />
+                  <Heart size={18} />
                   <div>
                     <strong>Handcrafted Daily</strong>
                     <span>Fresh Cream &amp; Wild Berries</span>
@@ -319,7 +318,7 @@ export default function About() {
       <section className={styles.journeySection}>
         <div className={styles.storyContainer}>
           <div className={styles.centerSectionHeader}>
-            <span className={styles.sectionKicker}>✦ OUR BAKING PROCESS</span>
+            <span className={styles.sectionKicker}>OUR BAKING PROCESS</span>
             <h2 className={styles.sectionTitle}>How We Craft Your Cake</h2>
             <p className={styles.centerSubtitle}>
               From premium ingredients to safe doorstep delivery, 
@@ -357,7 +356,7 @@ export default function About() {
       <section className={styles.bentoSection}>
         <div className={styles.storyContainer}>
           <div className={styles.centerSectionHeader}>
-            <span className={styles.sectionKicker}>✦ THE BAKE FACTORY PROMISE</span>
+            <span className={styles.sectionKicker}>THE BAKE FACTORY PROMISE</span>
             <h2 className={styles.sectionTitle}>Ingredients &amp; Standards We Swear By</h2>
             <p className={styles.centerSubtitle}>
               Quality and honesty are at the heart of our bakery. Here is what goes into our cakes &mdash; and what we strictly avoid.
@@ -396,7 +395,7 @@ export default function About() {
       <section className={styles.specialtiesSection}>
         <div className={styles.storyContainer}>
           <div className={styles.centerSectionHeader}>
-            <span className={styles.sectionKicker}>✦ OUR SPECIALTIES</span>
+            <span className={styles.sectionKicker}>OUR SPECIALTIES</span>
             <h2 className={styles.sectionTitle}>Our Signature Creations</h2>
             <p className={styles.centerSubtitle}>
               From fresh birthday cakes to gourmet dessert jars, discover our most loved bakery treats.
@@ -479,7 +478,7 @@ export default function About() {
       {/* ── 7. LUXURY GRAND CTA ── */}
       <section className={styles.ctaGrandSection}>
         <div className={styles.ctaGrandContainer}>
-          <span className={styles.ctaKicker}>✦ CELEBRATE WITH BAKE FACTORY</span>
+          <span className={styles.ctaKicker}>CELEBRATE WITH BAKE FACTORY</span>
           <h2 className={styles.ctaGrandTitle}>
             Ready to Taste the Difference?
           </h2>
@@ -491,7 +490,7 @@ export default function About() {
 
           <div className={styles.ctaGrandBtnRow}>
             <Link href="/menu" className={styles.ctaPrimaryBtn}>
-              <Sparkles size={18} />
+              <Cake size={18} />
               <span>Browse Live Menu &amp; Order</span>
               <ArrowRight size={18} />
             </Link>
@@ -503,10 +502,10 @@ export default function About() {
           </div>
 
           <div className={styles.ctaGuaranteesRow}>
-            <span>✦ 100% Fresh Daily</span>
-            <span>✦ Pure Dairy Butter</span>
-            <span>✦ 45–60 Min Delivery</span>
-            <span>✦ Pure Veg Eggless Available</span>
+            <span>• 100% Fresh Daily</span>
+            <span>• Pure Dairy Butter</span>
+            <span>• 45–60 Min Delivery</span>
+            <span>• Pure Veg Eggless Available</span>
           </div>
         </div>
       </section>

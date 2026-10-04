@@ -33,7 +33,7 @@ export default function Contact() {
       {/* 1. Header */}
       <section className={styles.header}>
         <div className={styles.headerContainer}>
-          <span className={styles.headerTag}>✦ GET IN TOUCH & OFFICIAL DETAILS</span>
+          <span className={styles.headerTag}>GET IN TOUCH &amp; OFFICIAL DETAILS</span>
           <h1>Customer Support & Bakery Information</h1>
           <p>Have a question about our artisanal cakes, dietary options, or express delivery in Vijayawada &amp; Tadepalle? Reach out to our team.</p>
         </div>

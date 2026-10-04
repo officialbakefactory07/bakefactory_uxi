@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
-import { ShoppingBag, User, Package, Heart, MapPin, LogOut, ChevronDown, Menu, X, PhoneCall, Sparkles } from 'lucide-react';
+import { ShoppingBag, User, Package, Heart, MapPin, LogOut, ChevronDown, Menu, X, PhoneCall } from 'lucide-react';
 import styles from './Navbar.module.css';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';

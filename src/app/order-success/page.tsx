@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import { CheckCircle2, ShoppingBag, Clock, MapPin, ArrowRight, ShieldCheck, Sparkles, ChefHat } from 'lucide-react';
+import { CheckCircle2, ShoppingBag, Clock, MapPin, ArrowRight, ShieldCheck, ChefHat } from 'lucide-react';
 import styles from './page.module.css';
 
 function OrderSuccessContent() {
@@ -46,7 +46,7 @@ function OrderSuccessContent() {
         </div>
 
         <span className={styles.badge}>
-          <Sparkles size={14} />
+          <ShieldCheck size={14} />
           <span>PAYMENT VERIFIED & CONFIRMED</span>
         </span>
 

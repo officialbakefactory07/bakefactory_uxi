@@ -12,7 +12,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { ref, uploadString, getDownloadURL } from 'firebase/storage';
-import { Search, Plus, Pencil, Trash2, X, Upload, Sparkles, Wand2, Image as ImageIcon, FileText, Check, AlertCircle, RefreshCw } from 'lucide-react';
+import { Search, Plus, Pencil, Trash2, X, Upload, Wand2, Image as ImageIcon, FileText, Check, AlertCircle, RefreshCw } from 'lucide-react';
 import styles from './page.module.css';
 
 interface MenuItem {
@@ -450,7 +450,7 @@ export default function MenuPage() {
             onClick={() => { setAiModalOpen(true); setAiStatusMsg(null); }}
             title="Import menu from unstructured text or menu card photo using Groq AI"
           >
-            <Sparkles size={18} />
+            <Wand2 size={18} />
             <span>AI Menu Importer (Groq)</span>
           </button>
 
@@ -589,7 +589,7 @@ export default function MenuPage() {
             <div className={styles.aiModalHeader}>
               <div className={styles.aiHeaderTitle}>
                 <div className={styles.aiIconBadge}>
-                  <Sparkles size={22} />
+                  <Wand2 size={22} />
                 </div>
                 <div>
                   <h2>AI Menu Extractor & Importer</h2>

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Bluetooth, Printer, CheckCircle2, X, Sparkles, AlertCircle } from 'lucide-react';
+import { Bluetooth, Printer, CheckCircle2, X, PlusCircle, AlertCircle } from 'lucide-react';
 import { ReceiptData, printViaBluetooth } from '@/lib/escpos';
 import styles from './ReceiptModal.module.css';
 
@@ -493,7 +493,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ data, onClose, onNew
             className={styles.newSaleBtn} 
             onClick={onNewSale}
           >
-            <Sparkles size={16} />
+            <PlusCircle size={16} />
             <span>New Sale</span>
           </button>
         </div>

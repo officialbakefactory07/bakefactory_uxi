@@ -9,7 +9,7 @@ import { Button } from '@/components/Button/Button';
 import { Card } from '@/components/Card/Card';
 import { 
   Trash2, Plus, Minus, Tag, Check, MapPin, Edit3, 
-  PlusCircle, ShoppingBag, ShieldCheck, Sparkles, X, Phone, User, CheckCircle2,
+  PlusCircle, ShoppingBag, ShieldCheck, X, Phone, User, CheckCircle2,
   Banknote, CreditCard, Wallet, Clock, AlertCircle, Home, Briefcase, Navigation, Loader2
 } from 'lucide-react';
 import { db } from '@/lib/firebase';
@@ -1145,7 +1145,7 @@ function CartContent() {
             </div>
 
             <div className={styles.razorpayNoticeBox}>
-              <Sparkles size={16} className={styles.sparkleGold} />
+              <ShieldCheck size={16} className={styles.sparkleGold} />
               <span>
                 {paymentMethod === 'online' 
                   ? '⚡ Secure 256-bit encrypted checkout will launch when you proceed.' 
@@ -1177,7 +1177,7 @@ function CartContent() {
             {appliedCoupon ? (
               <div className={styles.appliedCouponBox}>
                 <div className={styles.appliedCouponHeader}>
-                  <Sparkles size={18} className={styles.sparkleIcon} />
+                  <Tag size={18} className={styles.sparkleIcon} />
                   <div>
                     <strong>{appliedCoupon.code} Applied!</strong>
                     <p>You saved ₹{discountAmount} on this order</p>
