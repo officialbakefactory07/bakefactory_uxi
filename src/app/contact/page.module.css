@@ -7,14 +7,14 @@
 
 /* ==================== 1. HEADER ==================== */
 .header {
-  padding: 6.5rem 2rem 4rem 2rem;
-  background: linear-gradient(180deg, rgba(244, 236, 225, 0.7) 0%, rgba(252, 248, 242, 1) 100%);
+  padding: 6.5rem 2rem 4.5rem 2rem;
+  background: linear-gradient(180deg, rgba(244, 236, 225, 0.75) 0%, rgba(252, 248, 242, 1) 100%);
   text-align: center;
   border-bottom: 1px solid var(--color-border);
 }
 
 .headerContainer {
-  max-width: 750px;
+  max-width: 760px;
   margin: 0 auto;
 }
 
@@ -25,8 +25,12 @@
   letter-spacing: 0.18em;
   color: var(--color-hover-accent);
   text-transform: uppercase;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
   display: inline-block;
+  background: #FEF8E7;
+  padding: 0.35rem 0.95rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(212, 160, 23, 0.3);
 }
 
 .header h1 {
@@ -35,114 +39,74 @@
   font-weight: 600;
   color: var(--color-heading);
   line-height: 1.15;
-  margin-bottom: 1rem;
+  margin-bottom: 1.15rem;
 }
 
 @media (max-width: 768px) {
+  .header {
+    padding: 5rem 1.25rem 3.5rem 1.25rem;
+  }
   .header h1 {
-    font-size: 2.4rem;
+    font-size: 2.35rem;
   }
 }
 
 .header p {
   font-family: var(--font-sans);
   font-size: 1.05rem;
-  line-height: 1.7;
+  line-height: 1.75;
   color: var(--color-body-muted);
 }
 
 /* ==================== 2. MAIN CONTAINER ==================== */
 .container {
-  max-width: 1280px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 4.5rem 2rem 6rem 2rem;
+  padding: 4rem 2rem 6rem 2rem;
   width: 100%;
 }
 
-/* Legal Info & FSSAI Banner */
-.legalInfoBanner {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 3.5rem;
-}
-
-@media (max-width: 900px) {
-  .legalInfoBanner {
-    grid-template-columns: 1fr;
+@media (max-width: 768px) {
+  .container {
+    padding: 2.5rem 1.25rem 4.5rem 1.25rem;
   }
 }
 
-.legalCard {
-  background: #FFFFFF;
-  border-radius: var(--radius-lg);
-  border: 1.5px solid #F2E7D5;
-  border-left: 4px solid var(--color-gold);
-  padding: 1.5rem 1.25rem;
-  display: flex;
-  gap: 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-}
-
-.legalIconBadge {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: #FEF8E7;
-  color: #8D6208;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.legalCard h3 {
-  font-family: var(--font-luxury);
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--color-heading);
-  margin-bottom: 0.4rem;
-}
-
-.legalCard p {
-  font-size: 0.82rem;
-  color: #55483F;
-  margin-bottom: 0.2rem;
-  line-height: 1.45;
-}
-
-/* Quick Contact Cards */
+/* Quick Concierge Cards */
 .infoSection {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  margin-bottom: 4.5rem;
+  gap: 1.75rem;
+  margin-bottom: 4rem;
 }
 
 @media (max-width: 900px) {
   .infoSection {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.25rem;
+    margin-bottom: 3rem;
   }
 }
 
 .infoCard {
   background: #FFFFFF;
-  padding: 2.2rem 1.75rem;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
+  padding: 2.25rem 1.75rem;
+  border-radius: 20px;
+  border: 1px solid rgba(35, 22, 14, 0.08);
+  box-shadow: 0 4px 20px rgba(35, 22, 14, 0.04);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.85rem;
+  text-decoration: none;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
 .infoCard:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-md);
-  border-color: rgba(212, 160, 23, 0.35);
+  box-shadow: 0 16px 36px rgba(35, 22, 14, 0.09);
+  border-color: rgba(212, 160, 23, 0.45);
 }
 
 .iconCircle {
@@ -157,34 +121,69 @@
   color: var(--color-button-dark);
 }
 
+.iconWhatsApp {
+  background: #E8F5E9;
+  border-color: #C8E6C9;
+  color: #2E7D32;
+}
+
+.cardHeaderMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cardMiniTag {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--color-hover-accent);
+  text-transform: uppercase;
+}
+
 .infoCard h3 {
   font-family: var(--font-luxury);
-  font-size: 1.5rem;
+  font-size: 1.55rem;
   font-weight: 600;
   color: var(--color-heading);
 }
 
-.addressText,
-.phoneText,
-.emailText {
+.phoneText {
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  letter-spacing: 0.02em;
+}
+
+.addressText {
   font-family: var(--font-sans);
   font-size: 0.9rem;
-  line-height: 1.6;
+  line-height: 1.55;
+  color: var(--color-body-muted);
+}
+
+.cardDesc {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.5;
   color: var(--color-body-muted);
   flex: 1;
 }
 
 .cardAction {
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: var(--color-hover-accent);
+  margin-top: 0.35rem;
 }
 
 /* ==================== 3. CONTENT SPLIT ==================== */
 .contentGrid {
   display: grid;
-  grid-template-columns: 1.3fr 0.9fr;
+  grid-template-columns: 1.35fr 0.95fr;
   gap: 3.5rem;
   align-items: flex-start;
 }
@@ -192,7 +191,7 @@
 @media (max-width: 960px) {
   .contentGrid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.75rem;
   }
 }
 
@@ -200,14 +199,14 @@
 .formSection {
   background: #FFFFFF;
   padding: 3rem;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-md);
+  border-radius: 24px;
+  border: 1px solid rgba(35, 22, 14, 0.08);
+  box-shadow: 0 8px 30px rgba(35, 22, 14, 0.05);
 }
 
 @media (max-width: 600px) {
   .formSection {
-    padding: 2rem 1.5rem;
+    padding: 2rem 1.25rem;
   }
 }
 
@@ -215,7 +214,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.45rem;
 }
 
 .formIcon {
@@ -224,28 +223,35 @@
 
 .formHeader h2 {
   font-family: var(--font-luxury);
-  font-size: 2.2rem;
+  font-size: 2.1rem;
   font-weight: 600;
   color: var(--color-heading);
+}
+
+@media (max-width: 600px) {
+  .formHeader h2 {
+    font-size: 1.65rem;
+  }
 }
 
 .formSub {
   font-family: var(--font-sans);
   font-size: 0.92rem;
   color: var(--color-body-muted);
+  line-height: 1.6;
   margin-bottom: 2rem;
 }
 
 .contactForm {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.4rem;
 }
 
 .formRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 @media (max-width: 600px) {
@@ -255,32 +261,39 @@
   }
 }
 
-.formGroup,
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.45rem;
   width: 100%;
 }
 
-.formGroup label,
 .inputGroup label {
   font-family: var(--font-sans);
-  font-size: 0.88rem;
-  font-weight: 600;
+  font-size: 0.86rem;
+  font-weight: 700;
   color: var(--color-heading);
 }
 
-.formGroup input,
-.formGroup textarea,
+.reqStar {
+  color: #D32F2F;
+}
+
+.optionalTag {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-body-muted);
+}
+
 .inputGroup input,
-.inputGroup textarea {
+.inputGroup textarea,
+.selectInput {
   width: 100%;
-  padding: 0.9rem 1.1rem;
+  padding: 0.85rem 1rem;
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
   font-family: var(--font-sans);
-  font-size: 0.95rem;
+  font-size: 0.94rem;
   color: var(--color-heading);
   background: var(--color-background-cream);
   outline: none;
@@ -288,10 +301,9 @@
   transition: all 0.2s ease;
 }
 
-.formGroup input:focus,
-.formGroup textarea:focus,
 .inputGroup input:focus,
-.inputGroup textarea:focus {
+.inputGroup textarea:focus,
+.selectInput:focus {
   background: #FFFFFF;
   border-color: var(--color-button);
   box-shadow: 0 0 0 3.5px rgba(212, 160, 23, 0.18);
@@ -301,25 +313,30 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
-  background: var(--color-button);
-  color: var(--color-heading);
+  gap: 0.65rem;
+  background: #23160E;
+  color: #FFFFFF;
   font-family: var(--font-sans);
   font-size: 0.95rem;
   font-weight: 700;
-  padding: 0.95rem 2rem;
+  padding: 1rem 2.25rem;
   border-radius: var(--radius-full);
-  border: none;
+  border: 1px solid rgba(212, 160, 23, 0.45);
   cursor: pointer;
-  box-shadow: var(--shadow-gold);
+  box-shadow: 0 8px 24px rgba(35, 22, 14, 0.2);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   margin-top: 0.5rem;
 }
 
-.submitBtn:hover {
-  background: #E5B22A;
+.submitBtn:hover:not(:disabled) {
+  background: #3B2416;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(212, 160, 23, 0.35);
+  box-shadow: 0 12px 28px rgba(35, 22, 14, 0.28);
+}
+
+.submitBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 /* Success Box */
@@ -333,7 +350,7 @@
 }
 
 .successIcon {
-  color: var(--color-success);
+  color: #2E7D32;
 }
 
 .successBox h3 {
@@ -347,49 +364,45 @@
   font-family: var(--font-sans);
   font-size: 0.95rem;
   color: var(--color-body-muted);
+  max-width: 440px;
 }
 
 .resetBtn {
   margin-top: 1rem;
-  background: var(--color-heading);
-  color: #FFFFFF;
+  padding: 0.75rem 1.75rem;
+  background: var(--color-button);
+  color: var(--color-heading);
   border: none;
+  border-radius: var(--radius-full);
   font-family: var(--font-sans);
   font-size: 0.88rem;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-full);
+  font-weight: 700;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  box-shadow: var(--shadow-gold);
 }
 
-.resetBtn:hover {
-  opacity: 0.9;
-}
-
-/* Side Info Section */
-.sideInfoSection {
+/* Side Section */
+.sideSection {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.75rem;
 }
 
 .hoursCard {
   background: #FFFFFF;
   padding: 2.25rem 2rem;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(35, 22, 14, 0.08);
+  box-shadow: 0 4px 20px rgba(35, 22, 14, 0.04);
 }
 
 .hoursHeader {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1.75rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(212, 160, 23, 0.2);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(35, 22, 14, 0.06);
 }
 
 .hoursIconCircle {
@@ -397,15 +410,11 @@
   height: 44px;
   border-radius: 12px;
   background: #FEF8E7;
-  border: 1px solid rgba(212, 160, 23, 0.35);
+  color: #8D6208;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-}
-
-.hoursIcon {
-  color: #8D6208;
 }
 
 .hoursHeader h3 {
@@ -413,39 +422,25 @@
   font-size: 1.45rem;
   font-weight: 600;
   color: var(--color-heading);
-  margin: 0;
-  line-height: 1.2;
 }
 
 .hoursHeader span {
-  display: block;
   font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--color-hover-accent);
-  text-transform: uppercase;
-  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--color-body-muted);
 }
 
 .timingsList {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 1rem;
 }
 
 .timingRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 0.85rem;
-  border-bottom: 1px solid rgba(35, 22, 14, 0.06);
   gap: 1rem;
-}
-
-.timingRow:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
 }
 
 .timingDay {
@@ -457,53 +452,89 @@
 
 .timingTime {
   font-family: var(--font-sans);
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: #8D6208;
   background: #FEF8E7;
   border: 1px solid rgba(212, 160, 23, 0.3);
-  padding: 0.3rem 0.75rem;
+  padding: 0.28rem 0.7rem;
   border-radius: var(--radius-full);
   white-space: nowrap;
 }
 
-.customOrderNote {
-  background: linear-gradient(135deg, #23160E, #351F13);
-  color: #FFFFFF;
-  padding: 2.25rem 2rem;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  border: 1px solid rgba(212, 160, 23, 0.3);
+.mapCard {
+  background: #FFFFFF;
+  padding: 0.6rem;
+  border-radius: 20px;
+  border: 1px solid rgba(35, 22, 14, 0.08);
+  box-shadow: 0 4px 20px rgba(35, 22, 14, 0.04);
+  overflow: hidden;
 }
 
-.customOrderNote h4 {
-  font-family: var(--font-luxury);
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--color-background-cream);
-  margin-bottom: 0.75rem;
+.emailPillCard {
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1px solid rgba(35, 22, 14, 0.08);
+  padding: 1.15rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 10px rgba(35, 22, 14, 0.03);
 }
 
-.customOrderNote p {
-  font-family: var(--font-sans);
+.emailIcon {
+  color: var(--color-button);
+  flex-shrink: 0;
+}
+
+.emailPillCard strong {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--color-heading);
+  font-weight: 700;
+}
+
+.emailPillCard a {
   font-size: 0.88rem;
-  line-height: 1.6;
-  color: rgba(252, 248, 242, 0.8);
-  margin-bottom: 1.25rem;
+  color: var(--color-hover-accent);
+  text-decoration: none;
+  font-weight: 600;
 }
 
-.hotlineLink {
+/* 4. Elegant Minimal Credential Badge */
+.credentialFooter {
+  margin-top: 4.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.credentialPill {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  color: var(--color-button);
+  gap: 0.65rem;
+  padding: 0.65rem 1.5rem;
+  background: #FFFFFF;
+  border: 1px solid rgba(212, 160, 23, 0.3);
+  border-radius: var(--radius-full);
   font-family: var(--font-sans);
-  font-size: 0.88rem;
-  font-weight: 700;
-  transition: transform 0.2s ease;
+  font-size: 0.78rem;
+  color: var(--color-body-muted);
+  box-shadow: 0 4px 15px rgba(35, 22, 14, 0.04);
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
 }
 
-.hotlineLink:hover {
-  transform: translateX(4px);
-  color: #E5B22A;
+.credentialIcon {
+  color: #8D6208;
+  flex-shrink: 0;
+}
+
+.credentialPill strong {
+  color: var(--color-heading);
+  font-weight: 700;
+}
+
+.credentialDot {
+  color: rgba(35, 22, 14, 0.3);
 }

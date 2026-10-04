@@ -4,12 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { LayoutDashboard, ShoppingCart, UtensilsCrossed, Users, BarChart3, History, Tag, Settings, LogOut, ExternalLink, ChevronLeft, Printer, KeyRound, Star, Menu, X } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, UtensilsCrossed, Users, BarChart3, History, Tag, Settings, LogOut, ExternalLink, ChevronLeft, KeyRound, Star, Menu, X } from 'lucide-react';
 import styles from './layout.module.css';
 
 const NAV_ITEMS = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/dashboard/pos-sales', label: 'POS & Billing', icon: Printer },
   { href: '/admin/dashboard/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/admin/dashboard/menu', label: 'Menu', icon: UtensilsCrossed },
   { href: '/admin/dashboard/reviews', label: 'Reviews & Ratings', icon: Star },
@@ -109,10 +108,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         <div className={styles.sidebarBottom}>
-          <Link href="/pos" target="_blank" className={styles.viewStore} style={{ background: '#FEF8E7', color: '#B8820B', fontWeight: 700, borderColor: 'rgba(212, 160, 23, 0.3)' }}>
-            <Printer size={16} />
-            {!collapsed && <span>Open POS Terminal</span>}
-          </Link>
           <Link href="/" target="_blank" className={styles.viewStore}>
             <ExternalLink size={16} />
             {!collapsed && <span>View Store</span>}

@@ -58,7 +58,7 @@ export default function About() {
       step: '04',
       title: 'Safe Doorstep Delivery',
       subtitle: 'Delivered Fresh & Intact',
-      desc: 'Packaged in sturdy luxury gift boxes and delivered carefully across Vijayawada, Tadepalle & Undavalli in 45–60 minutes.',
+      desc: 'Packaged in sturdy luxury gift boxes and delivered carefully across Tadepalle, Vijayawada & Undavalli in 45–60 minutes.',
       icon: Truck,
     },
   ];
@@ -147,7 +147,7 @@ export default function About() {
             className={styles.heroBadge}
           >
             <ChefHat size={15} className={styles.goldSparkle} />
-            <span>ARTISANAL BAKERY • VIJAYAWADA &amp; TADEPALLE</span>
+            <span>ARTISANAL BAKERY • TADEPALLE</span>
           </motion.div>
 
           <motion.h1
@@ -249,7 +249,7 @@ export default function About() {
                 </p>
                 <div className={styles.quoteSignature}>
                   <strong>— Bake Factory Bakers</strong>
-                  <span>Vijayawada &amp; Tadepalle</span>
+                  <span>Tadepalle (Amaravathi Road)</span>
                 </div>
               </div>
 

@@ -41,7 +41,7 @@ export const Footer = () => {
           </div>
 
           <p className={styles.brandDesc}>
-            Vijayawada&apos;s premier boutique bakery atelier. Handcrafted with 100% pure butter, genuine Belgian chocolate, and uncompromising passion.
+            Tadepalle&apos;s premier boutique bakery atelier. Handcrafted with 100% pure butter, genuine Belgian chocolate, and uncompromising passion.
           </p>
 
           <div className={styles.socialRow}>
@@ -82,7 +82,7 @@ export const Footer = () => {
           <div className={styles.contactItems}>
             <div className={styles.contactItem}>
               <MapPin size={16} className={styles.itemIcon} />
-              <span>Amaravathi Road, Tadepalle &ndash; Vijayawada</span>
+              <span>Amaravathi Road, Undavalli, Tadepalle &ndash; 522501</span>
             </div>
 
             <a href="tel:+917989499446" className={styles.contactItem}>

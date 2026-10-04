@@ -440,7 +440,7 @@ export default function MenuPage() {
         <div>
           <h1 className={styles.title}>Menu Management</h1>
           <p className={styles.subtitle}>
-            Live Store & POS Catalog &mdash; {items.length} item{items.length !== 1 ? 's' : ''}
+            Live Store Catalog &mdash; {items.length} item{items.length !== 1 ? 's' : ''}
           </p>
         </div>
 

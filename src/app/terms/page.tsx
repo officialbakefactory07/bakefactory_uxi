@@ -38,7 +38,7 @@ export default function TermsPage() {
               Our registered food business premises address is: <strong>Bake Factory, #12-1/2, Near Rohan&apos;s Pride Appartments, Amaravathi Road, Undavalli (Rural), Tadepalle, Guntur, Andhra Pradesh &ndash; 522501, India</strong>.
             </p>
             <p>
-              By accessing our website, placing an order, or utilizing our POS counter and online delivery services, you agree to be bound by these Terms and Conditions and our Privacy Policy.
+              By accessing our website, placing an order, or utilizing our online delivery services, you agree to be bound by these Terms and Conditions and our Privacy Policy.
             </p>
           </section>
 

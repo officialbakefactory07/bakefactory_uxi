@@ -2,23 +2,44 @@
 
 import React, { useState } from 'react';
 import styles from './page.module.css';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, MessageSquare, Award, ShieldCheck, Building2, Cake, Truck } from 'lucide-react';
+import { 
+  MapPin, Phone, Mail, Clock, Send, CheckCircle2, 
+  MessageCircle, Sparkles, Award
+} from 'lucide-react';
 
 export default function Contact() {
-  const [formState, setFormState] = useState({ name: '', email: '', phone: '', message: '' });
+  const [formState, setFormState] = useState({ 
+    name: '', 
+    email: '', 
+    phone: '', 
+    occasion: 'Celebration Cake', 
+    eventDate: '', 
+    message: '' 
+  });
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formState.name || !formState.message) return;
+    if (!formState.name.trim() || !formState.phone.trim() || !formState.message.trim()) return;
     setSending(true);
+
+    const fullMessage = [
+      `Occasion: ${formState.occasion}`,
+      formState.eventDate ? `Event Date: ${formState.eventDate}` : '',
+      `Message:\n${formState.message}`
+    ].filter(Boolean).join('\n\n');
 
     try {
       await fetch('/api/contact-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formState)
+        body: JSON.stringify({
+          name: formState.name,
+          email: formState.email,
+          phone: formState.phone,
+          message: fullMessage
+        })
       });
     } catch (err) {
       console.error("Error submitting contact email:", err);
@@ -30,58 +51,55 @@ export default function Contact() {
 
   return (
     <div className={styles.page}>
-      {/* 1. Header */}
+      {/* 1. Atelier Header */}
       <section className={styles.header}>
         <div className={styles.headerContainer}>
-          <span className={styles.headerTag}>GET IN TOUCH &amp; OFFICIAL DETAILS</span>
-          <h1>Customer Support & Bakery Information</h1>
-          <p>Have a question about our artisanal cakes, dietary options, or express delivery in Vijayawada &amp; Tadepalle? Reach out to our team.</p>
+          <span className={styles.headerTag}>ATELIER CONCIERGE</span>
+          <h1>Connect With Our Studio</h1>
+          <p>
+            Whether you are planning a bespoke tiered celebration cake, inquiring about gourmet pastries, or arranging express doorstep delivery in Tadepalle, our atelier team is at your service.
+          </p>
         </div>
       </section>
 
       <div className={styles.container}>
         
-        {/* 2. Business Registration & Official FSSAI Info Banner */}
-        <div className={styles.legalInfoBanner}>
-          <div className={styles.legalCard}>
-            <div className={styles.legalIconBadge}>
-              <Building2 size={24} />
-            </div>
-            <div>
-              <h3>Legal Business Entity</h3>
-              <p><strong>FBO / Entity:</strong> VENIGALLA THUSHITHA</p>
-              <p><strong>Trade Name:</strong> BAKE FACTORY</p>
-              <p><strong>Kind of Business:</strong> Food Vending &amp; Bakery Confectionery</p>
-            </div>
-          </div>
-
-          <div className={styles.legalCard}>
-            <div className={styles.legalIconBadge}>
-              <Award size={24} />
-            </div>
-            <div>
-              <h3>FSSAI License & Certification</h3>
-              <p><strong>FSSAI Reg. No:</strong> 20126141002411</p>
-              <p><strong>Food Authority:</strong> Govt. of Andhra Pradesh (FSSAI)</p>
-              <p><strong>Place of Issue:</strong> Guntur &bull; 100% Food Safety Compliant</p>
-            </div>
-          </div>
-
-          <div className={styles.legalCard}>
-            <div className={styles.legalIconBadge}>
-              <Truck size={24} />
-            </div>
-            <div>
-              <h3>Delivery & Service Area</h3>
-              <p><strong>Coverage:</strong> Vijayawada, Tadepalle, Undavalli (522501, 520001+)</p>
-              <p><strong>Delivery Slots:</strong> Express 45–60 mins / Scheduled Deliveries</p>
-              <p><strong>Store Pickup:</strong> Self-pickup available from our studio</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 3. Quick Contact Cards */}
+        {/* 2. Direct Concierge Contact Cards */}
         <div className={styles.infoSection}>
+          {/* Card 1: WhatsApp Concierge */}
+          <a 
+            href="https://wa.me/917989499446?text=Hi%20Bake%20Factory,%20I%20would%20like%20to%20enquire%20about%20a%20cake" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={styles.infoCard}
+          >
+            <div className={`${styles.iconCircle} ${styles.iconWhatsApp}`}>
+              <MessageCircle size={24} />
+            </div>
+            <div className={styles.cardHeaderMeta}>
+              <span className={styles.cardMiniTag}>FASTEST RESPONSE</span>
+              <h3>WhatsApp Concierge</h3>
+            </div>
+            <p className={styles.phoneText}>+91 79894 99446</p>
+            <p className={styles.cardDesc}>Instant chats for custom designs, reference photos, &amp; same-day delivery slots.</p>
+            <span className={styles.cardAction}>Chat on WhatsApp &rarr;</span>
+          </a>
+
+          {/* Card 2: Phone Hotline */}
+          <a href="tel:+917989499446" className={styles.infoCard}>
+            <div className={styles.iconCircle}>
+              <Phone size={24} />
+            </div>
+            <div className={styles.cardHeaderMeta}>
+              <span className={styles.cardMiniTag}>DIRECT LINE</span>
+              <h3>Call Our Atelier</h3>
+            </div>
+            <p className={styles.phoneText}>+91 79894 99446</p>
+            <p className={styles.cardDesc}>Speak directly with our pastry team for rush orders or consultation guidance.</p>
+            <span className={styles.cardAction}>Call Atelier &rarr;</span>
+          </a>
+
+          {/* Card 3: Studio Location */}
           <a 
             href="https://www.google.com/maps/search/BAKE+FACTORY+%5BCakes+and+Desserts,+Maximilian+Kolbe,+Catholic+Church+Area,+12-1%2F2,+near+Rohan's+Pride+Appartments,+Tadepalle,+Sitanagaram,+Tadepalli,+Tadepalle,+Andhra+Pradesh+522501,+India/@16.4815522,80.6128612,17z" 
             target="_blank" 
@@ -91,52 +109,39 @@ export default function Contact() {
             <div className={styles.iconCircle}>
               <MapPin size={24} />
             </div>
-            <h3>Registered Premises</h3>
+            <div className={styles.cardHeaderMeta}>
+              <span className={styles.cardMiniTag}>ATELIER STUDIO</span>
+              <h3>Studio &amp; Pickups</h3>
+            </div>
             <p className={styles.addressText}>
-              Bake Factory, #12-1/2, Near Rohan&apos;s Pride Appartments, Amaravathi Road, Undavalli (Rural), Tadepalle, Guntur, Andhra Pradesh &ndash; 522501
+              Bake Factory, #12-1/2, Near Rohan&apos;s Pride Apartments, Amaravathi Road, Undavalli (Rural), Tadepalle &ndash; 522501
             </p>
-            <span className={styles.cardAction}>Get Directions &rarr;</span>
-          </a>
-
-          <a href="tel:+917989499446" className={styles.infoCard}>
-            <div className={styles.iconCircle}>
-              <Phone size={24} />
-            </div>
-            <h3>Call or WhatsApp Hotline</h3>
-            <p className={styles.phoneText}>+91 79894 99446</p>
-            <span className={styles.cardAction}>Call Bakery &rarr;</span>
-          </a>
-
-          <a href="mailto:officialbakefactory@gmail.com" className={styles.infoCard}>
-            <div className={styles.iconCircle}>
-              <Mail size={24} />
-            </div>
-            <h3>Email Support & Grievances</h3>
-            <p className={styles.emailText}>officialbakefactory@gmail.com</p>
-            <span className={styles.cardAction}>Send Email &rarr;</span>
+            <span className={styles.cardAction}>Open in Google Maps &rarr;</span>
           </a>
         </div>
 
-        {/* 4. Form & Hours Split */}
+        {/* 3. Form & Timings Split Grid */}
         <div className={styles.contentGrid}>
-          {/* Contact Form */}
+          {/* Custom Cake & Order Inquiry Form */}
           <div className={styles.formSection}>
             <div className={styles.formHeader}>
-              <MessageSquare size={22} className={styles.formIcon} />
-              <h2>Send Us a Message</h2>
+              <Sparkles size={22} className={styles.formIcon} />
+              <h2>Bespoke Cake &amp; Order Inquiry</h2>
             </div>
-            <p className={styles.formSub}>Fill out the details below and our team will get back to you promptly.</p>
+            <p className={styles.formSub}>
+              Share your celebration details below. Our chefs will review and reach out with tailored flavor profiles and design suggestions.
+            </p>
 
             {submitted ? (
               <div className={styles.successBox}>
                 <CheckCircle2 size={48} className={styles.successIcon} />
                 <h3>Thank You, {formState.name}!</h3>
-                <p>Your message has been received. Our team will contact you shortly.</p>
+                <p>Your inquiry has been received. Our atelier team will connect with you via WhatsApp / Phone shortly.</p>
                 <button 
                   className={styles.resetBtn}
                   onClick={() => {
                     setSubmitted(false);
-                    setFormState({ name: '', email: '', phone: '', message: '' });
+                    setFormState({ name: '', email: '', phone: '', occasion: 'Celebration Cake', eventDate: '', message: '' });
                   }}
                 >
                   Send Another Inquiry
@@ -146,18 +151,18 @@ export default function Contact() {
               <form onSubmit={handleSubmit} className={styles.contactForm}>
                 <div className={styles.formRow}>
                   <div className={styles.inputGroup}>
-                    <label htmlFor="name">Full Name *</label>
+                    <label htmlFor="name">Full Name <span className={styles.reqStar}>*</span></label>
                     <input 
                       type="text" 
                       id="name" 
                       required 
-                      placeholder="e.g. Rahul Sharma"
+                      placeholder="e.g. Anand Varma"
                       value={formState.name}
                       onChange={e => setFormState({...formState, name: e.target.value})}
                     />
                   </div>
                   <div className={styles.inputGroup}>
-                    <label htmlFor="phone">Phone Number *</label>
+                    <label htmlFor="phone">Phone / WhatsApp <span className={styles.reqStar}>*</span></label>
                     <input 
                       type="tel" 
                       id="phone" 
@@ -169,24 +174,54 @@ export default function Contact() {
                   </div>
                 </div>
 
+                <div className={styles.formRow}>
+                  <div className={styles.inputGroup}>
+                    <label htmlFor="email">Email Address <span className={styles.optionalTag}>(Optional)</span></label>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      placeholder="you@example.com"
+                      value={formState.email}
+                      onChange={e => setFormState({...formState, email: e.target.value})}
+                    />
+                  </div>
+
+                  <div className={styles.inputGroup}>
+                    <label htmlFor="occasion">Occasion / Type</label>
+                    <select
+                      id="occasion"
+                      value={formState.occasion}
+                      onChange={e => setFormState({...formState, occasion: e.target.value})}
+                      className={styles.selectInput}
+                    >
+                      <option value="Celebration Cake">Celebration Cake</option>
+                      <option value="Wedding / Tier Cake">Wedding / Tier Cake</option>
+                      <option value="Birthday Party">Birthday Party</option>
+                      <option value="Anniversary">Anniversary</option>
+                      <option value="Baby Shower / Milestone">Baby Shower / Milestone</option>
+                      <option value="Corporate Event / Gifting">Corporate Event / Gifting</option>
+                      <option value="General Inquiry">General Inquiry</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div className={styles.inputGroup}>
-                  <label htmlFor="email">Email Address</label>
+                  <label htmlFor="eventDate">Preferred Delivery / Event Date <span className={styles.optionalTag}>(Optional)</span></label>
                   <input 
-                    type="email" 
-                    id="email" 
-                    placeholder="you@example.com"
-                    value={formState.email}
-                    onChange={e => setFormState({...formState, email: e.target.value})}
+                    type="date" 
+                    id="eventDate" 
+                    value={formState.eventDate}
+                    onChange={e => setFormState({...formState, eventDate: e.target.value})}
                   />
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label htmlFor="message">Your Message or Custom Order Details *</label>
+                  <label htmlFor="message">Cake Specifications / Requirements <span className={styles.reqStar}>*</span></label>
                   <textarea 
                     id="message" 
                     required 
                     rows={4} 
-                    placeholder="Tell us about your celebration date, guest count, flavor preference, or dietary requests..."
+                    placeholder="Tell us about your celebration theme, flavor preferences (e.g. Belgian Truffle, Lotus Biscoff), dietary needs (eggless), or approximate guest count..."
                     value={formState.message}
                     onChange={e => setFormState({...formState, message: e.target.value})}
                   />
@@ -194,57 +229,76 @@ export default function Contact() {
 
                 <button type="submit" disabled={sending} className={styles.submitBtn}>
                   <Send size={18} />
-                  <span>{sending ? 'Sending...' : 'Send Message'}</span>
+                  <span>{sending ? 'Transmitting to Atelier...' : 'Submit Consultation Request'}</span>
                 </button>
               </form>
             )}
           </div>
 
-          {/* Operating Hours & Studio Map */}
+          {/* Side Atelier Details */}
           <div className={styles.sideSection}>
+            {/* Operating Hours Card */}
             <div className={styles.hoursCard}>
               <div className={styles.hoursHeader}>
                 <div className={styles.hoursIconCircle}>
                   <Clock size={22} className={styles.hoursIcon} />
                 </div>
                 <div>
-                  <h3>Operating Hours</h3>
-                  <span>Fresh From Oven &bull; 7 Days a Week</span>
+                  <h3>Atelier Timings</h3>
+                  <span>Fresh Bakes &bull; 7 Days a Week</span>
                 </div>
               </div>
 
               <div className={styles.timingsList}>
                 <div className={styles.timingRow}>
-                  <span className={styles.timingDay}>Monday &ndash; Friday</span>
-                  <span className={styles.timingTime}>9:00 AM &ndash; 10:30 PM</span>
-                </div>
-                <div className={styles.timingRow}>
-                  <span className={styles.timingDay}>Saturday</span>
+                  <span className={styles.timingDay}>Monday &ndash; Sunday</span>
                   <span className={styles.timingTime}>9:00 AM &ndash; 11:00 PM</span>
                 </div>
                 <div className={styles.timingRow}>
-                  <span className={styles.timingDay}>Sunday</span>
-                  <span className={styles.timingTime}>9:00 AM &ndash; 11:00 PM</span>
+                  <span className={styles.timingDay}>Express Delivery</span>
+                  <span className={styles.timingTime}>45–60 mins (Tadepalle &amp; Vijayawada)</span>
                 </div>
                 <div className={styles.timingRow}>
-                  <span className={styles.timingDay}>Midnight Delivery</span>
+                  <span className={styles.timingDay}>Midnight Surprise</span>
                   <span className={styles.timingTime}>11:00 PM &ndash; 12:30 AM (Pre-booked)</span>
                 </div>
               </div>
             </div>
 
+            {/* Google Maps Embed */}
             <div className={styles.mapCard}>
               <iframe 
                 title="Bake Factory Location"
-                src="https://maps.google.com/maps?q=16.4815522,80.6128612&hl=es;z=14&output=embed"
+                src="https://maps.google.com/maps?q=16.4815522,80.6128612&hl=en;z=14&output=embed"
                 width="100%" 
-                height="220" 
-                style={{ border: 0, borderRadius: '12px' }} 
+                height="230" 
+                style={{ border: 0, borderRadius: '16px', display: 'block' }} 
                 allowFullScreen={false} 
                 loading="lazy" 
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
+
+            {/* Direct Email Support Note */}
+            <div className={styles.emailPillCard}>
+              <Mail size={18} className={styles.emailIcon} />
+              <div>
+                <strong>Direct Email Inquiries</strong>
+                <a href="mailto:officialbakefactory@gmail.com">officialbakefactory@gmail.com</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 4. Elegant Minimal Credential Badge */}
+        <div className={styles.credentialFooter}>
+          <div className={styles.credentialPill}>
+            <Award size={16} className={styles.credentialIcon} />
+            <span>FSSAI Reg. No: <strong>20126141002411</strong></span>
+            <span className={styles.credentialDot}>&bull;</span>
+            <span>100% Food Safety Certified Artisanal Kitchen</span>
+            <span className={styles.credentialDot}>&bull;</span>
+            <span>Tadepalle, Andhra Pradesh</span>
           </div>
         </div>
 

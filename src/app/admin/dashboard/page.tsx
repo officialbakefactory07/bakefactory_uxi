@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { db } from '@/lib/firebase';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { IndianRupee, ShoppingBag, Banknote, Smartphone, TrendingUp, Printer, ArrowUpRight, Store } from 'lucide-react';
+import { IndianRupee, ShoppingBag, Banknote, Smartphone, TrendingUp } from 'lucide-react';
 import styles from './page.module.css';
 
 interface OrderItem {
@@ -44,58 +44,36 @@ function getDayLabel(dateStr: string): string {
 }
 
 export default function AdminDashboard() {
-  const [onlineOrders, setOnlineOrders] = useState<Order[]>([]);
-  const [posOrders, setPosOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 1. Real-time online web orders listener
+  // Real-time online store orders listener
   useEffect(() => {
     const qOnline = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
-    const unsubOnline = onSnapshot(qOnline, (snap) => {
+    const unsub = onSnapshot(qOnline, (snap) => {
       const data: Order[] = [];
       snap.forEach((doc) => {
         const d = doc.data();
-        data.push({ id: doc.id, ...d, source: 'ONLINE' } as Order);
+        data.push({ id: doc.id, ...d } as Order);
       });
-      setOnlineOrders(data);
-    }, (err) => {
-      console.error("Firestore online orders error:", err);
-    });
-
-    // 2. Real-time POS in-store orders listener
-    const qPos = query(collection(db, 'pos_orders'), orderBy('createdAt', 'desc'));
-    const unsubPos = onSnapshot(qPos, (snap) => {
-      const data: Order[] = [];
-      snap.forEach((doc) => {
-        const d = doc.data();
-        data.push({ id: doc.id, ...d, totalPrice: d.total, source: 'POS' } as Order);
-      });
-      setPosOrders(data);
+      setOrders(data);
       setLoading(false);
     }, (err) => {
-      console.error("Firestore pos orders error:", err);
+      console.error("Firestore orders error:", err);
       setLoading(false);
     });
 
-    return () => {
-      unsubOnline();
-      unsubPos();
-    };
+    return () => unsub();
   }, []);
 
-  // Combined orders pool
-  const allOrders = useMemo(() => {
-    return [...onlineOrders, ...posOrders];
-  }, [onlineOrders, posOrders]);
+  const allOrders = orders;
 
-  // Compute today's stats across online + POS
+  // Compute today's stats
   const todayStats = useMemo(() => {
     let sales = 0;
     let count = 0;
     let cash = 0;
     let upi = 0;
-    let posCount = 0;
-    let onlineCount = 0;
 
     allOrders.forEach((order) => {
       const orderDate = order.createdAt?.toDate
@@ -107,15 +85,12 @@ export default function AdminDashboard() {
         sales += orderAmt;
         count++;
 
-        if (order.source === 'POS') posCount++;
-        else onlineCount++;
-
-        if (order.paymentMethod === 'Cash') cash += orderAmt;
-        if (order.paymentMethod === 'UPI' || order.paymentMethod === 'Online') upi += orderAmt;
+        if (order.paymentMethod === 'Cash' || order.paymentMethod === 'COD') cash += orderAmt;
+        if (order.paymentMethod === 'UPI' || order.paymentMethod === 'Online' || order.paymentMethod === 'Prepaid') upi += orderAmt;
       }
     });
 
-    return { sales, count, cash, upi, posCount, onlineCount };
+    return { sales, count, cash, upi };
   }, [allOrders]);
 
   // Top selling items
@@ -179,31 +154,12 @@ export default function AdminDashboard() {
   return (
     <div className={styles.page}>
       
-      {/* Top Banner / Fast POS Launcher */}
-      <div className={styles.posBanner}>
-        <div className={styles.posBannerText}>
-          <Store size={20} className={styles.sparkleIcon} />
-          <div>
-            <strong>Point of Sale & Billing Terminal Active</strong>
-            <span>Cashier billing, Bluetooth 58mm/80mm receipt printing and live shift reports enabled.</span>
-          </div>
-        </div>
-        <div className={styles.bannerActions}>
-          <Link href="/pos" target="_blank" className={styles.bannerPosBtn}>
-            <Printer size={16} /> Open POS Terminal <ArrowUpRight size={16} />
-          </Link>
-          <Link href="/admin/dashboard/pos-sales" className={styles.bannerSalesBtn}>
-            Daily Sales Log
-          </Link>
-        </div>
-      </div>
-
       {/* Page Title */}
       <h1 className={styles.pageTitle}>Admin Overview</h1>
 
       {/* Daily Sales Overview */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Combined Today&apos;s Sales (Online + Store POS)</h2>
+        <h2 className={styles.sectionTitle}>Today&apos;s Store Performance</h2>
         <div className={styles.statsGrid}>
           
           {/* Today's Sales */}
@@ -226,7 +182,7 @@ export default function AdminDashboard() {
             </div>
             <div className={styles.statInfo}>
               <span className={styles.statLabel}>TOTAL ORDERS</span>
-              <span className={styles.statValue}>{todayStats.count} <small>({todayStats.posCount} POS, {todayStats.onlineCount} Web)</small></span>
+              <span className={styles.statValue}>{todayStats.count}</span>
             </div>
           </div>
 
@@ -305,15 +261,15 @@ export default function AdminDashboard() {
           </div>
         </section>
 
-        {/* Recent Combined Activity */}
+        {/* Recent Orders Activity */}
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Recent Orders Activity</h2>
           <div className={styles.topItemsCard}>
             <ul className={styles.topItemList}>
               {allOrders.slice(0, 6).map(order => (
                 <li key={order.id} className={styles.topItemRow}>
-                  <span className={order.source === 'POS' ? styles.badgePos : styles.badgeOnline}>
-                    {order.source === 'POS' ? 'POS BILL' : 'WEB ORDER'}
+                  <span className={styles.badgeOnline}>
+                    #{order.id.includes('-') ? order.id.toUpperCase() : order.id.slice(0, 8).toUpperCase()}
                   </span>
                   <span className={styles.topItemName}>
                     {order.items?.map(i => `${i.quantity}x ${i.name}`).join(', ') || 'Order Details'}

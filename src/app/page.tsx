@@ -88,7 +88,7 @@ export default function Home() {
   // Write Review Modal State
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [reviewName, setReviewName] = useState('');
-  const [reviewLocation, setReviewLocation] = useState('Vijayawada');
+  const [reviewLocation, setReviewLocation] = useState('Tadepalle');
   const [reviewRating, setReviewRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewComment, setReviewComment] = useState('');
@@ -212,7 +212,7 @@ export default function Home() {
     try {
       await addDoc(collection(db, 'reviews'), {
         name: reviewName.trim(),
-        location: reviewLocation.trim() || 'Vijayawada',
+        location: reviewLocation.trim() || 'Tadepalle',
         rating: reviewRating,
         comment: reviewComment.trim(),
         userEmail: user?.email || '',
@@ -243,7 +243,7 @@ export default function Home() {
         <div className={styles.heroContent}>
           <div className={styles.heroBadge}>
             <span className={styles.badgePulseDot} />
-            <span>EST. 2024 &bull; VIJAYAWADA&apos;S ARTISANAL ATELIER</span>
+            <span>EST. 2024 &bull; TADEPALLE&apos;S ARTISANAL ATELIER</span>
           </div>
 
           <h1 className={styles.heroTitle}>
@@ -251,7 +251,7 @@ export default function Home() {
           </h1>
           
           <p className={styles.heroSubtitle}>
-            From velvety Belgian chocolate gateaux and French butter pastries to bespoke tiered wedding cakes &mdash; baked fresh every dawn in Vijayawada with 100% pure dairy butter and real fruit compotes.
+            From velvety Belgian chocolate gateaux and French butter pastries to bespoke tiered wedding cakes &mdash; baked fresh every dawn in Tadepalle with 100% pure dairy butter and real fruit compotes.
           </p>
           
           <div className={styles.ctaButtons}>
@@ -287,7 +287,7 @@ export default function Home() {
                 </>
               ) : (
                 <span className={styles.trustHighlights}>
-                  Artisanal Gourmet Bakery &bull; Fresh Daily in Vijayawada
+                  Artisanal Gourmet Bakery &bull; Fresh Daily in Tadepalle
                 </span>
               )}
             </div>
@@ -306,25 +306,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. Elevated Stats Bar */}
-      <section className={styles.statsBar}>
-        <div className={styles.statItem}>
-          <span className={styles.statNum}>5+</span>
-          <span className={styles.statLabel}>YEARS OF EXCELLENCE</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statNum}>50+</span>
-          <span className={styles.statLabel}>GOURMET RECIPES</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statNum}>100%</span>
-          <span className={styles.statLabel}>PURE DAIRY BUTTER</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statNum}>DAILY</span>
-          <span className={styles.statLabel}>OVEN-FRESH BAKED</span>
-        </div>
-      </section>
 
       {/* 3. Featured Categories Collection */}
       <section className={styles.categories}>
@@ -477,7 +458,7 @@ export default function Home() {
                     <ChefHat size={16} className={styles.goldIcon} />
                     <div>
                       <strong>Master Pastry Art</strong>
-                      <span>Vijayawada Atelier</span>
+                      <span>Tadepalle Atelier</span>
                     </div>
                   </div>
                 </div>
@@ -496,8 +477,8 @@ export default function Home() {
                       <Star size={12} fill="#D4A017" color="#D4A017" />
                       <Star size={12} fill="#D4A017" color="#D4A017" />
                     </div>
-                    <strong>10,000+ Celebrations</strong>
-                    <span>Handcrafted in Vijayawada</span>
+                    <strong>Artisanal Confectionery</strong>
+                    <span>Handcrafted in Tadepalle</span>
                   </div>
                 </div>
 
@@ -519,7 +500,7 @@ export default function Home() {
               <div className={styles.collectionHeading}>AUTHENTIC EXPERIENCES</div>
               <h2 className={styles.sectionTitle}>Sweet Words from Our Patrons</h2>
               <p className={styles.sectionSubtitle}>
-                Real feedback from our dessert lovers in Vijayawada &amp; Tadepalle.
+                Real feedback from our dessert lovers in Tadepalle &amp; Vijayawada.
               </p>
             </div>
 

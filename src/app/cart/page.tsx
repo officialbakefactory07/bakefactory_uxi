@@ -34,8 +34,8 @@ const INITIAL_ADDRESS_FORM: StructuredAddressForm = {
   flat: '',
   area: '',
   landmark: '',
-  city: 'Vijayawada',
-  pincode: '520010',
+  city: 'Tadepalle',
+  pincode: '522501',
   receiverName: '',
 };
 
@@ -66,14 +66,14 @@ const parseAddressToForm = (raw: string): StructuredAddressForm => {
     const flat = parts[0] || '';
     const area = parts[1] || '';
     let landmark = '';
-    let city = 'Vijayawada';
-    let pincode = '520010';
+    let city = 'Tadepalle';
+    let pincode = '522501';
 
     const last = parts[parts.length - 1];
     const pinMatch = last.match(/(\d{6})/);
     if (pinMatch) {
       pincode = pinMatch[1];
-      city = last.replace(/-\s*\d{6}/, '').replace(/\d{6}/, '').trim() || 'Vijayawada';
+      city = last.replace(/-\s*\d{6}/, '').replace(/\d{6}/, '').trim() || 'Tadepalle';
     } else {
       city = last;
     }
@@ -82,7 +82,7 @@ const parseAddressToForm = (raw: string): StructuredAddressForm => {
       landmark = parts.slice(2, parts.length - 1).join(', ').replace(/^Near\s+/i, '');
     }
 
-    return { tag, flat, area, landmark, city: city || 'Vijayawada', pincode: pincode || '520010', receiverName: '' };
+    return { tag, flat, area, landmark, city: city || 'Tadepalle', pincode: pincode || '522501', receiverName: '' };
   }
 
   return { ...INITIAL_ADDRESS_FORM, tag, flat: str };
@@ -783,7 +783,7 @@ function CartContent() {
                 {/* Delivery Address Section */}
                 <div className={styles.addressBlock}>
                   <div className={styles.blockHeader}>
-                    <label><MapPin size={16} /> Delivery Address (Vijayawada / Tadepalle)</label>
+                    <label><MapPin size={16} /> Delivery Address (Tadepalle / Vijayawada)</label>
                     {!isAddingNewAddress && !isEditingAddress && (
                       <div className={styles.blockHeaderBtnGroup}>
                         <button 
@@ -926,10 +926,10 @@ function CartContent() {
                             value={addressForm.city}
                             onChange={e => setAddressForm({ ...addressForm, city: e.target.value })}
                           >
-                            <option value="Vijayawada">Vijayawada</option>
                             <option value="Tadepalle">Tadepalle</option>
-                            <option value="Guntur">Guntur</option>
+                            <option value="Vijayawada">Vijayawada</option>
                             <option value="Mangalagiri">Mangalagiri</option>
+                            <option value="Guntur">Guntur</option>
                             <option value="Other">Other</option>
                           </select>
                         </div>

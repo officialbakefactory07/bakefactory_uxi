@@ -370,62 +370,7 @@
 
 
 
-/* ==================== 2. STATS BAR ==================== */
-.statsBar {
-  background: var(--color-header-footer);
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 2.75rem 4rem;
-  text-align: center;
-  box-shadow: 0 8px 30px rgba(35, 22, 14, 0.2);
-  position: relative;
-  z-index: 3;
-}
 
-@media (max-width: 768px) {
-  .statsBar {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    padding: 2rem 1.5rem;
-  }
-}
-
-.statItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.statItem:last-child {
-  border-right: none;
-}
-
-@media (max-width: 768px) {
-  .statItem {
-    border-right: none;
-  }
-}
-
-.statNum {
-  font-family: var(--font-luxury);
-  font-size: 2.8rem;
-  font-weight: 700;
-  background: var(--color-gold-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1;
-}
-
-.statLabel {
-  color: rgba(252, 248, 242, 0.8);
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
 
 /* ==================== 3. CATEGORIES SECTION ==================== */
 .categories {

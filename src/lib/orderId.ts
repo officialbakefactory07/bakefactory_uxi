@@ -3,15 +3,15 @@ import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 
 /**
  * Extracts a 2-letter uppercase city abbreviation for human-readable order IDs.
- * Defaults to 'VJ' for Vijayawada.
+ * Defaults to 'TD' for Tadepalle.
  */
 export function getCityCode(cityInput?: string): string {
-  if (!cityInput) return 'VJ';
+  if (!cityInput) return 'TD';
   const c = cityInput.trim().toUpperCase();
+  if (c.includes('TADEPALLE') || c.includes('TADEPALLI') || c.includes('TD')) return 'TD';
   if (c.includes('VIJAYAWADA') || c.includes('BEZWADA') || c.includes('VIJ')) return 'VJ';
   if (c.includes('GUNTUR')) return 'GN';
   if (c.includes('MANGALAGIRI')) return 'MG';
-  if (c.includes('TADEPALLE') || c.includes('TADEPALLI')) return 'TD';
   if (c.includes('HYDERABAD') || c.includes('SECUNDERABAD')) return 'HY';
   if (c.includes('VISAKHAPATNAM') || c.includes('VIZAG')) return 'VZ';
   if (c.includes('BANGALORE') || c.includes('BENGALURU')) return 'BL';
@@ -26,7 +26,7 @@ export function getCityCode(cityInput?: string): string {
 
   // Generic fallback: first 2 alphabet characters
   const clean = c.replace(/[^A-Z]/g, '');
-  return clean.length >= 2 ? clean.slice(0, 2) : 'VJ';
+  return clean.length >= 2 ? clean.slice(0, 2) : 'TD';
 }
 
 /**

@@ -268,13 +268,13 @@ export default function StaffAccessPage() {
                 <KeyRound size={22} />
               </div>
               <div>
-                <h2>POS Cashier Logins</h2>
-                <p>Staff members permitted to open registers and print receipts</p>
+                <h2>Staff &amp; Team Logins</h2>
+                <p>Authorized team members for order fulfillment and customer support</p>
               </div>
             </div>
 
             <button className={styles.addBtn} onClick={openAddModal}>
-              <Plus size={16} /> Add Cashier
+              <Plus size={16} /> Add Team Member
             </button>
           </div>
 
