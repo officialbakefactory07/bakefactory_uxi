@@ -8,6 +8,7 @@ import {
   orderBy,
   onSnapshot,
   updateDoc,
+  deleteDoc,
   doc,
 } from 'firebase/firestore';
 import {
@@ -19,25 +20,65 @@ import {
   ChefHat,
   Truck,
   CircleCheckBig,
+  Eye,
+  Trash2,
+  X,
+  Phone,
+  Mail,
+  MapPin,
+  CreditCard,
+  FileText,
+  User,
+  AlertTriangle,
+  Printer,
+  Calendar,
 } from 'lucide-react';
 import styles from './page.module.css';
 
 interface OrderItem {
+  id?: string;
   name: string;
   quantity: number;
   price?: number;
+  weight?: string;
+  flavour?: string;
+  flavor?: string;
+  customization?: string;
+  cakeMessage?: string;
+  image?: string;
 }
 
 interface Order {
   id: string;
+  orderId?: string;
+  orderNumber?: string;
+  userId?: string;
   userEmail?: string;
-  items?: OrderItem[];
-  totalPrice?: number;
-  status?: string;
-  createdAt?: any;
-  address?: string;
+  userName?: string;
+  customerName?: string;
+  contactPhone?: string;
   contact?: string;
+  phone?: string;
+  deliveryAddress?: string;
+  address?: string;
+  deliveryCity?: string;
+  items?: OrderItem[];
+  subtotal?: number;
+  discount?: number;
+  couponCode?: string | null;
+  deliveryFee?: number;
+  totalPrice?: number;
+  paymentMethod?: string;
+  paymentStatus?: string;
   specialInstructions?: string;
+  status?: string;
+  cancelReason?: string;
+  cancelledAt?: any;
+  paidAt?: any;
+  razorpayPaymentId?: string;
+  razorpayOrderId?: string;
+  createdAt?: any;
+  updatedAt?: any;
 }
 
 const STATUS_OPTIONS = [
@@ -62,6 +103,8 @@ const STATUS_CONFIG: Record<string, { color: string; bg: string; icon: React.Ele
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Real-time orders listener
   useEffect(() => {
@@ -72,6 +115,12 @@ export default function OrdersPage() {
         data.push({ id: docSnap.id, ...docSnap.data() } as Order);
       });
       setOrders(data);
+      // Keep selected order in sync if currently viewed
+      setSelectedOrder((prev) => {
+        if (!prev) return null;
+        const updated = data.find((o) => o.id === prev.id);
+        return updated || null;
+      });
       setLoading(false);
     }, (error) => {
       console.error("Firestore onSnapshot error:", error);
@@ -91,9 +140,32 @@ export default function OrdersPage() {
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
     try {
-      await updateDoc(doc(db, 'orders', orderId), { status: newStatus });
+      await updateDoc(doc(db, 'orders', orderId), { 
+        status: newStatus,
+        updatedAt: new Date()
+      });
     } catch (err) {
       console.error('Failed to update order status:', err);
+      alert('Failed to update status. Please try again.');
+    }
+  };
+
+  const handleDeleteOrder = async (orderId: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const confirmed = window.confirm(`Are you sure you want to permanently delete order #${orderId}? This cannot be undone.`);
+    if (!confirmed) return;
+
+    setDeletingId(orderId);
+    try {
+      await deleteDoc(doc(db, 'orders', orderId));
+      if (selectedOrder?.id === orderId) {
+        setSelectedOrder(null);
+      }
+    } catch (err) {
+      console.error('Failed to delete order:', err);
+      alert('Failed to delete order. Please try again.');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -117,6 +189,11 @@ export default function OrdersPage() {
     });
   };
 
+  const formatCurrency = (amount: number | undefined): string => {
+    const num = typeof amount === 'number' ? amount : 0;
+    return `₹${num.toFixed(2)}`;
+  };
+
   return (
     <div className={styles.page}>
       {/* Page Header */}
@@ -124,7 +201,7 @@ export default function OrdersPage() {
         <div>
           <h1 className={styles.pageTitle}>Orders</h1>
           <p className={styles.pageSubtitle}>
-            Manage and track all customer orders in real-time
+            Manage, inspect full customer details, update status, and track orders in real-time
           </p>
         </div>
       </div>
@@ -199,13 +276,22 @@ export default function OrdersPage() {
                     <th>Total</th>
                     <th>Status</th>
                     <th>Update Status</th>
+                    <th style={{ textAlign: 'center' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {orders.map((order) => {
                     const statusStyle = getStatusStyle(order.status);
+                    const customerName = order.userName || order.customerName || (order.userEmail ? order.userEmail.split('@')[0] : 'Customer');
+                    const phone = order.contactPhone || order.contact || order.phone;
+
                     return (
-                      <tr key={order.id}>
+                      <tr 
+                        key={order.id} 
+                        className={styles.tableRow}
+                        onClick={() => setSelectedOrder(order)}
+                        title="Click to view full order details"
+                      >
                         <td>
                           <span className={styles.orderId}>
                             #{order.id.includes('-') ? order.id.toUpperCase() : order.id.slice(0, 8).toUpperCase()}
@@ -215,9 +301,11 @@ export default function OrdersPage() {
                           </span>
                         </td>
                         <td>
-                          <span className={styles.customerEmail}>
-                            {order.userEmail || '—'}
-                          </span>
+                          <div className={styles.customerCol}>
+                            <span className={styles.customerName}>{customerName}</span>
+                            <span className={styles.customerEmail}>{order.userEmail || '—'}</span>
+                            {phone && <span className={styles.customerPhone}>📞 {phone}</span>}
+                          </div>
                         </td>
                         <td>
                           <div className={styles.itemsList}>
@@ -230,7 +318,7 @@ export default function OrdersPage() {
                         </td>
                         <td>
                           <span className={styles.totalPrice}>
-                            ₹{(order.totalPrice ?? 0).toFixed(2)}
+                            {formatCurrency(order.totalPrice)}
                           </span>
                         </td>
                         <td>
@@ -244,7 +332,7 @@ export default function OrdersPage() {
                             {order.status || 'Unknown'}
                           </span>
                         </td>
-                        <td>
+                        <td onClick={(e) => e.stopPropagation()}>
                           <select
                             className={styles.statusSelect}
                             value={order.status || 'Preparing'}
@@ -263,6 +351,28 @@ export default function OrdersPage() {
                             ))}
                           </select>
                         </td>
+                        <td onClick={(e) => e.stopPropagation()}>
+                          <div className={styles.actionsCell}>
+                            <button
+                              type="button"
+                              className={styles.viewBtn}
+                              title="View full order details"
+                              onClick={() => setSelectedOrder(order)}
+                            >
+                              <Eye size={16} />
+                              <span>Details</span>
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.deleteBtn}
+                              title="Delete this order"
+                              disabled={deletingId === order.id}
+                              onClick={(e) => handleDeleteOrder(order.id, e)}
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </td>
                       </tr>
                     );
                   })}
@@ -274,8 +384,15 @@ export default function OrdersPage() {
             <div className={styles.mobileCards}>
               {orders.map((order) => {
                 const statusStyle = getStatusStyle(order.status);
+                const customerName = order.userName || order.customerName || (order.userEmail ? order.userEmail.split('@')[0] : 'Customer');
+                const phone = order.contactPhone || order.contact || order.phone;
+
                 return (
-                  <div key={order.id} className={styles.mobileCard}>
+                  <div 
+                    key={order.id} 
+                    className={styles.mobileCard}
+                    onClick={() => setSelectedOrder(order)}
+                  >
                     <div className={styles.mobileCardHead}>
                       <div>
                         <span className={styles.orderId}>
@@ -286,16 +403,20 @@ export default function OrdersPage() {
                         </span>
                       </div>
                       <span className={styles.totalPrice}>
-                        ₹{(order.totalPrice ?? 0).toFixed(2)}
+                        {formatCurrency(order.totalPrice)}
                       </span>
                     </div>
+
                     <div className={styles.mobileCardBody}>
                       <div className={styles.mobileRow}>
                         <span className={styles.mobileLabel}>Customer</span>
-                        <span className={styles.customerEmail}>
-                          {order.userEmail || '—'}
-                        </span>
+                        <div className={styles.customerColMobile}>
+                          <span className={styles.customerName}>{customerName}</span>
+                          <span className={styles.customerEmail}>{order.userEmail || '—'}</span>
+                          {phone && <span className={styles.customerPhone}>📞 {phone}</span>}
+                        </div>
                       </div>
+
                       <div className={styles.mobileRow}>
                         <span className={styles.mobileLabel}>Items</span>
                         <div className={styles.itemsList}>
@@ -306,6 +427,7 @@ export default function OrdersPage() {
                           )) || '—'}
                         </div>
                       </div>
+
                       <div className={styles.mobileRow}>
                         <span className={styles.mobileLabel}>Status</span>
                         <span
@@ -319,25 +441,46 @@ export default function OrdersPage() {
                         </span>
                       </div>
                     </div>
-                    <div className={styles.mobileCardFoot}>
-                      <label>Update Status:</label>
-                      <select
-                        className={styles.statusSelect}
-                        value={order.status || 'Preparing'}
-                        onChange={(e) =>
-                          handleStatusChange(order.id, e.target.value)
-                        }
-                        style={{
-                          borderColor: statusStyle.color,
-                          color: statusStyle.color,
-                        }}
-                      >
-                        {STATUS_OPTIONS.map((s) => (
-                          <option key={s} value={s}>
-                            {s}
-                          </option>
-                        ))}
-                      </select>
+
+                    <div className={styles.mobileCardFoot} onClick={(e) => e.stopPropagation()}>
+                      <div className={styles.mobileSelectRow}>
+                        <label>Update Status:</label>
+                        <select
+                          className={styles.statusSelect}
+                          value={order.status || 'Preparing'}
+                          onChange={(e) =>
+                            handleStatusChange(order.id, e.target.value)
+                          }
+                          style={{
+                            borderColor: statusStyle.color,
+                            color: statusStyle.color,
+                          }}
+                        >
+                          {STATUS_OPTIONS.map((s) => (
+                            <option key={s} value={s}>
+                              {s}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className={styles.mobileActionButtons}>
+                        <button
+                          type="button"
+                          className={styles.viewBtnMobile}
+                          onClick={() => setSelectedOrder(order)}
+                        >
+                          <Eye size={15} /> View Details
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.deleteBtnMobile}
+                          disabled={deletingId === order.id}
+                          onClick={(e) => handleDeleteOrder(order.id, e)}
+                        >
+                          <Trash2 size={15} /> Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
@@ -346,6 +489,267 @@ export default function OrdersPage() {
           </>
         )}
       </div>
+
+      {/* ── COMPLETE ORDER DETAILS MODAL ── */}
+      {selectedOrder && (
+        <div className={styles.modalOverlay} onClick={() => setSelectedOrder(null)}>
+          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div className={styles.modalHeader}>
+              <div>
+                <div className={styles.modalTitleRow}>
+                  <h2 className={styles.modalTitle}>
+                    Order #{selectedOrder.id.includes('-') ? selectedOrder.id.toUpperCase() : selectedOrder.id.slice(0, 8).toUpperCase()}
+                  </h2>
+                  <span
+                    className={styles.statusBadge}
+                    style={{
+                      color: getStatusStyle(selectedOrder.status).color,
+                      background: getStatusStyle(selectedOrder.status).bg,
+                    }}
+                  >
+                    {selectedOrder.status || 'Unknown'}
+                  </span>
+                </div>
+                <p className={styles.modalDate}>
+                  <Calendar size={14} /> Placed on {formatDate(selectedOrder.createdAt)}
+                </p>
+              </div>
+
+              <button 
+                type="button" 
+                className={styles.closeBtn} 
+                onClick={() => setSelectedOrder(null)}
+                aria-label="Close modal"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Quick Status Bar */}
+            <div className={styles.modalStatusBar}>
+              <span className={styles.modalStatusLabel}>Update Order Status:</span>
+              <select
+                className={styles.statusSelect}
+                value={selectedOrder.status || 'Preparing'}
+                onChange={(e) => handleStatusChange(selectedOrder.id, e.target.value)}
+                style={{
+                  borderColor: getStatusStyle(selectedOrder.status).color,
+                  color: getStatusStyle(selectedOrder.status).color,
+                }}
+              >
+                {STATUS_OPTIONS.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Modal Body */}
+            <div className={styles.modalBody}>
+              {/* Customer & Delivery Grid */}
+              <div className={styles.detailsGrid}>
+                {/* Customer Details Box */}
+                <div className={styles.detailBox}>
+                  <h3 className={styles.detailBoxTitle}>
+                    <User size={16} /> Customer Information
+                  </h3>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Full Name:</span>
+                    <span className={styles.detailValueBold}>
+                      {selectedOrder.userName || selectedOrder.customerName || 'Valued Customer'}
+                    </span>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Email:</span>
+                    <a href={`mailto:${selectedOrder.userEmail}`} className={styles.detailLink}>
+                      <Mail size={13} /> {selectedOrder.userEmail || '—'}
+                    </a>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Contact Phone:</span>
+                    {selectedOrder.contactPhone || selectedOrder.contact || selectedOrder.phone ? (
+                      <div className={styles.phoneGroup}>
+                        <a 
+                          href={`tel:${selectedOrder.contactPhone || selectedOrder.contact || selectedOrder.phone}`} 
+                          className={styles.detailLink}
+                        >
+                          <Phone size={13} /> {selectedOrder.contactPhone || selectedOrder.contact || selectedOrder.phone}
+                        </a>
+                        <a 
+                          href={`https://wa.me/91${(selectedOrder.contactPhone || selectedOrder.contact || selectedOrder.phone || '').replace(/[^0-9]/g, '').slice(-10)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.whatsappChip}
+                        >
+                          WhatsApp
+                        </a>
+                      </div>
+                    ) : (
+                      <span className={styles.detailValue}>—</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Delivery Information Box */}
+                <div className={styles.detailBox}>
+                  <h3 className={styles.detailBoxTitle}>
+                    <MapPin size={16} /> Delivery & Address
+                  </h3>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>City / Area:</span>
+                    <span className={styles.detailValueBold}>
+                      {selectedOrder.deliveryCity || 'Tadepalle / Vijayawada'}
+                    </span>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <span className={styles.detailLabel}>Delivery Address:</span>
+                    <span className={styles.detailValue}>
+                      {selectedOrder.deliveryAddress || selectedOrder.address || 'Standard Delivery Address'}
+                    </span>
+                  </div>
+                  {selectedOrder.specialInstructions && (
+                    <div className={styles.detailRow}>
+                      <span className={styles.detailLabel}>Special Note:</span>
+                      <span className={styles.instructionsValue}>
+                        <FileText size={13} /> {selectedOrder.specialInstructions}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Payment & Transaction Box */}
+                <div className={styles.detailBoxFull}>
+                  <h3 className={styles.detailBoxTitle}>
+                    <CreditCard size={16} /> Payment & Billing
+                  </h3>
+                  <div className={styles.paymentFlexRow}>
+                    <div>
+                      <span className={styles.detailLabel}>Payment Method</span>
+                      <p className={styles.detailValueBold}>{selectedOrder.paymentMethod || 'Cash on Delivery (COD)'}</p>
+                    </div>
+                    <div>
+                      <span className={styles.detailLabel}>Payment Status</span>
+                      <p className={styles.paymentStatusBadge}>{selectedOrder.paymentStatus || 'Pending'}</p>
+                    </div>
+                    {selectedOrder.razorpayPaymentId && (
+                      <div>
+                        <span className={styles.detailLabel}>Payment Reference</span>
+                        <p className={styles.detailCode}>{selectedOrder.razorpayPaymentId}</p>
+                      </div>
+                    )}
+                    {selectedOrder.cancelReason && (
+                      <div className={styles.cancelReasonNotice}>
+                        <AlertTriangle size={15} color="#c62828" />
+                        <span><strong>Reason:</strong> {selectedOrder.cancelReason}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Items Breakdown Table */}
+              <div className={styles.itemsSection}>
+                <h3 className={styles.itemsSectionTitle}>Ordered Items ({selectedOrder.items?.length || 0})</h3>
+                <div className={styles.itemsTableWrap}>
+                  <table className={styles.itemsTable}>
+                    <thead>
+                      <tr>
+                        <th>Item Description</th>
+                        <th style={{ textAlign: 'center' }}>Qty</th>
+                        <th style={{ textAlign: 'right' }}>Price</th>
+                        <th style={{ textAlign: 'right' }}>Subtotal</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedOrder.items?.map((item, idx) => {
+                        const unitPrice = item.price ?? 0;
+                        const itemTotal = unitPrice * item.quantity;
+                        return (
+                          <tr key={idx}>
+                            <td>
+                              <span className={styles.modalItemName}>{item.name}</span>
+                              {(item.weight || item.flavour || item.flavor || item.customization || item.cakeMessage) && (
+                                <div className={styles.itemMetaLine}>
+                                  {item.weight && <span className={styles.metaBadge}>{item.weight}</span>}
+                                  {(item.flavour || item.flavor) && <span className={styles.metaBadge}>{item.flavour || item.flavor}</span>}
+                                  {item.customization && <span className={styles.metaBadge}>{item.customization}</span>}
+                                  {item.cakeMessage && <span className={styles.cakeMessage}>“{item.cakeMessage}”</span>}
+                                </div>
+                              )}
+                            </td>
+                            <td style={{ textAlign: 'center' }}>
+                              <span className={styles.qtyBadge}>{item.quantity}</span>
+                            </td>
+                            <td style={{ textAlign: 'right' }}>
+                              {unitPrice > 0 ? formatCurrency(unitPrice) : '—'}
+                            </td>
+                            <td style={{ textAlign: 'right', fontWeight: 600 }}>
+                              {unitPrice > 0 ? formatCurrency(itemTotal) : formatCurrency(selectedOrder.totalPrice)}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Financial Summary */}
+                <div className={styles.financialSummary}>
+                  <div className={styles.summaryRow}>
+                    <span>Items Subtotal:</span>
+                    <span>{formatCurrency(selectedOrder.subtotal || selectedOrder.totalPrice)}</span>
+                  </div>
+                  {typeof selectedOrder.deliveryFee === 'number' && selectedOrder.deliveryFee > 0 && (
+                    <div className={styles.summaryRow}>
+                      <span>Delivery Fee:</span>
+                      <span>{formatCurrency(selectedOrder.deliveryFee)}</span>
+                    </div>
+                  )}
+                  {typeof selectedOrder.discount === 'number' && selectedOrder.discount > 0 && (
+                    <div className={styles.summaryRowDiscount}>
+                      <span>Discount ({selectedOrder.couponCode || 'Promo'}):</span>
+                      <span>-{formatCurrency(selectedOrder.discount)}</span>
+                    </div>
+                  )}
+                  <div className={styles.summaryRowGrandTotal}>
+                    <span>Grand Total:</span>
+                    <span className={styles.grandTotalValue}>{formatCurrency(selectedOrder.totalPrice)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Actions Footer */}
+            <div className={styles.modalFooter}>
+              <button
+                type="button"
+                className={styles.modalDeleteBtn}
+                disabled={deletingId === selectedOrder.id}
+                onClick={() => handleDeleteOrder(selectedOrder.id)}
+              >
+                <Trash2 size={16} /> Delete Order
+              </button>
+
+              <div className={styles.modalRightActions}>
+                <button
+                  type="button"
+                  className={styles.printBtn}
+                  onClick={() => window.print()}
+                >
+                  <Printer size={16} /> Print Order
+                </button>
+                <button
+                  type="button"
+                  className={styles.closeModalBtn}
+                  onClick={() => setSelectedOrder(null)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
