@@ -212,7 +212,7 @@ export default function OrdersPage() {
                       <tr key={order.id}>
                         <td>
                           <span className={styles.orderId}>
-                            #{order.id.slice(0, 8).toUpperCase()}
+                            #{order.id.includes('-') ? order.id.toUpperCase() : order.id.slice(0, 8).toUpperCase()}
                           </span>
                           <span className={styles.orderDate}>
                             {formatDate(order.createdAt)}
@@ -289,7 +289,7 @@ export default function OrdersPage() {
                     <div className={styles.mobileCardHead}>
                       <div>
                         <span className={styles.orderId}>
-                          #{order.id.slice(0, 8).toUpperCase()}
+                          #{order.id.includes('-') ? order.id.toUpperCase() : order.id.slice(0, 8).toUpperCase()}
                         </span>
                         <span className={styles.orderDate}>
                           {formatDate(order.createdAt)}

@@ -294,7 +294,9 @@ export default function ProfilePage() {
                   <div className={styles.orderCardHeader}>
                     <div>
                       <div className={styles.orderIdRow}>
-                        <strong className={styles.orderIdText}>#{order.id.slice(0, 8).toUpperCase()}</strong>
+                        <strong className={styles.orderIdText}>
+                          #{order.id.includes('-') ? order.id.toUpperCase() : order.id.slice(0, 8).toUpperCase()}
+                        </strong>
                         {!isCompleted && !isCancelled && (
                           <span className={styles.liveBadge}>
                             <span className={styles.pulseDotRed} /> LIVE TRACKING

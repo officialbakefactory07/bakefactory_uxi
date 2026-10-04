@@ -13,7 +13,8 @@ import {
   Banknote, CreditCard, Wallet, Clock, AlertCircle, Home, Briefcase, Navigation, Loader2
 } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, setDoc, serverTimestamp, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { generateSequentialOrderId } from '@/lib/orderId';
 
 // Address Form Types & Helpers (Swiggy / Zomato style)
 export type AddressTag = 'Home' | 'Work' | 'Other';
@@ -419,12 +420,23 @@ function CartContent() {
 
     setIsSubmitting(true);
     try {
+      // Determine delivery city for sequential city-prefixed order ID (e.g. VJ-1001, GN-1002)
+      const orderCity = isAddingNewAddress 
+        ? addressForm.city 
+        : (addresses[selectedAddressIndex] ? parseAddressToForm(addresses[selectedAddressIndex]).city : 'Vijayawada');
+
+      const customOrderId = await generateSequentialOrderId(orderCity);
+
       const orderPayload = {
+        id: customOrderId,
+        orderId: customOrderId,
+        orderNumber: customOrderId,
         userId: user.uid,
         userEmail: user.email,
         userName: profile?.fullName || user.displayName || 'Customer',
         contactPhone,
         deliveryAddress: currentAddress,
+        deliveryCity: orderCity,
         items,
         subtotal: totalPrice,
         discount: discountAmount,
@@ -438,9 +450,9 @@ function CartContent() {
         createdAt: serverTimestamp()
       };
 
-      const docRef = await addDoc(collection(db, "orders"), orderPayload);
+      await setDoc(doc(db, "orders", customOrderId), orderPayload);
 
-      // ── IF ONLINE PAYMENT (Razorpay / PayU) ──
+      // ── IF ONLINE PAYMENT ──
       if (paymentMethod === 'online') {
         // Try Razorpay checkout first
         const isRzpLoaded = await loadRazorpayScript();
@@ -450,7 +462,7 @@ function CartContent() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              orderId: docRef.id,
+              orderId: customOrderId,
               amount: finalPrice,
               customerName: profile?.fullName || user.displayName || 'Customer',
               email: user.email,
@@ -468,7 +480,7 @@ function CartContent() {
               amount: rzpOrderData.amount,
               currency: rzpOrderData.currency || 'INR',
               name: 'Bake Factory',
-              description: `Order #${docRef.id.slice(0, 8)} (${items.length} items)`,
+              description: `Order #${customOrderId} (${items.length} items)`,
               image: '/logo.png',
               order_id: rzpOrderId,
               prefill: {
@@ -485,7 +497,7 @@ function CartContent() {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                      orderId: docRef.id,
+                      orderId: customOrderId,
                       razorpay_order_id: response.razorpay_order_id,
                       razorpay_payment_id: response.razorpay_payment_id,
                       razorpay_signature: response.razorpay_signature,
@@ -496,16 +508,16 @@ function CartContent() {
                   const verifyData = await verifyRes.json();
                   if (verifyData.success) {
                     clearCart();
-                    router.push(`/order-success?id=${docRef.id}&status=success`);
+                    router.push(`/order-success?id=${customOrderId}&status=success`);
                   } else {
                     alert(`Payment verification issue: ${verifyData.error || 'Please contact support.'}`);
                     clearCart();
-                    router.push(`/order-success?id=${docRef.id}&status=pending`);
+                    router.push(`/order-success?id=${customOrderId}&status=pending`);
                   }
                 } catch (verifyErr) {
                   console.error('Error in signature verification:', verifyErr);
                   clearCart();
-                  router.push(`/order-success?id=${docRef.id}&status=pending`);
+                  router.push(`/order-success?id=${customOrderId}&status=pending`);
                 }
               },
               modal: {
@@ -518,7 +530,7 @@ function CartContent() {
             const rzp = new (window as any).Razorpay(options);
             if (typeof rzp.on === 'function') {
               rzp.on('payment.failed', function (response: any) {
-                console.error('Razorpay Payment Failed:', response?.error);
+                console.error('Payment Failed:', response?.error);
                 alert(`Payment failed: ${response?.error?.description || 'Transaction declined'}`);
                 setIsSubmitting(false);
               });
@@ -528,20 +540,20 @@ function CartContent() {
             return;
           }
         } catch (rzpErr) {
-          console.warn('Razorpay initiation fallback, trying PayU:', rzpErr);
+          console.warn('Online checkout initiation fallback, trying secondary route:', rzpErr);
         }
 
-        // PayU Gateway Fallback
+        // Secondary Payment Gateway Fallback
         const payuRes = await fetch('/api/payu/create-payment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            orderId: docRef.id,
+            orderId: customOrderId,
             amount: finalPrice,
             customerName: profile?.fullName || user.displayName || 'Customer',
             email: user.email,
             phone: contactPhone,
-            productInfo: `Bake Factory Order #${docRef.id.slice(0, 8)} (${items.length} items)`
+            productInfo: `Bake Factory Order #${customOrderId} (${items.length} items)`
           })
         });
 
@@ -575,7 +587,6 @@ function CartContent() {
           body: JSON.stringify({
             email: user.email,
             order: {
-              id: docRef.id,
               ...orderPayload,
               createdAt: new Date().toISOString()
             }
@@ -584,7 +595,7 @@ function CartContent() {
       }
 
       clearCart();
-      router.push(`/order-success?id=${docRef.id}&status=cod`);
+      router.push(`/order-success?id=${customOrderId}&status=cod`);
     } catch (error: any) {
       console.error("Error placing order:", error);
       alert(error.message || "There was an error placing your order. Please try again.");

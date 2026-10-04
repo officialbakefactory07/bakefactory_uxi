@@ -271,20 +271,26 @@ export default function Home() {
           
           <div className={styles.trustBadge}>
             <div className={styles.trustStarsRow}>
-              <div className={styles.starsCluster}>
-                <Star size={15} fill="#D4A017" color="#D4A017" />
-                <Star size={15} fill="#D4A017" color="#D4A017" />
-                <Star size={15} fill="#D4A017" color="#D4A017" />
-                <Star size={15} fill="#D4A017" color="#D4A017" />
-                <Star size={15} fill="#D4A017" color="#D4A017" />
-              </div>
-              <span className={styles.trustRatingScore}>{avgRating}</span>
-              <span className={styles.trustDivider}>&bull;</span>
-              <span className={styles.trustHighlights}>
-                {reviews.length > 0
-                  ? `${reviews.length} Verified Patron Review${reviews.length > 1 ? 's' : ''}`
-                  : '2,500+ Celebrations Made Special'}
-              </span>
+              {reviews.length > 0 ? (
+                <>
+                  <div className={styles.starsCluster}>
+                    <Star size={15} fill="#D4A017" color="#D4A017" />
+                    <Star size={15} fill="#D4A017" color="#D4A017" />
+                    <Star size={15} fill="#D4A017" color="#D4A017" />
+                    <Star size={15} fill="#D4A017" color="#D4A017" />
+                    <Star size={15} fill="#D4A017" color="#D4A017" />
+                  </div>
+                  <span className={styles.trustRatingScore}>{avgRating}</span>
+                  <span className={styles.trustDivider}>&bull;</span>
+                  <span className={styles.trustHighlights}>
+                    {reviews.length} Verified Patron Review{reviews.length > 1 ? 's' : ''}
+                  </span>
+                </>
+              ) : (
+                <span className={styles.trustHighlights}>
+                  Artisanal Gourmet Bakery &bull; Fresh Daily in Vijayawada
+                </span>
+              )}
             </div>
             <div className={styles.trustTags}>
               <span className={styles.trustTag}>
@@ -366,12 +372,12 @@ export default function Home() {
           <span className={styles.statLabel}>GOURMET RECIPES</span>
         </div>
         <div className={styles.statItem}>
-          <span className={styles.statNum}>10K+</span>
-          <span className={styles.statLabel}>HAPPY CLIENTS</span>
+          <span className={styles.statNum}>100%</span>
+          <span className={styles.statLabel}>PURE DAIRY BUTTER</span>
         </div>
         <div className={styles.statItem}>
-          <span className={styles.statNum}>100%</span>
-          <span className={styles.statLabel}>FRESHLY BAKED</span>
+          <span className={styles.statNum}>DAILY</span>
+          <span className={styles.statLabel}>OVEN-FRESH BAKED</span>
         </div>
       </section>
 

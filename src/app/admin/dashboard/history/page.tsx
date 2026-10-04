@@ -53,7 +53,9 @@ export default function HistoryPage() {
           <p className={styles.empty}>No order history available.</p>
         ) : orders.map(order => (
           <div key={order.id} className={styles.tableRow}>
-            <span className={styles.orderId}>#{order.id.slice(0, 8).toUpperCase()}</span>
+            <span className={styles.orderId}>
+              #{order.id.includes('-') ? order.id.toUpperCase() : order.id.slice(0, 8).toUpperCase()}
+            </span>
             <span>{order.userEmail || '—'}</span>
             <span className={styles.items}>
               {order.items?.map((i: any) => `${i.quantity}× ${i.name}`).join(', ') || '—'}

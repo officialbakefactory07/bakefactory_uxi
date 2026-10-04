@@ -26,10 +26,10 @@ import styles from './page.module.css';
 
 export default function About() {
   const stats = [
-    { value: '10,000+', label: 'Celebrations Sweetened', icon: Cake },
+    { value: '100% Fresh', label: 'Artisanal Handcrafted Bakes', icon: Cake },
     { value: '100%', label: 'Pure Dairy Butter & Real Cocoa', icon: Heart },
     { value: '45–60m', label: 'Express Delivery Network', icon: Truck },
-    { value: '4.9 / 5', label: 'Rated by 1,200+ Happy Customers', icon: Star },
+    { value: '4.9 / 5', label: 'Top Customer Satisfaction Rating', icon: Star },
   ];
 
   const craftSteps = [
