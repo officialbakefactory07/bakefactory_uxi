@@ -959,7 +959,7 @@ export default function MenuPage() {
                   )}
                   {form.image && (
                     <div style={{
-                      backgroundColor: 'rgba(0,0,0,0.4)',
+                      backgroundColor: 'rgba(0,0,0,0.45)',
                       color: 'white',
                       width: '100%',
                       height: '100%',
@@ -968,7 +968,7 @@ export default function MenuPage() {
                       justifyContent: 'center',
                       fontSize: '0.85rem',
                       fontWeight: 600,
-                      padding: '2rem 0',
+                      padding: '1.25rem 0',
                     }}>
                       Change Image
                     </div>

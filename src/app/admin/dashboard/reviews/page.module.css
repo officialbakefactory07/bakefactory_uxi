@@ -189,6 +189,7 @@
 @media (max-width: 768px) {
   .searchWrap {
     width: 100%;
+    min-width: 0;
   }
 }
 
