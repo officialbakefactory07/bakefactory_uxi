@@ -146,7 +146,7 @@ function OrderSuccessContent() {
         {/* Trust badge */}
         <div className={styles.trustFooter}>
           <ShieldCheck size={16} />
-          <span>Secure 256-Bit SSL Encrypted &bull; 100% Food Grade Quality Guaranteed</span>
+          <span>Freshly prepared with care &bull; Guaranteed Quality</span>
         </div>
 
       </div>

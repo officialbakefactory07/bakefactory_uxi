@@ -29,7 +29,7 @@ export default function About() {
     { value: '10,000+', label: 'Celebrations Sweetened', icon: Cake },
     { value: '100%', label: 'Pure Dairy Butter & Real Cocoa', icon: Heart },
     { value: '45–60m', label: 'Express Delivery Network', icon: Truck },
-    { value: '4.9 ★', label: 'Rated by 1,200+ Happy Customers', icon: Star },
+    { value: '4.9 / 5', label: 'Rated by 1,200+ Happy Customers', icon: Star },
   ];
 
   const craftSteps = [

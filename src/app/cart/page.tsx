@@ -214,7 +214,7 @@ function CartContent() {
     if (found) {
       setAppliedCoupon(found);
       setCouponCode(found.code);
-      setCouponSuccess(`🎉 Coupon ${found.code} applied successfully!`);
+      setCouponSuccess(`Coupon ${found.code} applied successfully!`);
     } else {
       setCouponError('Invalid coupon code. Try BAKE50 or WELCOME10.');
     }
@@ -250,7 +250,7 @@ function CartContent() {
           address: updatedList[0],
           savedAddresses: updatedList
         });
-        setSavedSuccessMsg('✨ Delivery address saved!');
+        setSavedSuccessMsg('Delivery address saved!');
         setTimeout(() => setSavedSuccessMsg(''), 3000);
       } catch (err) {
         console.error('Error saving address to profile:', err);
@@ -281,7 +281,7 @@ function CartContent() {
           address: updatedList[0],
           savedAddresses: updatedList
         });
-        setSavedSuccessMsg('✨ Delivery address updated!');
+        setSavedSuccessMsg('Delivery address updated!');
         setTimeout(() => setSavedSuccessMsg(''), 3000);
       } catch (err) {
         console.error('Error updating address in profile:', err);
@@ -1088,7 +1088,7 @@ function CartContent() {
             <div className={styles.cardHeaderRow}>
               <h2><CreditCard size={20} /> Payment Method</h2>
               <span className={styles.secureTag}>
-                <ShieldCheck size={13} /> Razorpay &amp; PayU 256-Bit SSL Encrypted
+                <ShieldCheck size={13} /> Razorpay &amp; PayU
               </span>
             </div>
 
@@ -1144,20 +1144,11 @@ function CartContent() {
 
             </div>
 
-            <div className={styles.razorpayNoticeBox}>
-              <ShieldCheck size={16} className={styles.sparkleGold} />
-              <span>
-                {paymentMethod === 'online' 
-                  ? '⚡ Secure 256-bit encrypted checkout will launch when you proceed.' 
-                  : '💵 Please keep exact cash or UPI ready at the time of delivery.'}
-              </span>
-            </div>
-
             {/* 30-Minute Cancellation Policy Alert */}
             <div className={styles.cancelPolicyBox}>
               <Clock size={18} className={styles.clockIcon} />
               <div>
-                <strong>⏱️ 30-Minute Cancellation Policy</strong>
+                <strong>30-Minute Cancellation Policy</strong>
                 <p>Orders can be cancelled within <strong>30 minutes</strong> of placement. See our full <a href="/refund-policy" target="_blank" style={{ color: '#D4A017', textDecoration: 'underline' }}>Cancellation &amp; Refund Policy</a>.</p>
               </div>
             </div>
@@ -1261,7 +1252,7 @@ function CartContent() {
 
               {totalPrice < 499 && totalPrice > 0 && (
                 <p className={styles.freeDeliveryTip}>
-                  💡 Add ₹{(499 - totalPrice).toFixed(0)} more for FREE delivery!
+                  Add ₹{(499 - totalPrice).toFixed(0)} more for FREE delivery!
                 </p>
               )}
 
@@ -1291,7 +1282,7 @@ function CartContent() {
               </Button>
 
               <div className={styles.secureGuarantee}>
-                <ShieldCheck size={16} /> 100% Safe &amp; Secure Razorpay &amp; PayU Gateways
+                <ShieldCheck size={16} /> Secure checkout via Razorpay &amp; PayU
               </div>
 
             </div>

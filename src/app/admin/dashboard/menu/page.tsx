@@ -271,7 +271,7 @@ export default function MenuPage() {
           };
         });
         setAiExtractedItems(mappedItems);
-        setAiStatusMsg({ type: 'success', text: `✨ Extracted ${mappedItems.length} products with AI! Review and import below.` });
+        setAiStatusMsg({ type: 'success', text: `Extracted ${mappedItems.length} products with AI! Review and import below.` });
       }
     } catch (err: any) {
       setAiStatusMsg({ type: 'error', text: err.message || 'Error communicating with Groq AI.' });
@@ -310,7 +310,7 @@ export default function MenuPage() {
       setAiTextPrompt('');
       setAiImageBase64('');
       await fetchMenu();
-      alert(`🎉 Successfully imported ${selectedItems.length} products into the Bake Factory menu!`);
+      alert(`Successfully imported ${selectedItems.length} products into the Bake Factory menu!`);
     } catch (err: any) {
       alert('Error importing menu items: ' + err.message);
     } finally {
@@ -493,7 +493,7 @@ export default function MenuPage() {
         <div className={styles.emptyState}>
           {searchQuery || activeCategory !== 'All'
             ? 'No items match your filters.'
-            : 'No menu items yet. Click "✨ AI Menu Importer" or "+ Add Item" to populate your catalog!'}
+            : 'No menu items yet. Click "AI Menu Importer" or "+ Add Item" to populate your catalog!'}
         </div>
       ) : (
         <div className={styles.grid}>
@@ -570,7 +570,7 @@ export default function MenuPage() {
                     </button>
 
                     {item.bestSeller && (
-                      <span className={styles.bestSellerBadge}>★ Best Seller</span>
+                      <span className={styles.bestSellerBadge}>Best Seller</span>
                     )}
                   </div>
                 </div>
@@ -697,7 +697,7 @@ export default function MenuPage() {
                 disabled={aiExtracting}
               >
                 <Wand2 size={18} />
-                <span>{aiExtracting ? 'Analyzing with Groq AI…' : '⚡ Extract Menu Items with Groq AI'}</span>
+                <span>{aiExtracting ? 'Analyzing menu…' : 'Extract Menu Items with AI'}</span>
               </button>
             </div>
 

@@ -251,7 +251,7 @@ export default function OrdersPage() {
                         <td>
                           {order.status === 'Cancelled' ? (
                             <span className={styles.cancelledDisabledTag} title="Customer cancelled this order. Status cannot be modified.">
-                              🚫 Cancelled (Locked)
+                              Cancelled (Locked)
                             </span>
                           ) : (
                             <select
@@ -333,7 +333,7 @@ export default function OrdersPage() {
                       <label>Update Status:</label>
                       {order.status === 'Cancelled' ? (
                         <span className={styles.cancelledDisabledTag} title="Customer cancelled this order. Status cannot be modified.">
-                          🚫 Cancelled (Locked)
+                          Cancelled (Locked)
                         </span>
                       ) : (
                         <select

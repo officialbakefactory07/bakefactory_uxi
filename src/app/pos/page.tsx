@@ -316,7 +316,7 @@ export default function PosTerminal() {
           animation: 'spin 0.8s linear infinite'
         }} />
         <p style={{ fontSize: '0.9rem', color: '#D4A017', letterSpacing: '0.05em', fontWeight: 600 }}>
-          🔒 Verifying Cashier Terminal Access...
+          Verifying Cashier Terminal Access...
         </p>
       </div>
     );
@@ -354,13 +354,13 @@ export default function PosTerminal() {
           className={`${styles.mobileTabBtn} ${mobileTab === 'menu' ? styles.mobileTabActive : ''}`}
           onClick={() => setMobileTab('menu')}
         >
-          🍰 Menu Catalog
+          Menu Catalog
         </button>
         <button 
           className={`${styles.mobileTabBtn} ${mobileTab === 'cart' ? styles.mobileTabActive : ''}`}
           onClick={() => setMobileTab('cart')}
         >
-          🛒 Current Bill ({totalCartCount}) • ₹{netTotal.toFixed(0)}
+          Current Bill ({totalCartCount}) • ₹{netTotal.toFixed(0)}
         </button>
       </div>
 

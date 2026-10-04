@@ -104,7 +104,7 @@ export async function sendOrderConfirmationEmail(toEmail: string, order: any) {
           </div>
 
           <div style="background: #E8F5E9; border-radius: 8px; padding: 12px; text-align: center; color: #2E7D32; font-weight: 700; font-size: 13px; margin-bottom: 20px;">
-            ✦ Estimated delivery / pickup: 45 - 60 minutes
+            Estimated delivery / pickup: 45 - 60 minutes
           </div>
 
           <p style="font-size: 12px; color: #8C7A6B; text-align: center; margin: 0;">
@@ -133,7 +133,7 @@ export async function sendContactNotificationEmail(contactData: { name: string; 
   try {
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; padding: 24px; color: #23160E;">
-        <h2>📬 New Website Contact Inquiry</h2>
+        <h2>New Website Contact Inquiry</h2>
         <p><strong>From:</strong> ${contactData.name}</p>
         <p><strong>Email:</strong> ${contactData.email || 'Not provided'}</p>
         <p><strong>Phone:</strong> ${contactData.phone || 'Not provided'}</p>

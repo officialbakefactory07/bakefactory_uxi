@@ -203,7 +203,7 @@ export default function PosSalesDashboard() {
       {/* ── Middle: Top Selling Items Breakdown ── */}
       {metrics.topItems.length > 0 && (
         <div className={styles.topItemsCard}>
-          <h3>🔥 Top Selling Bakery Items on {selectedDate}</h3>
+          <h3>Top Selling Bakery Items on {selectedDate}</h3>
           <div className={styles.topItemsList}>
             {metrics.topItems.map(([name, qty], idx) => (
               <div key={idx} className={styles.topItemChip}>

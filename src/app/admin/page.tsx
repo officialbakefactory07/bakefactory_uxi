@@ -104,7 +104,7 @@ export default function AdminLogin() {
             {loading ? (
               <span className={styles.btnSpinner} />
             ) : (
-              '🔐 Access Master Dashboard'
+              'Access Master Dashboard'
             )}
           </button>
         </form>

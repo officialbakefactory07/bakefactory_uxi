@@ -185,17 +185,17 @@ export default function ProfilePage() {
   const getLiveMessage = (status?: string) => {
     switch (status) {
       case 'Preparing':
-        return '👨‍🍳 Order received! Our bakers are preparing fresh ingredients.';
+        return 'Order received. Our bakers are preparing fresh ingredients.';
       case 'Cooking':
-        return '🔥 Baking in the Oven! Our master pastry chef is preparing your treats with passion.';
+        return 'Baking in the oven. Our pastry chef is preparing your order.';
       case 'Out for delivery':
-        return '🛵 Out for Delivery! Rider is bringing your fresh order to your address.';
+        return 'Out for delivery. The delivery rider is bringing your order to your address.';
       case 'Completed':
-        return '🎉 Order Delivered! Thank you for ordering with Bake Factory.';
+        return 'Order delivered. Thank you for ordering with Bake Factory.';
       case 'Cancelled':
-        return '🚫 Order Cancelled. Refund (if applicable) will be processed to your account.';
+        return 'Order cancelled. Refund (if applicable) will be processed to your account.';
       default:
-        return '✨ Order is being processed.';
+        return 'Order is being processed.';
     }
   };
 
@@ -214,7 +214,7 @@ export default function ProfilePage() {
 
         {dataError && (
           <div className={styles.warningBanner}>
-            ⚠️ Firestore rules not configured yet — some data may not load. Set rules in Firebase Console.
+            Unable to sync live order updates. Please refresh the page.
           </div>
         )}
 
@@ -396,7 +396,7 @@ export default function ProfilePage() {
                       {/* Info tag when 30-minute cancellation window closes */}
                       {!canCancel && !isCancelled && !isCompleted && (
                         <span className={styles.windowClosedTag} title="30-minute cancellation window has ended">
-                          🔒 Cancellation closed (30m passed)
+                          Cancellation window closed (30 mins passed)
                         </span>
                       )}
                     </div>
