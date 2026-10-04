@@ -18,7 +18,6 @@ import {
   Crown,
   Cake,
   Truck,
-  ChevronRight,
   Leaf,
 } from 'lucide-react';
 import styles from './page.module.css';
@@ -303,60 +302,6 @@ export default function Home() {
                 <CheckCircle2 size={13} className={styles.trustCheckIcon} /> Same-Day Delivery
               </span>
             </div>
-          </div>
-        </div>
-
-        {/* Right Showcase: Mini Visual Category Strip (Compact Thumbnail Cards) */}
-        <div className={styles.categoryStripContainer}>
-          <div className={styles.categoryStripHeader}>
-            <div className={styles.stripHeaderLeft}>
-              <span className={styles.stripPulseDot} />
-              <span className={styles.stripHeaderTag}>DAILY ATELIER PICKS</span>
-            </div>
-            <span className={styles.stripHeaderStatus}>Fresh From Oven</span>
-          </div>
-
-          <div className={styles.stripList}>
-            {(categories.length > 0 ? categories.slice(0, 3) : DEFAULT_CATEGORIES).map((cat, idx) => {
-              const fallback = DEFAULT_CATEGORIES[idx] || DEFAULT_CATEGORIES[0];
-              const displayImage = resolveCategoryImage(cat, fallback.image);
-              const displayTagline = cat.tagline || fallback.tagline;
-              const displayBadge = idx === 0 ? 'Signature' : idx === 1 ? 'Popular' : 'Oven Fresh';
-
-              return (
-                <Link
-                  key={cat.id}
-                  href={`/menu?category=${cat.id}`}
-                  className={styles.stripItem}
-                >
-                  <div className={styles.stripThumbWrap}>
-                    <div
-                      className={styles.stripThumb}
-                      style={{ backgroundImage: `url(${displayImage})` }}
-                    />
-                    <span className={styles.stripMiniBadge}>{displayBadge}</span>
-                  </div>
-
-                  <div className={styles.stripMeta}>
-                    <div className={styles.stripTitleRow}>
-                      <h4 className={styles.stripName}>{cat.name}</h4>
-                      <ArrowRight size={15} className={styles.stripArrow} />
-                    </div>
-                    <p className={styles.stripTagline}>{displayTagline}</p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-
-          <div className={styles.stripFooter}>
-            <Link href="/menu" className={styles.stripExploreAllBtn}>
-              <span>Explore All Treats</span>
-              <ChevronRight size={15} />
-            </Link>
-            <span className={styles.stripHoursNote}>
-              <Clock size={12} className={styles.stripClockIcon} /> Order before 6 PM for today
-            </span>
           </div>
         </div>
       </section>
