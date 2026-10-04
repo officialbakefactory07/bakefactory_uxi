@@ -59,11 +59,11 @@ export async function POST(req: NextRequest) {
 
           if (isSuccess) {
             await updateDoc(orderRef, {
-              paymentStatus: 'Paid (PayU Gateway)',
+              paymentStatus: 'Paid (Online Secured)',
               status: 'Preparing',
               payuTxnId: txnid,
               payuPaymentId: mihpayid || '',
-              paymentMode: mode || 'Online (PayU)',
+              paymentMode: mode || 'Online',
               paidAt: serverTimestamp()
             });
 
@@ -72,9 +72,9 @@ export async function POST(req: NextRequest) {
               sendOrderConfirmationEmail(email || existingOrder.userEmail, {
                 id: orderId,
                 ...existingOrder,
-                paymentMethod: `PayU (${mode || 'Online'})`,
+                paymentMethod: 'Online Payment',
                 paymentStatus: 'Paid'
-              }).catch(e => console.error('Error sending PayU order email:', e));
+              }).catch(e => console.error('Error sending order email:', e));
             }
           } else {
             await updateDoc(orderRef, {

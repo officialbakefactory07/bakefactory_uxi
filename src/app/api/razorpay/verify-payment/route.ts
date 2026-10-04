@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
           const orderData = orderSnap.data();
 
           await updateDoc(orderRef, {
-            paymentStatus: 'Paid (Razorpay Secured)',
+            paymentStatus: 'Paid (Online Secured)',
             status: 'Preparing',
             razorpayPaymentId: payment_id,
             razorpayOrderId: order_id || '',
@@ -54,9 +54,9 @@ export async function POST(req: NextRequest) {
             sendOrderConfirmationEmail(targetEmail, {
               id: firestoreOrderId,
               ...orderData,
-              paymentMethod: 'Online Payment (Razorpay)',
+              paymentMethod: 'Online Payment',
               paymentStatus: 'Paid',
-            }).catch((e) => console.error('Error sending Razorpay confirmation email:', e));
+            }).catch((e) => console.error('Error sending confirmation email:', e));
           }
         }
       } catch (dbErr) {

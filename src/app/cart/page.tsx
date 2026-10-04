@@ -328,21 +328,20 @@ function CartContent() {
           const res = await fetch(`/api/reverse-geocode?lat=${latitude}&lng=${longitude}`);
           const data = await res.json();
 
-          if (data.success) {
+          if (data.success && (data.area || data.city)) {
             setAddressForm(prev => ({
               ...prev,
               area: data.area || prev.area,
               landmark: data.landmark || prev.landmark,
-              city: ['Vijayawada', 'Tadepalle', 'Guntur', 'Mangalagiri'].includes(data.city)
-                ? data.city
-                : (data.city || prev.city),
-              pincode: data.pincode || prev.pincode,
+              city: data.city || prev.city || 'Vijayawada',
+              pincode: data.pincode || prev.pincode || '520010',
               receiverName: profile?.fullName || user?.displayName || prev.receiverName
             }));
             setIsAddingNewAddress(true);
             setIsEditingAddress(false);
-            setSavedSuccessMsg('Location auto-detected! Please enter your Flat / House number to complete.');
-            setTimeout(() => setSavedSuccessMsg(''), 5000);
+            const locName = [data.area, data.city].filter(Boolean).join(', ');
+            setSavedSuccessMsg(`Location detected: ${locName}! Please enter your Flat / House number.`);
+            setTimeout(() => setSavedSuccessMsg(''), 6000);
           } else {
             alert('Could not determine exact street address from GPS. Please fill in details manually.');
             setIsAddingNewAddress(true);
@@ -371,8 +370,8 @@ function CartContent() {
       },
       {
         enableHighAccuracy: true,
-        timeout: 12000,
-        maximumAge: 15000
+        timeout: 15000,
+        maximumAge: 0
       }
     );
   };
@@ -432,7 +431,7 @@ function CartContent() {
         couponCode: appliedCoupon ? appliedCoupon.code : null,
         deliveryFee,
         totalPrice: finalPrice,
-        paymentMethod: paymentMethod === 'online' ? 'Online Payment (Razorpay / PayU)' : 'Cash on Delivery (COD)',
+        paymentMethod: paymentMethod === 'online' ? 'Online Payment (UPI, Cards, NetBanking)' : 'Cash on Delivery (COD)',
         paymentStatus: paymentMethod === 'online' ? 'Pending Payment' : 'Pending (COD)',
         specialInstructions: instructions,
         status: 'Preparing',
@@ -1083,18 +1082,18 @@ function CartContent() {
             )}
           </Card>
 
-          {/* Section 3: Payment Method Selection (Razorpay / PayU & COD) */}
+          {/* Section 3: Payment Method Selection */}
           <Card className={styles.sectionCard}>
             <div className={styles.cardHeaderRow}>
               <h2><CreditCard size={20} /> Payment Method</h2>
               <span className={styles.secureTag}>
-                <ShieldCheck size={13} /> Razorpay &amp; PayU
+                <ShieldCheck size={13} /> 100% Secure Payment
               </span>
             </div>
 
             <div className={styles.paymentOptionsList}>
               
-              {/* Option 1: Online Payment via Razorpay / PayU */}
+              {/* Option 1: Online Payment */}
               <div 
                 className={`${styles.paymentCard} ${paymentMethod === 'online' ? styles.selectedPaymentCard : ''}`}
                 onClick={() => setPaymentMethod('online')}
@@ -1109,11 +1108,11 @@ function CartContent() {
                 </div>
                 <div className={styles.paymentInfoCol}>
                   <div className={styles.paymentTitleRow}>
-                    <h3>Online Payment (Razorpay / PayU)</h3>
+                    <h3>Online Payment (UPI, Cards, NetBanking)</h3>
                     <span className={styles.razorpayBadge}>Instant &bull; 100% Safe</span>
                   </div>
                   <p className={styles.paymentDesc}>
-                    UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards (Visa, Mastercard, RuPay), NetBanking, and Wallets.
+                    UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, NetBanking, and Wallets.
                   </p>
                 </div>
               </div>
@@ -1282,7 +1281,7 @@ function CartContent() {
               </Button>
 
               <div className={styles.secureGuarantee}>
-                <ShieldCheck size={16} /> Secure checkout via Razorpay &amp; PayU
+                <ShieldCheck size={16} /> 100% Safe &amp; Secure Checkout
               </div>
 
             </div>

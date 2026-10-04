@@ -45,18 +45,18 @@ export default function PrivacyPage() {
             <ul>
               <li>To prepare, bake, and dispatch your bakery orders accurately to your delivery address in Vijayawada.</li>
               <li>To send order confirmation receipts, OTP verification codes, and real-time live order tracking status updates via Resend email.</li>
-              <li>To securely process payments through authorized gateway partners (PayU).</li>
+              <li>To securely process payments through authorized gateway partners.</li>
               <li>To provide customer support and handle inquiries or dietary customization requests.</li>
             </ul>
           </section>
 
           <section className={styles.section}>
-            <h2>3. Payment Data Security (Razorpay &amp; PayU Gateways)</h2>
+            <h2>3. Payment Data Security</h2>
             <p>
               <strong>Bake Factory does NOT store or process your credit card numbers, debit card PINs, CVV, or NetBanking passwords on our servers.</strong>
             </p>
             <p>
-              All online payment transactions are directed to certified payment aggregators (<strong>Razorpay Software Private Limited</strong> and <strong>PayU Payments Private Limited</strong>), which are fully certified under <strong>PCI-DSS Level 1 compliance</strong> and encrypted using bank-grade 256-bit SSL protocols.
+              All online payment transactions are directed to certified payment aggregators, which are fully certified under <strong>PCI-DSS Level 1 compliance</strong> and encrypted using bank-grade SSL protocols.
             </p>
           </section>
 
@@ -66,7 +66,7 @@ export default function PrivacyPage() {
               We respect your privacy. <strong>We NEVER sell, trade, or rent your personal data to third-party marketing companies.</strong> Data is shared only with:
             </p>
             <ul>
-              <li><strong>Payment Aggregators (PayU):</strong> For payment authentication and settlement.</li>
+              <li><strong>Payment Aggregators:</strong> For secure payment authentication and settlement.</li>
               <li><strong>Delivery Personnel:</strong> Only recipient name, contact phone number, and delivery address to complete physical handover of freshly baked goods.</li>
               <li><strong>Legal Authorities:</strong> If required by Indian law, regulation, or court order.</li>
             </ul>
