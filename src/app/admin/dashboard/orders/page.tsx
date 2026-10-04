@@ -48,14 +48,15 @@ const STATUS_OPTIONS = [
   'Cancelled',
 ] as const;
 
-type StatusType = (typeof STATUS_OPTIONS)[number];
+type StatusType = (typeof STATUS_OPTIONS)[number] | 'Payment Pending';
 
-const STATUS_CONFIG: Record<StatusType, { color: string; bg: string; icon: React.ElementType }> = {
+const STATUS_CONFIG: Record<string, { color: string; bg: string; icon: React.ElementType }> = {
   Preparing: { color: '#5d4037', bg: 'rgba(93,64,55,0.1)', icon: Package },
   Cooking: { color: '#e65100', bg: 'rgba(230,81,0,0.1)', icon: ChefHat },
   'Out for delivery': { color: '#1565c0', bg: 'rgba(21,101,192,0.1)', icon: Truck },
   Completed: { color: '#2e7d32', bg: 'rgba(46,125,50,0.1)', icon: CircleCheckBig },
   Cancelled: { color: '#c62828', bg: 'rgba(198,40,40,0.1)', icon: XCircle },
+  'Payment Pending': { color: '#c62828', bg: 'rgba(198,40,40,0.1)', icon: XCircle },
 };
 
 export default function OrdersPage() {
@@ -86,12 +87,12 @@ export default function OrdersPage() {
     (o) => o.status === 'Preparing' || o.status === 'Cooking'
   ).length;
   const completedCount = orders.filter((o) => o.status === 'Completed').length;
-  const cancelledCount = orders.filter((o) => o.status === 'Cancelled').length;
+  const cancelledCount = orders.filter((o) => o.status === 'Cancelled' || o.status === 'Payment Pending').length;
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
     const currentOrder = orders.find((o) => o.id === orderId);
-    if (currentOrder && currentOrder.status === 'Cancelled') {
-      alert('This order was cancelled by the customer and its status cannot be modified.');
+    if (currentOrder && (currentOrder.status === 'Cancelled' || currentOrder.status === 'Payment Pending')) {
+      alert('This order was cancelled or payment was not completed. Its status cannot be modified.');
       return;
     }
     try {
@@ -103,7 +104,7 @@ export default function OrdersPage() {
 
   const getStatusStyle = (status?: string): { color: string; bg: string } => {
     if (status && status in STATUS_CONFIG) {
-      const cfg = STATUS_CONFIG[status as StatusType];
+      const cfg = STATUS_CONFIG[status];
       return { color: cfg.color, bg: cfg.bg };
     }
     return { color: '#555', bg: 'rgba(0,0,0,0.05)' };
@@ -249,9 +250,9 @@ export default function OrdersPage() {
                           </span>
                         </td>
                         <td>
-                          {order.status === 'Cancelled' ? (
-                            <span className={styles.cancelledDisabledTag} title="Customer cancelled this order. Status cannot be modified.">
-                              Cancelled (Locked)
+                          {order.status === 'Cancelled' || order.status === 'Payment Pending' ? (
+                            <span className={styles.cancelledDisabledTag} title="Order is cancelled or unpaid. Status cannot be modified.">
+                              {order.status === 'Payment Pending' ? 'Unpaid (Cancelled)' : 'Cancelled (Locked)'}
                             </span>
                           ) : (
                             <select
@@ -331,9 +332,9 @@ export default function OrdersPage() {
                     </div>
                     <div className={styles.mobileCardFoot}>
                       <label>Update Status:</label>
-                      {order.status === 'Cancelled' ? (
-                        <span className={styles.cancelledDisabledTag} title="Customer cancelled this order. Status cannot be modified.">
-                          Cancelled (Locked)
+                      {order.status === 'Cancelled' || order.status === 'Payment Pending' ? (
+                        <span className={styles.cancelledDisabledTag} title="Order is cancelled or unpaid. Status cannot be modified.">
+                          {order.status === 'Payment Pending' ? 'Unpaid (Cancelled)' : 'Cancelled (Locked)'}
                         </span>
                       ) : (
                         <select

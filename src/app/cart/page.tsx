@@ -446,7 +446,7 @@ function CartContent() {
         paymentMethod: paymentMethod === 'online' ? 'Online Payment (UPI, Cards, NetBanking)' : 'Cash on Delivery (COD)',
         paymentStatus: paymentMethod === 'online' ? 'Pending Payment' : 'Pending (COD)',
         specialInstructions: instructions,
-        status: 'Preparing',
+        status: paymentMethod === 'online' ? 'Payment Pending' : 'Preparing',
         createdAt: serverTimestamp()
       };
 
@@ -511,8 +511,17 @@ function CartContent() {
                     router.push(`/order-success?id=${customOrderId}&status=success`);
                   } else {
                     alert(`Payment verification issue: ${verifyData.error || 'Please contact support.'}`);
+                    try {
+                      await updateDoc(doc(db, "orders", customOrderId), {
+                        status: 'Cancelled',
+                        paymentStatus: 'Verification Failed',
+                        cancelReason: verifyData.error || 'Payment signature verification failed',
+                        updatedAt: serverTimestamp(),
+                        cancelledAt: serverTimestamp()
+                      });
+                    } catch (e) {}
                     clearCart();
-                    router.push(`/order-success?id=${customOrderId}&status=pending`);
+                    router.push(`/order-success?id=${customOrderId}&status=cancelled`);
                   }
                 } catch (verifyErr) {
                   console.error('Error in signature verification:', verifyErr);
@@ -521,18 +530,40 @@ function CartContent() {
                 }
               },
               modal: {
-                ondismiss: function () {
+                ondismiss: async function () {
                   setIsSubmitting(false);
+                  try {
+                    await updateDoc(doc(db, "orders", customOrderId), {
+                      status: 'Cancelled',
+                      paymentStatus: 'Cancelled (Abandoned)',
+                      cancelReason: 'Customer closed payment window without completing payment',
+                      updatedAt: serverTimestamp(),
+                      cancelledAt: serverTimestamp()
+                    });
+                  } catch (dismissErr) {
+                    console.error('Failed to cancel order on modal dismiss:', dismissErr);
+                  }
                 }
               }
             };
 
             const rzp = new (window as any).Razorpay(options);
             if (typeof rzp.on === 'function') {
-              rzp.on('payment.failed', function (response: any) {
+              rzp.on('payment.failed', async function (response: any) {
                 console.error('Payment Failed:', response?.error);
                 alert(`Payment failed: ${response?.error?.description || 'Transaction declined'}`);
                 setIsSubmitting(false);
+                try {
+                  await updateDoc(doc(db, "orders", customOrderId), {
+                    status: 'Cancelled',
+                    paymentStatus: 'Payment Failed',
+                    cancelReason: response?.error?.description || 'Transaction declined or failed',
+                    updatedAt: serverTimestamp(),
+                    cancelledAt: serverTimestamp()
+                  });
+                } catch (failErr) {
+                  console.error('Failed to cancel order on payment failed:', failErr);
+                }
               });
             }
             rzp.open();
@@ -577,6 +608,20 @@ function CartContent() {
           form.submit();
           return;
         }
+
+        // If online gateways could not be initiated
+        try {
+          await updateDoc(doc(db, "orders", customOrderId), {
+            status: 'Cancelled',
+            paymentStatus: 'Gateway Unavailable',
+            cancelReason: 'Payment gateway could not be initiated',
+            updatedAt: serverTimestamp(),
+            cancelledAt: serverTimestamp()
+          });
+        } catch (e) {}
+        alert('Payment gateway could not be initiated. Please try again or select Cash on Delivery.');
+        setIsSubmitting(false);
+        return;
       }
 
       // ── IF CASH ON DELIVERY (COD) ──

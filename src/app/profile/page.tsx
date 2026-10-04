@@ -157,6 +157,7 @@ export default function ProfilePage() {
       'Cooking': '#e65100',
       'Preparing': '#6d4c41',
       'Cancelled': '#c62828',
+      'Payment Pending': '#c62828',
     };
     return map[status] || '#6d4c41';
   };
@@ -178,6 +179,7 @@ export default function ProfilePage() {
       case 'Out for delivery': return 75;
       case 'Completed': return 100;
       case 'Cancelled': return 0;
+      case 'Payment Pending': return 0;
       default: return 15;
     }
   };
@@ -194,6 +196,8 @@ export default function ProfilePage() {
         return 'Order delivered. Thank you for ordering with Bake Factory.';
       case 'Cancelled':
         return 'Order cancelled. Refund (if applicable) will be processed to your account.';
+      case 'Payment Pending':
+        return 'Order cancelled due to incomplete payment. No charges were deducted.';
       default:
         return 'Order is being processed.';
     }
@@ -274,7 +278,7 @@ export default function ProfilePage() {
               const stageIdx = getStageIndex(order.status);
               const progressPct = getProgressPercentage(order.status);
               const isCompleted = order.status === 'Completed';
-              const isCancelled = order.status === 'Cancelled';
+              const isCancelled = order.status === 'Cancelled' || order.status === 'Payment Pending';
 
               // 30-Minute Cancellation Window Calculation
               const orderTimeMs = order.createdAt?.seconds ? order.createdAt.seconds * 1000 : currentTime;
@@ -314,7 +318,7 @@ export default function ProfilePage() {
 
                     <div className={styles.headerRightCol}>
                       <span className={styles.statusBadge} style={{ background: getStatusColor(order.status) + '18', color: getStatusColor(order.status) }}>
-                        {order.status || 'Preparing'}
+                        {order.status === 'Payment Pending' ? 'Cancelled (Unpaid)' : (order.status || 'Preparing')}
                       </span>
                       <p className={styles.orderTotalText}>Total: <strong>₹{(order.totalPrice ?? 0).toFixed(0)}</strong></p>
                     </div>
