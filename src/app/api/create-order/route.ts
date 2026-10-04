@@ -6,19 +6,17 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     let { amount, currency = 'INR', receipt, notes, orderId, customerName, email, phone } = body;
 
-    if (!amount || Number(amount) <= 0) {
-      return NextResponse.json({ error: 'Invalid amount. Minimum amount is 100 paise (₹1).' }, { status: 400 });
+    const numericAmount = Number(amount);
+    if (!amount || isNaN(numericAmount) || numericAmount <= 0) {
+      return NextResponse.json({ error: 'Invalid order amount. Minimum amount is ₹1.' }, { status: 400 });
     }
 
-    // Ensure amount is in paise (minimum 100 paise)
-    let amountInPaise = Math.round(Number(amount));
-    // If amount is small float like 45.5, convert to paise
-    if (amountInPaise < 100 && Number(amount) > 0) {
-      amountInPaise = Math.round(Number(amount) * 100);
-    }
+    // Amount passed from cart/checkout is in INR Rupees (e.g., 1200 for ₹1200)
+    // Razorpay orders API strictly expects amount in paise (1 INR = 100 paise)
+    const amountInPaise = Math.round(numericAmount * 100);
 
     if (amountInPaise < 100) {
-      return NextResponse.json({ error: 'Minimum order amount is 100 paise (₹1.00)' }, { status: 400 });
+      return NextResponse.json({ error: 'Minimum order amount is ₹1.00 (100 paise)' }, { status: 400 });
     }
 
     const receiptId = receipt || `rcpt_${orderId ? String(orderId).slice(0, 16) : Date.now()}`;
